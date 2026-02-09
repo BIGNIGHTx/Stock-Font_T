@@ -33,10 +33,37 @@ const Dashboard = () => {
   const totalRevenue = sales.reduce((acc, s) => acc + s.total_price, 0);
   const lowStockProducts = products.filter(p => p.stock < 10).length;
 
-  // ข้อมูลสำหรับกราฟ (จัดกลุ่มยอดขายตามวัน 7 วันล่าสุด)
+  // คำนวณต้นทุนของสินค้าที่ขายไปแล้ว (COGS)
+  const totalCOGS = sales.reduce((acc, sale) => {
+    const product = products.find(p => p.id === sale.product_id);
+    if (product) {
+      // ถ้ามี cost_price ให้ใช้ ถ้าไม่มีให้ใช้ 60% ของราคาขาย
+      const costPrice = product.cost_price || (product.price * 0.6);
+      return acc + (costPrice * sale.quantity);
+    }
+    return acc;
+  }, 0);
+
+  // คำนวณกำไร
+  const grossProfit = totalRevenue - totalCOGS;
+  const profitMargin = totalRevenue > 0 
+    ? ((grossProfit / totalRevenue) * 100).toFixed(1) 
+    : 0;
+
+  // ข้อมูลสำหรับกราฟ (แสดง Mon-Sun เสมอ)
+  const getMondayOfWeek = () => {
+    const today = new Date();
+    const day = today.getDay(); // 0=Sun, 1=Mon, ..., 6=Sat
+    const diff = day === 0 ? -6 : 1 - day; // ถ้าเป็นอาทิตย์ให้ลบ 6 วัน, วันอื่นให้ลบไป (day-1)
+    const monday = new Date(today);
+    monday.setDate(today.getDate() + diff);
+    return monday;
+  };
+
   const last7Days = [...Array(7)].map((_, i) => {
-    const date = new Date();
-    date.setDate(date.getDate() - (6 - i));
+    const monday = getMondayOfWeek();
+    const date = new Date(monday);
+    date.setDate(monday.getDate() + i); // Mon=0, Tue=1, ..., Sun=6
     return date.toISOString().split('T')[0];
   });
 
@@ -127,16 +154,18 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Card 2 */}
+        {/* Card 2: Gross Profit */}
         <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-start">
           <div>
-            <p className="text-slate-500 text-sm font-medium">Total Stock Value</p>
+            <p className="text-slate-500 text-sm font-medium">Gross Profit</p>
             <h3 className="text-3xl font-bold text-slate-800 mt-2">
-              {isLoading ? '-' : `฿${totalStockValue.toLocaleString()}`}
+              {isLoading ? '-' : `฿${grossProfit.toLocaleString(undefined, { minimumFractionDigits: 2 })}`}
             </h3>
-            <p className="text-purple-500 text-xs font-medium mt-2">Inventory worth</p>
+            <p className={`text-xs font-medium mt-2 ${grossProfit >= 0 ? 'text-emerald-500' : 'text-red-500'}`}>
+              {profitMargin}% Margin
+            </p>
           </div>
-          <div className="p-3 bg-purple-50 rounded-xl text-purple-600">
+          <div className="p-3 bg-emerald-50 rounded-xl text-emerald-600">
             <Wallet size={24} />
           </div>
         </div>

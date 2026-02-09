@@ -10,7 +10,7 @@ const Inventory = () => {
 
   // State สำหรับฟอร์มเพิ่มสินค้า
   const [newProduct, setNewProduct] = useState({
-    name: '', sku: '', category: 'Electronics', price: '', stock: ''
+    name: '', sku: '', category: 'Electronics', price: '', cost_price: '', stock: ''
   });
 
   // --- 1. ดึงข้อมูลจาก Backend เมื่อเข้าหน้านี้ ---
@@ -31,24 +31,33 @@ const Inventory = () => {
 
   // --- 2. ฟังก์ชันบันทึกสินค้าลง Database ---
   const handleSaveProduct = async () => {
+    // --- Validation ---
+    const { name, sku, category, price, cost_price, stock } = newProduct;
+    if (!name || !sku || !category || price === '' || cost_price === '' || stock === '') {
+      alert('กรุณากรอกข้อมูลให้ครบทุกช่อง');
+      return;
+    }
+    if (isNaN(price) || isNaN(cost_price) || isNaN(stock) || parseFloat(price) <= 0 || parseFloat(cost_price) <= 0 || parseInt(stock) < 0) {
+      alert('ราคาขาย/ต้นทุนต้องเป็นตัวเลขบวก และ stock ต้องไม่ติดลบ');
+      return;
+    }
     try {
-      // แปลงค่า price/stock เป็นตัวเลขก่อนส่ง
       const payload = {
-        ...newProduct,
-        price: parseFloat(newProduct.price),
-        stock: parseInt(newProduct.stock)
+        name,
+        sku,
+        category,
+        price: parseFloat(price),
+        cost_price: parseFloat(cost_price),
+        stock: parseInt(stock)
       };
-
       await axios.post('http://127.0.0.1:8000/products/', payload);
-      
-      // บันทึกเสร็จแล้ว -> ปิด Modal -> ดึงข้อมูลใหม่ -> ล้างฟอร์ม
       setIsModalOpen(false);
       fetchProducts(); 
-      setNewProduct({ name: '', sku: '', category: 'Electronics', price: '', stock: '' });
+      setNewProduct({ name: '', sku: '', category: 'Electronics', price: '', cost_price: '', stock: '' });
       alert("บันทึกสินค้าเรียบร้อย!");
     } catch (error) {
       console.error("Error saving product:", error);
-      alert("เกิดข้อผิดพลาดในการบันทึก");
+      alert(`เกิดข้อผิดพลาด: ${error.response?.data?.detail || error.message}`);
     }
   };
 
@@ -166,10 +175,14 @@ const Inventory = () => {
                       <option>Accessories</option>
                    </select>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-3 gap-4">
                   <input 
-                    type="number" placeholder="Price" className="w-full p-2 border rounded"
+                    type="number" placeholder="Price (ขาย)" className="w-full p-2 border rounded"
                     value={newProduct.price} onChange={e => setNewProduct({...newProduct, price: e.target.value})}
+                  />
+                  <input 
+                    type="number" placeholder="Cost Price (ต้นทุน)" className="w-full p-2 border rounded"
+                    value={newProduct.cost_price} onChange={e => setNewProduct({...newProduct, cost_price: e.target.value})}
                   />
                   <input 
                     type="number" placeholder="Stock" className="w-full p-2 border rounded"
