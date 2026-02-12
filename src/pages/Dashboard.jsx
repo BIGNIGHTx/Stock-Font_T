@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Package, Wallet, TrendingUp, AlertTriangle, Download, Plus } from 'lucide-react';
+import { Package, Wallet, TrendingUp, AlertTriangle, Download, Plus, Trash2 } from 'lucide-react';
 import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 const Dashboard = () => {
@@ -43,6 +43,27 @@ const Dashboard = () => {
     };
     fetchData();
   }, []);
+
+  // --- Delete Sale ---
+  const handleDeleteSale = async (saleId) => {
+    if (!window.confirm("Are you sure you want to delete this sale? Stock will be restored.")) return;
+
+    try {
+      await axios.delete(`http://127.0.0.1:8000/sales/${saleId}`);
+      // Update state locally to reflect changes immediately
+      setSales(prevSales => prevSales.filter(s => s.id !== saleId));
+
+      // Also update products if stock was restored (optional: re-fetch products)
+      // For simplicity, we can just re-fetch everything or optimistically update
+      // Let's re-fetch to be safe and accurate with stock levels
+      const productsRes = await axios.get('http://127.0.0.1:8000/products/');
+      setProducts(productsRes.data);
+
+    } catch (error) {
+      console.error("Error deleting sale:", error);
+      alert("Failed to delete sale");
+    }
+  };
 
   // --- คำนวณสถิติจากข้อมูลจริง ---
   const totalProducts = products.length;
@@ -315,6 +336,7 @@ const Dashboard = () => {
                 <th className="px-6 py-3 font-medium">Product</th>
                 <th className="px-6 py-3 font-medium text-center">Qty</th>
                 <th className="px-6 py-3 font-medium text-right">Total</th>
+                <th className="px-6 py-3 font-medium text-center">Action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -337,12 +359,21 @@ const Dashboard = () => {
                       <td className="px-6 py-4 text-right font-bold text-emerald-600">
                         ฿{sale.total_price.toLocaleString()}
                       </td>
+                      <td className="px-6 py-4 text-center">
+                        <button
+                          onClick={() => handleDeleteSale(sale.id)}
+                          className="p-2 text-red-500 hover:bg-red-50 rounded-full transition-colors"
+                          title="Delete Sale"
+                        >
+                          <Trash2 size={18} />
+                        </button>
+                      </td>
                     </tr>
                   );
                 })
               ) : (
                 <tr>
-                  <td colSpan="4" className="px-6 py-12 text-center text-slate-400">
+                  <td colSpan="5" className="px-6 py-12 text-center text-slate-400">
                     <div className="flex flex-col items-center justify-center">
                       <Package size={32} className="mb-2 opacity-20" />
                       <p>No sales recorded for this date</p>
