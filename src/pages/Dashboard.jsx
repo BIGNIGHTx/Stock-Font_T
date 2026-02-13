@@ -318,7 +318,7 @@ const Dashboard = ({ onNavigate }) => {
               type="date"
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
-              className="bg-transparent text-slate-700 font-semibold focus:outline-none text-sm cursor-pointer"
+              className="bg-transparent text-slate-700 font-semibold focus:outline-none text-sm cursor-pointer [&::-webkit-calendar-picker-indicator]:cursor-pointer"
             />
           </div>
         </div>
@@ -426,7 +426,7 @@ const Dashboard = ({ onNavigate }) => {
                       setChartEndDate(newEnd.toISOString().split('T')[0]);
                     }
                   }}
-                  className="bg-slate-50 border border-slate-200 text-slate-600 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-1.5 outline-none shadow-sm cursor-pointer hover:border-blue-300 transition-colors"
+                  className="bg-slate-50 border border-slate-200 text-slate-600 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-1.5 outline-none shadow-sm cursor-pointer hover:border-blue-300 transition-colors [&::-webkit-calendar-picker-indicator]:cursor-pointer"
                 />
               </div>
               <div className="flex flex-col">
@@ -449,7 +449,7 @@ const Dashboard = ({ onNavigate }) => {
                       setChartStartDate(newStart.toISOString().split('T')[0]);
                     }
                   }}
-                  className="bg-slate-50 border border-slate-200 text-slate-600 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-1.5 outline-none shadow-sm cursor-pointer hover:border-blue-300 transition-colors"
+                  className="bg-slate-50 border border-slate-200 text-slate-600 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-1.5 outline-none shadow-sm cursor-pointer hover:border-blue-300 transition-colors [&::-webkit-calendar-picker-indicator]:cursor-pointer"
                 />
               </div>
             </div>
