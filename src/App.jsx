@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
+import { Text } from './components/text';
 import Dashboard from './pages/Dashboard';
 import Inventory from './pages/Inventory';
 import Sales from './pages/Sales';
@@ -42,7 +43,7 @@ function App() {
       <div className="flex-1 ml-64 flex flex-col">
         {/* Top Header */}
         <header className="h-16 bg-white dark:bg-dark-surface border-b border-gray-200 dark:border-dark-border flex items-center justify-between px-8 sticky top-0 z-40 transition-colors duration-300">
-          <h2 className="text-xl font-bold text-gray-800 dark:text-dark-text">Overview</h2>
+          <Text as="h2" className="text-xl font-bold text-gray-800 dark:text-dark-text">Overview</Text>
           <div className="flex items-center gap-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />

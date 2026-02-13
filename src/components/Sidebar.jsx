@@ -1,5 +1,6 @@
 import React from 'react';
 import { LayoutDashboard, Package, ShoppingCart, BarChart3, Settings, LogOut } from 'lucide-react';
+import { Text } from '../components/text';
 
 const Sidebar = ({ activePage, setActivePage }) => {
   const menuItems = [
@@ -21,14 +22,14 @@ const Sidebar = ({ activePage, setActivePage }) => {
         />
         <div className="ml-3 flex flex-col justify-center overflow-hidden w-full pr-1">
           <div className="font-extrabold leading-none tracking-tight">
-            <span className="block text-xl bg-gradient-to-r from-gray-600 via-black to-gray-600 dark:from-gray-400 dark:via-white dark:to-gray-400 bg-clip-text text-transparent animate-gradient bg-[length:200%_auto] pb-0.5">
+            <Text as="span" className="block text-xl bg-gradient-to-r from-gray-600 via-black to-gray-600 dark:from-gray-400 dark:via-white dark:to-gray-400 bg-clip-text text-transparent animate-gradient bg-[length:200%_auto] pb-0.5">
               SomBoon
-            </span>
-            <span className="block text-xl bg-gradient-to-r from-gray-600 via-black to-gray-600 dark:from-gray-400 dark:via-white dark:to-gray-400 bg-clip-text text-transparent animate-gradient bg-[length:200%_auto] delay-75">
+            </Text>
+            <Text as="span" className="block text-xl bg-gradient-to-r from-gray-600 via-black to-gray-600 dark:from-gray-400 dark:via-white dark:to-gray-400 bg-clip-text text-transparent animate-gradient bg-[length:200%_auto] delay-75">
               ElecTric
-            </span>
+            </Text>
           </div>
-          <p className="text-[10px] text-gray-500 dark:text-gray-400 font-medium mt-1 tracking-wide uppercase">Stock Management</p>
+          <Text className="text-[10px] text-gray-500 dark:text-gray-400 font-medium mt-1 tracking-wide uppercase">Stock Management</Text>
         </div>
       </div>
 
@@ -54,7 +55,7 @@ const Sidebar = ({ activePage, setActivePage }) => {
               }`}
           >
             <item.icon size={20} className="mr-3" />
-            {item.label}
+            <Text as="span">{item.label}</Text>
           </button>
         ))}
       </nav>
@@ -68,8 +69,8 @@ const Sidebar = ({ activePage, setActivePage }) => {
             className="w-10 h-10 rounded-full object-cover border border-gray-200 dark:border-dark-border"
           />
           <div className="ml-3 flex-1">
-            <p className="text-sm font-semibold text-gray-800 dark:text-dark-text">Alex Morgan</p>
-            <p className="text-xs text-gray-500 dark:text-dark-muted">Store Manager</p>
+            <Text className="text-sm font-semibold text-gray-800 dark:text-dark-text">Alex Morgan</Text>
+            <Text className="text-xs text-gray-500 dark:text-dark-muted">Store Manager</Text>
           </div>
         </div>
       </div>

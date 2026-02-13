@@ -14,6 +14,7 @@ import {
   Trash2,
   Package // Re-added Package for legacy icon usage if needed, though Box is used now
 } from 'lucide-react';
+import { Text } from '../components/text';
 import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 const Dashboard = ({ onNavigate }) => {
@@ -206,33 +207,33 @@ const Dashboard = ({ onNavigate }) => {
       {/* ================= Header Section ================= */}
       <header className="flex flex-col xl:flex-row justify-between items-start xl:items-end gap-6 mb-10">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">Welcome back, Admin!</h1>
-          <p className="text-slate-500">Here's what's happening with your store today.</p>
+          <Text as="h1" className="text-3xl font-bold text-slate-900 mb-2">Welcome back, Admin!</Text>
+          <Text className="text-slate-500">Here's what's happening with your store today.</Text>
         </div>
 
         <div className="flex flex-col md:flex-row items-center gap-6 w-full xl:w-auto">
           {/* Time & Date Display */}
           <div className="text-right hidden md:block">
-            <div className="text-3xl font-mono font-bold text-slate-800 tracking-tight">
+            <Text className="text-3xl font-mono font-bold text-slate-800 tracking-tight">
               {currentDateTime.toLocaleTimeString('th-TH', { hour12: false })}
-            </div>
-            <div className="text-sm font-medium text-slate-400">
+            </Text>
+            <Text className="text-sm font-medium text-slate-400">
               {formattedDate}
-            </div>
+            </Text>
           </div>
 
           {/* Action Buttons */}
           <div className="flex gap-3 w-full md:w-auto">
             <button className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3 bg-white border border-slate-200 rounded-xl font-semibold text-slate-600 shadow-sm hover:bg-slate-50 transition-all cursor-pointer">
               <Download size={18} />
-              Export
+              <Text as="span">Export</Text>
             </button>
             <button
               onClick={() => onNavigate && onNavigate('inventory', { openAddModal: true })}
               className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3 bg-[#1e293b] text-white rounded-xl font-semibold shadow-lg shadow-slate-300 hover:bg-slate-800 transition-all transform active:scale-95 cursor-pointer"
             >
               <Plus size={18} />
-              Add Product
+              <Text as="span">Add Product</Text>
             </button>
           </div>
         </div>
@@ -281,16 +282,16 @@ const Dashboard = ({ onNavigate }) => {
             </div>
           </div>
           <div>
-            <h3 className="text-red-800 text-sm font-semibold mb-1">Low Stock Alert</h3>
-            <p className="text-3xl font-bold text-slate-800">{isLoading ? '-' : `${lowStockProducts} Items`}</p>
+            <Text as="h3" className="text-red-800 text-sm font-semibold mb-1">Low Stock Alert</Text>
+            <Text className="text-3xl font-bold text-slate-800">{isLoading ? '-' : `${lowStockProducts} Items`}</Text>
           </div>
           <div className="flex items-center gap-2 mt-2">
             <span className={`text-xs font-bold px-2 py-1 rounded-md ${lowStockProducts > 0 ? 'text-red-600 bg-red-100' : 'text-green-600 bg-green-100'}`}>
-              {lowStockProducts > 0 ? 'Action Required' : 'All Good'}
+              <Text as="span">{lowStockProducts > 0 ? 'Action Required' : 'All Good'}</Text>
             </span>
-            <span className="text-xs text-red-400">
+            <Text as="span" className="text-xs text-red-400">
               {lowStockProducts > 0 ? 'restock needed' : 'stock healthy'}
-            </span>
+            </Text>
           </div>
         </div>
 
@@ -302,16 +303,16 @@ const Dashboard = ({ onNavigate }) => {
         {/* Section Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
-            <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+            <Text as="h2" className="text-lg font-bold text-slate-800 flex items-center gap-2">
               Of the Day <span className="px-3 py-1 bg-slate-100 rounded-full text-xs text-slate-500 font-normal">
-                {selectedDateFormatted}
+                <Text as="span">{selectedDateFormatted}</Text>
               </span>
-            </h2>
-            <p className="text-slate-400 text-sm mt-1">Detailed breakdown of sales for the selected date</p>
+            </Text>
+            <Text className="text-slate-400 text-sm mt-1">Detailed breakdown of sales for the selected date</Text>
           </div>
 
           <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 px-4 py-2 rounded-xl">
-            <span className="text-sm text-slate-500 font-medium">Select Date:</span>
+            <Text as="span" className="text-sm text-slate-500 font-medium">Select Date:</Text>
             <input
               type="date"
               value={selectedDate}
@@ -324,13 +325,13 @@ const Dashboard = ({ onNavigate }) => {
         {/* Colored Summary Boxes */}
         <div className="flex flex-col md:flex-row gap-6 mb-10">
           <div className="flex-1 bg-[#F0F4FF] rounded-2xl p-6 border border-blue-50">
-            <h4 className="text-blue-800 text-xs font-bold uppercase tracking-wider mb-2">Daily Revenue</h4>
-            <p className="text-3xl font-bold text-slate-800">฿{dailyRevenue.toLocaleString()}</p>
+            <Text as="h4" className="text-blue-800 text-xs font-bold uppercase tracking-wider mb-2">Daily Revenue</Text>
+            <Text className="text-3xl font-bold text-slate-800">฿{dailyRevenue.toLocaleString()}</Text>
           </div>
 
           <div className="flex-1 bg-[#FFF8F0] rounded-2xl p-6 border border-orange-50">
-            <h4 className="text-orange-800 text-xs font-bold uppercase tracking-wider mb-2">Items Sold</h4>
-            <p className="text-3xl font-bold text-slate-800">{dailyItemsSold}</p>
+            <Text as="h4" className="text-orange-800 text-xs font-bold uppercase tracking-wider mb-2">Items Sold</Text>
+            <Text className="text-3xl font-bold text-slate-800">{dailyItemsSold}</Text>
           </div>
         </div>
 
@@ -338,11 +339,11 @@ const Dashboard = ({ onNavigate }) => {
         <div className="w-full overflow-x-auto">
           {/* Table Header */}
           <div className="grid grid-cols-12 gap-4 px-6 py-3 bg-slate-50 rounded-xl text-xs font-bold text-slate-500 uppercase tracking-wider mb-4 min-w-[600px]">
-            <div className="col-span-2">Time</div>
-            <div className="col-span-4">Product</div>
-            <div className="col-span-2 text-center">Qty</div>
-            <div className="col-span-2 text-right">Total</div>
-            <div className="col-span-2 text-center">Action</div>
+            <div className="col-span-2"><Text as="span">Time</Text></div>
+            <div className="col-span-4"><Text as="span">Product</Text></div>
+            <div className="col-span-2 text-center"><Text as="span">Qty</Text></div>
+            <div className="col-span-2 text-right"><Text as="span">Total</Text></div>
+            <div className="col-span-2 text-center"><Text as="span">Action</Text></div>
           </div>
 
           {/* Table Body */}
@@ -353,18 +354,18 @@ const Dashboard = ({ onNavigate }) => {
                 return (
                   <div key={idx} className="grid grid-cols-12 gap-4 px-6 py-4 hover:bg-slate-50 rounded-xl transition-colors items-center border-b border-slate-50 last:border-0 text-sm">
                     <div className="col-span-2 font-mono text-slate-400">
-                      {new Date(sale.created_at).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })}
+                      <Text as="span">{new Date(sale.created_at).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })}</Text>
                     </div>
                     <div className="col-span-4 font-medium text-slate-700">
-                      {product ? product.name : `Product ID: ${sale.product_id}`}
+                      <Text as="span">{product ? product.name : `Product ID: ${sale.product_id}`}</Text>
                     </div>
                     <div className="col-span-2 text-center">
                       <span className="inline-block bg-slate-100 text-slate-600 px-2 py-1 rounded text-xs font-bold">
-                        x{sale.quantity}
+                        <Text as="span">x{sale.quantity}</Text>
                       </span>
                     </div>
                     <div className="col-span-2 text-right font-bold text-emerald-600">
-                      ฿{sale.total_price.toLocaleString()}
+                      <Text as="span">฿{sale.total_price.toLocaleString()}</Text>
                     </div>
                     <div className="col-span-2 text-center">
                       <button
@@ -383,7 +384,7 @@ const Dashboard = ({ onNavigate }) => {
             /* Empty State */
             <div className="flex flex-col items-center justify-center py-16 text-slate-300">
               <Box size={48} strokeWidth={1} className="mb-4 text-slate-200" />
-              <p className="font-medium">No sales recorded for this date</p>
+              <Text className="font-medium">No sales recorded for this date</Text>
             </div>
           )}
         </div>
@@ -397,14 +398,14 @@ const Dashboard = ({ onNavigate }) => {
         <div className="lg:col-span-2 bg-white rounded-[2rem] p-8 border border-slate-100 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.1)] transition-all duration-500 ease-out hover:-translate-y-2 cursor-pointer">
           <div className="flex justify-between items-center mb-6">
             <div>
-              <h3 className="text-lg font-bold text-slate-800">Sales Trends</h3>
-              <p className="text-sm text-slate-400">
+              <Text as="h3" className="text-lg font-bold text-slate-800">Sales Trends</Text>
+              <Text className="text-sm text-slate-400">
                 Revenue: {new Date(chartDays[0]).toLocaleDateString('th-TH', { day: 'numeric', month: 'short' })} - {new Date(chartDays[chartDays.length - 1]).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' })}
-              </p>
+              </Text>
             </div>
             <div className="flex items-center gap-2">
               <div className="flex flex-col">
-                <span className="text-[10px] text-slate-400 font-medium">From</span>
+                <Text as="span" className="text-[10px] text-slate-400 font-medium">From</Text>
                 <input
                   type="date"
                   value={chartStartDate}
@@ -428,7 +429,7 @@ const Dashboard = ({ onNavigate }) => {
                 />
               </div>
               <div className="flex flex-col">
-                <span className="text-[10px] text-slate-400 font-medium">To (Max 7 Days)</span>
+                <Text as="span" className="text-[10px] text-slate-400 font-medium">To (Max 7 Days)</Text>
                 <input
                   type="date"
                   value={chartEndDate}
@@ -454,11 +455,11 @@ const Dashboard = ({ onNavigate }) => {
           </div>
 
           {isLoading ? (
-            <div className="h-64 flex items-center justify-center text-slate-400">Loading chart...</div>
+            <div className="h-64 flex items-center justify-center text-slate-400"><Text>Loading chart...</Text></div>
           ) : sales.length === 0 ? (
             <div className="h-64 flex flex-col items-center justify-center text-slate-400">
               <TrendingUp size={48} className="mb-3 opacity-20" />
-              <p className="font-medium">No sales data yet</p>
+              <Text className="font-medium">No sales data yet</Text>
             </div>
           ) : (
             <div className="h-64 w-full">
@@ -503,12 +504,12 @@ const Dashboard = ({ onNavigate }) => {
         {/* Categories Pie Chart */}
         <div className="bg-white rounded-[2rem] p-6 border border-slate-100 shadow-sm flex flex-col hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.1)] transition-all duration-500 ease-out hover:-translate-y-2 cursor-pointer">
           <div className="mb-4">
-            <h3 className="text-lg font-bold text-slate-800">Inventory by Category</h3>
-            <p className="text-sm text-slate-400">Stock value distribution</p>
+            <Text as="h3" className="text-lg font-bold text-slate-800">Inventory by Category</Text>
+            <Text className="text-sm text-slate-400">Stock value distribution</Text>
           </div>
 
           {isLoading ? (
-            <div className="flex-1 flex items-center justify-center text-slate-400">Loading...</div>
+            <div className="flex-1 flex items-center justify-center text-slate-400"><Text>Loading...</Text></div>
           ) : pieData.length > 0 ? (
             <>
               <div className="flex-1 flex items-center justify-center relative">
@@ -524,10 +525,10 @@ const Dashboard = ({ onNavigate }) => {
                   </ResponsiveContainer>
                   {/* Center Text */}
                   <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                    <span className="text-3xl font-bold text-slate-800">
+                    <Text as="span" className="text-3xl font-bold text-slate-800">
                       {totalStockValue > 0 ? Math.round((topCategory.value / totalStockValue) * 100) : 0}%
-                    </span>
-                    <span className="text-xs text-slate-400">{topCategory.name}</span>
+                    </Text>
+                    <Text as="span" className="text-xs text-slate-400">{topCategory.name}</Text>
                   </div>
                 </div>
               </div>
@@ -536,15 +537,15 @@ const Dashboard = ({ onNavigate }) => {
                   <div key={item.name} className="flex justify-between items-center text-sm">
                     <div className="flex items-center">
                       <div className="w-3 h-3 rounded-full mr-2" style={{ backgroundColor: item.color }}></div>
-                      <span className="text-slate-600">{item.name}</span>
+                      <Text as="span" className="text-slate-600">{item.name}</Text>
                     </div>
-                    <span className="font-bold text-slate-800">฿{item.value.toLocaleString()}</span>
+                    <Text as="span" className="font-bold text-slate-800">฿{item.value.toLocaleString()}</Text>
                   </div>
                 ))}
               </div>
             </>
           ) : (
-            <div className="flex-1 flex items-center justify-center text-slate-400">No data available</div>
+            <div className="flex-1 flex items-center justify-center text-slate-400"><Text>No data available</Text></div>
           )}
         </div>
 
@@ -565,13 +566,13 @@ const SoftCard = ({ title, value, subLabel, icon: Icon, iconColor, iconBg, subLa
       </div>
 
       <div>
-        <h3 className="text-slate-500 text-sm font-medium mb-1">{title}</h3>
-        <p className="text-3xl font-bold text-slate-800 tracking-tight">{value}</p>
+        <Text as="h3" className="text-slate-500 text-sm font-medium mb-1">{title}</Text>
+        <Text className="text-3xl font-bold text-slate-800 tracking-tight">{value}</Text>
       </div>
 
-      <p className={`text-xs font-semibold ${subLabelColor}`}>
+      <Text className={`text-xs font-semibold ${subLabelColor}`}>
         {subLabel}
-      </p>
+      </Text>
     </div>
   );
 };

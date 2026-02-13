@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Calendar, Search, Package, TrendingDown, CheckCircle, AlertCircle, Plus, Minus } from 'lucide-react';
+import { Text } from '../components/text';
 
 const Sales = () => {
     // State สำหรับเก็บข้อมูลสินค้าจริง
@@ -71,12 +72,12 @@ const Sales = () => {
         <div className="min-h-screen bg-[#F3F5F9] font-sans p-6 md:p-10 text-slate-700 animate-fade-in pb-20">
             <div className="mb-8">
                 <div className="flex items-center gap-3 mb-2">
-                    <h2 className="text-3xl font-bold text-slate-900">Record New Sale (Live POS)</h2>
+                    <Text as="h2" className="text-3xl font-bold text-slate-900">Record New Sale (Live POS)</Text>
                     <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold flex items-center gap-1">
-                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div> DB Connected
+                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div> <Text as="span">DB Connected</Text>
                     </span>
                 </div>
-                <p className="text-slate-500">Real-time stock deduction system.</p>
+                <Text className="text-slate-500">Real-time stock deduction system.</Text>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -85,7 +86,7 @@ const Sales = () => {
 
                     <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)]">
                         <div className="flex justify-between items-center mb-6">
-                            <h3 className="font-bold text-lg text-slate-800">Transaction Details</h3>
+                            <Text as="h3" className="font-bold text-lg text-slate-800">Transaction Details</Text>
                             <div className="relative">
                                 <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
                                 <input
@@ -99,7 +100,7 @@ const Sales = () => {
 
                         {/* Product Selection */}
                         <div className="mb-8">
-                            <label className="block text-sm font-medium text-slate-700 mb-2">Select Product</label>
+                            <Text as="label" className="block text-sm font-medium text-slate-700 mb-2">Select Product</Text>
                             <div className="relative">
                                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
                                 <select
@@ -125,23 +126,23 @@ const Sales = () => {
                             <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200 mb-8 animate-slide-up">
                                 <div className="flex justify-between items-center mb-4">
                                     <div className="flex items-center gap-2 text-slate-700 font-semibold">
-                                        <Package size={20} /> Stock Preview
+                                        <Package size={20} /> <Text as="span">Stock Preview</Text>
                                     </div>
                                     <span className={`px-2 py-1 rounded text-xs font-bold ${remainingStock < 0 ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}`}>
-                                        {remainingStock < 0 ? 'Insufficient Stock' : 'In Stock'}
+                                        <Text as="span">{remainingStock < 0 ? 'Insufficient Stock' : 'In Stock'}</Text>
                                     </span>
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="bg-white p-4 rounded-xl border border-slate-200">
-                                        <p className="text-xs text-slate-400 mb-1">Current Stock</p>
-                                        <p className="text-2xl font-bold text-slate-800">{selectedProduct.stock} <span className="text-sm font-normal text-slate-400">units</span></p>
+                                        <Text className="text-xs text-slate-400 mb-1">Current Stock</Text>
+                                        <Text className="text-2xl font-bold text-slate-800">{selectedProduct.stock} <Text as="span" className="text-sm font-normal text-slate-400">units</Text></Text>
                                     </div>
                                     <div className="bg-white p-4 rounded-xl border border-slate-200 relative overflow-hidden">
-                                        <p className="text-xs text-blue-500 mb-1 font-bold">Projected Remaining</p>
-                                        <p className={`text-2xl font-bold ${remainingStock < 5 ? 'text-orange-500' : 'text-blue-600'}`}>
-                                            {remainingStock} <span className="text-sm font-normal text-slate-400">units</span>
-                                        </p>
+                                        <Text className="text-xs text-blue-500 mb-1 font-bold">Projected Remaining</Text>
+                                        <Text className={`text-2xl font-bold ${remainingStock < 5 ? 'text-orange-500' : 'text-blue-600'}`}>
+                                            {remainingStock} <Text as="span" className="text-sm font-normal text-slate-400">units</Text>
+                                        </Text>
                                         <TrendingDown className="absolute right-2 bottom-2 text-slate-100" size={40} />
                                     </div>
                                 </div>
@@ -151,7 +152,7 @@ const Sales = () => {
                         {/* Quantity & Price Row */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
                             <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-2">Quantity</label>
+                                <Text as="label" className="block text-sm font-medium text-slate-700 mb-2">Quantity</Text>
                                 <div className="flex items-center">
                                     <button
                                         onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -178,10 +179,10 @@ const Sales = () => {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-2">Unit Price ($)</label>
+                                <Text as="label" className="block text-sm font-medium text-slate-700 mb-2">Unit Price ($)</Text>
                                 <div className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-500 text-lg flex justify-between">
-                                    <span>฿ {selectedProduct ? selectedProduct.price.toLocaleString() : '0'}</span>
-                                    <span className="text-xs self-center uppercase">THB</span>
+                                    <Text as="span">฿ {selectedProduct ? selectedProduct.price.toLocaleString() : '0'}</Text>
+                                    <Text as="span" className="text-xs self-center uppercase">THB</Text>
                                 </div>
                             </div>
                         </div>
@@ -189,11 +190,11 @@ const Sales = () => {
                         {/* Total Amount (Bright Version) */}
                         <div className="mt-8 bg-white rounded-2xl p-6 flex justify-between items-center text-slate-800 shadow-sm border border-slate-200">
                             <div>
-                                <p className="text-slate-400 text-sm">Total Amount</p>
-                                <p className="text-xs text-slate-400">Tax included</p>
+                                <Text className="text-slate-400 text-sm">Total Amount</Text>
+                                <Text className="text-xs text-slate-400">Tax included</Text>
                             </div>
                             <div className="text-3xl font-bold tracking-tight text-blue-600">
-                                ฿{parseFloat(totalAmount).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                                <Text as="span">฿{parseFloat(totalAmount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</Text>
                             </div>
                         </div>
 
@@ -209,7 +210,7 @@ const Sales = () => {
                                     } disabled:opacity-50 disabled:cursor-not-allowed`}
                             >
                                 {isSuccess ? <CheckCircle size={20} /> : null}
-                                {isSuccess ? 'Sale Confirmed!' : 'Confirm Sale'}
+                                <Text as="span">{isSuccess ? 'Sale Confirmed!' : 'Confirm Sale'}</Text>
                             </button>
                         </div>
                     </div>

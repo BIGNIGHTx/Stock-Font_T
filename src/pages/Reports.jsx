@@ -16,6 +16,7 @@ import {
   Box,
   AlertTriangle
 } from 'lucide-react';
+import { Text } from '../components/text';
 
 const Reports = () => {
   const [salesData, setSalesData] = useState([]);
@@ -136,8 +137,8 @@ const Reports = () => {
       {/* Header & Controls */}
       <div className="flex flex-col xl:flex-row justify-between items-start xl:items-end gap-6 mb-10">
         <div>
-          <h2 className="text-3xl font-bold text-slate-900 mb-2">Sales Reports</h2>
-          <p className="text-slate-500">Manage sales, view history, and export data.</p>
+          <Text as="h2" className="text-3xl font-bold text-slate-900 mb-2">Sales Reports</Text>
+          <Text className="text-slate-500">Manage sales, view history, and export data.</Text>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3 w-full xl:w-auto">
@@ -147,13 +148,13 @@ const Reports = () => {
               onClick={() => setViewMode('daily')}
               className={`px-6 py-2 rounded-lg text-sm font-bold transition-all duration-200 cursor-pointer ${viewMode === 'daily' ? 'bg-slate-100 text-slate-800' : 'text-slate-500 hover:text-slate-700'}`}
             >
-              Daily View
+              <Text as="span">Daily View</Text>
             </button>
             <button
               onClick={() => setViewMode('monthly')}
               className={`px-6 py-2 rounded-lg text-sm font-bold transition-all duration-200 cursor-pointer ${viewMode === 'monthly' ? 'bg-slate-100 text-slate-800' : 'text-slate-500 hover:text-slate-700'}`}
             >
-              Monthly Overview
+              <Text as="span">Monthly Overview</Text>
             </button>
           </div>
 
@@ -222,34 +223,34 @@ const Reports = () => {
       <div className="bg-white rounded-[2.5rem] p-8 shadow-[0_2px_40px_-10px_rgba(0,0,0,0.04)] border border-slate-100 mb-10">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
-            <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+            <Text as="h3" className="text-lg font-bold text-slate-800 flex items-center gap-2">
               <FileText size={20} className="text-slate-400" />
               {viewMode === 'daily' ? `Transactions: ${new Date(selectedDate).toLocaleDateString('th-TH')}` : `Daily Breakthrough: ${selectedMonth}`}
-            </h3>
-            <p className="text-slate-400 text-sm mt-1">{filteredSales.length} Records found</p>
+            </Text>
+            <Text className="text-slate-400 text-sm mt-1">{filteredSales.length} Records found</Text>
           </div>
         </div>
 
         <div className="overflow-x-auto">
           {isLoading ? (
-            <div className="p-12 text-center text-slate-400">Loading data...</div>
+            <div className="p-12 text-center text-slate-400"><Text>Loading data...</Text></div>
           ) : (
             <table className="w-full text-left text-sm text-slate-600">
               <thead className="text-xs text-slate-500 uppercase bg-slate-50 border-b border-slate-100 font-semibold">
                 {viewMode === 'daily' ? (
                   <tr>
-                    <th className="px-6 py-4">Time</th>
-                    <th className="px-6 py-4">Product Name</th>
-                    <th className="px-6 py-4 text-center">Qty</th>
-                    <th className="px-6 py-4 text-right">Total</th>
-                    <th className="px-6 py-4 text-center">Action</th>
+                    <th className="px-6 py-4"><Text as="span">Time</Text></th>
+                    <th className="px-6 py-4"><Text as="span">Product Name</Text></th>
+                    <th className="px-6 py-4 text-center"><Text as="span">Qty</Text></th>
+                    <th className="px-6 py-4 text-right"><Text as="span">Total</Text></th>
+                    <th className="px-6 py-4 text-center"><Text as="span">Action</Text></th>
                   </tr>
                 ) : (
                   <tr>
-                    <th className="px-6 py-4">Date</th>
-                    <th className="px-6 py-4 text-center">Transactions</th>
-                    <th className="px-6 py-4 text-center">Items Sold</th>
-                    <th className="px-6 py-4 text-right">Total Revenue</th>
+                    <th className="px-6 py-4"><Text as="span">Date</Text></th>
+                    <th className="px-6 py-4 text-center"><Text as="span">Transactions</Text></th>
+                    <th className="px-6 py-4 text-center"><Text as="span">Items Sold</Text></th>
+                    <th className="px-6 py-4 text-right"><Text as="span">Total Revenue</Text></th>
                   </tr>
                 )}
               </thead>
@@ -259,14 +260,14 @@ const Reports = () => {
                   filteredSales.length > 0 ? filteredSales.map((sale) => (
                     <tr key={sale.id} className="hover:bg-slate-50 transition-colors group cursor-pointer">
                       <td className="px-6 py-4 font-mono text-slate-400">
-                        {new Date(sale.created_at).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })}
+                        <Text as="span">{new Date(sale.created_at).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })}</Text>
                       </td>
-                      <td className="px-6 py-4 font-bold text-slate-700">{sale.product_name}</td>
+                      <td className="px-6 py-4 font-bold text-slate-700"><Text as="span">{sale.product_name}</Text></td>
                       <td className="px-6 py-4 text-center">
-                        <span className="bg-slate-100 px-2 py-1 rounded text-xs font-bold text-slate-600">x{sale.quantity}</span>
+                        <span className="bg-slate-100 px-2 py-1 rounded text-xs font-bold text-slate-600"><Text as="span">x{sale.quantity}</Text></span>
                       </td>
                       <td className="px-6 py-4 text-right font-bold text-emerald-600">
-                        ฿{sale.total_price.toLocaleString()}
+                        <Text as="span">฿{sale.total_price.toLocaleString()}</Text>
                       </td>
                       <td className="px-6 py-4 text-center">
                         <button
@@ -280,7 +281,7 @@ const Reports = () => {
                     </tr>
                   )) : (
                     <tr>
-                      <td colSpan="5" className="px-6 py-12 text-center text-slate-400">No sales transactions found for this date.</td>
+                      <td colSpan="5" className="px-6 py-12 text-center text-slate-400"><Text>No sales transactions found for this date.</Text></td>
                     </tr>
                   )
                 ) : (
@@ -288,17 +289,17 @@ const Reports = () => {
                   getMonthlyGroupedData().length > 0 ? getMonthlyGroupedData().map((dayData) => (
                     <tr key={dayData.date} className="hover:bg-slate-50 transition-colors cursor-pointer">
                       <td className="px-6 py-4 font-bold text-slate-700">
-                        {new Date(dayData.date).toLocaleDateString('th-TH', { weekday: 'short', day: 'numeric', month: 'short' })}
+                        <Text as="span">{new Date(dayData.date).toLocaleDateString('th-TH', { weekday: 'short', day: 'numeric', month: 'short' })}</Text>
                       </td>
-                      <td className="px-6 py-4 text-center text-slate-600">{dayData.transactions}</td>
-                      <td className="px-6 py-4 text-center font-bold text-blue-600">{dayData.units}</td>
+                      <td className="px-6 py-4 text-center text-slate-600"><Text as="span">{dayData.transactions}</Text></td>
+                      <td className="px-6 py-4 text-center font-bold text-blue-600"><Text as="span">{dayData.units}</Text></td>
                       <td className="px-6 py-4 text-right font-bold text-emerald-600">
-                        ฿{dayData.revenue.toLocaleString()}
+                        <Text as="span">฿{dayData.revenue.toLocaleString()}</Text>
                       </td>
                     </tr>
                   )) : (
                     <tr>
-                      <td colSpan="4" className="px-6 py-12 text-center text-slate-400">No sales data found for this month.</td>
+                      <td colSpan="4" className="px-6 py-12 text-center text-slate-400"><Text>No sales data found for this month.</Text></td>
                     </tr>
                   )
                 )}
@@ -322,13 +323,13 @@ const SoftCard = ({ title, value, subLabel, icon: Icon, iconColor, iconBg, subLa
       </div>
 
       <div>
-        <h3 className="text-slate-500 text-sm font-medium mb-1">{title}</h3>
-        <p className="text-3xl font-bold text-slate-800 tracking-tight truncate pr-10">{value}</p>
+        <Text as="h3" className="text-slate-500 text-sm font-medium mb-1">{title}</Text>
+        <Text className="text-3xl font-bold text-slate-800 tracking-tight truncate pr-10">{value}</Text>
       </div>
 
-      <p className={`text-xs font-semibold ${subLabelColor}`}>
+      <Text className={`text-xs font-semibold ${subLabelColor}`}>
         {subLabel}
-      </p>
+      </Text>
     </div>
   );
 };

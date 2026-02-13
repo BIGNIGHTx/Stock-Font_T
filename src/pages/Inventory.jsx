@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Search, Plus, Filter, Edit3, Trash2, X, UploadCloud, Image as ImageIcon } from 'lucide-react';
 import { Badge } from '../components/badge';
+import { Text } from '../components/text';
 
 const Inventory = ({ initialOpenModal = false }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -119,8 +120,8 @@ const Inventory = ({ initialOpenModal = false }) => {
     <div className="min-h-screen bg-[#F3F5F9] font-sans p-6 md:p-10 text-slate-700 animate-fade-in pb-20">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h2 className="text-3xl font-bold text-slate-900">Product Stock</h2>
-          <p className="text-slate-500 text-sm mt-1">Manage your inventory from SQLite Database.</p>
+          <Text as="h2" className="text-3xl font-bold text-slate-900">Product Stock</Text>
+          <Text className="text-slate-500 text-sm mt-1">Manage your inventory from SQLite Database.</Text>
         </div>
         <button
           onClick={() => {
@@ -129,7 +130,7 @@ const Inventory = ({ initialOpenModal = false }) => {
           }}
           className="flex items-center px-6 py-3 bg-[#1e293b] text-white rounded-xl font-semibold shadow-lg shadow-slate-300 hover:bg-slate-800 transition-all transform active:scale-95 cursor-pointer"
         >
-          <Plus size={18} className="mr-2" /> Add New Product
+          <Plus size={18} className="mr-2" /> <Text as="span">Add New Product</Text>
         </button>
       </div>
 
@@ -150,30 +151,30 @@ const Inventory = ({ initialOpenModal = false }) => {
       {/* Table */}
       <div className="bg-white rounded-[2.5rem] p-8 shadow-[0_2px_40px_-10px_rgba(0,0,0,0.04)] border border-slate-100 overflow-hidden flex-1">
         {isLoading ? (
-          <div className="p-12 text-center text-slate-400">Loading data from backend...</div>
+          <div className="p-12 text-center text-slate-400"><Text>Loading data from backend...</Text></div>
         ) : (
           <table className="w-full text-left text-sm text-slate-600">
             <thead className="bg-slate-50 border-b border-slate-100 text-slate-500 font-semibold uppercase text-xs">
               <tr>
-                <th className="px-6 py-4">Product Name</th>
-                <th className="px-6 py-4">SKU</th>
-                <th className="px-6 py-4">Category</th>
-                <th className="px-6 py-4">Price</th>
-                <th className="px-6 py-4">Stock</th>
-                <th className="px-6 py-4 text-right">Actions</th>
+                <th className="px-6 py-4"><Text as="span">Product Name</Text></th>
+                <th className="px-6 py-4"><Text as="span">SKU</Text></th>
+                <th className="px-6 py-4"><Text as="span">Category</Text></th>
+                <th className="px-6 py-4"><Text as="span">Price</Text></th>
+                <th className="px-6 py-4"><Text as="span">Stock</Text></th>
+                <th className="px-6 py-4 text-right"><Text as="span">Actions</Text></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {filteredProducts.map((product) => (
                 <tr key={product.id} className="hover:bg-slate-50 transition-colors duration-200 cursor-pointer group">
-                  <td className="px-6 py-4 font-bold text-slate-800 group-hover:text-blue-600 transition-colors">{product.name}</td>
-                  <td className="px-6 py-4 text-slate-500 font-mono">{product.sku}</td>
+                  <td className="px-6 py-4 font-bold text-slate-800 group-hover:text-blue-600 transition-colors"><Text as="span">{product.name}</Text></td>
+                  <td className="px-6 py-4 text-slate-500 font-mono"><Text as="span">{product.sku}</Text></td>
                   <td className="px-6 py-4">
                     <Badge variant={product.category === 'Electronics' ? 'blue' : 'slate'}>
                       {product.category}
                     </Badge>
                   </td>
-                  <td className="px-6 py-4 text-slate-700 font-bold">฿{product.price.toLocaleString()}</td>
+                  <td className="px-6 py-4 text-slate-700 font-bold"><Text as="span">฿{product.price.toLocaleString()}</Text></td>
                   <td className="px-6 py-4">
                     <Badge variant={product.stock >= 5 ? 'emerald' : 'rose'} className="w-8 text-right inline-block rounded-lg">
                       {product.stock}
@@ -199,14 +200,14 @@ const Inventory = ({ initialOpenModal = false }) => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/20 backdrop-blur-sm p-4 animate-fade-in">
           <div className="bg-white rounded-[2rem] shadow-2xl w-full max-w-lg overflow-hidden animate-slide-up border border-slate-100">
             <div className="px-8 py-6 border-b border-slate-100 flex justify-between items-center bg-white">
-              <h3 className="font-bold text-xl text-slate-800">{editingId ? 'Edit Product' : 'Add New Product'}</h3>
+              <Text as="h3" className="font-bold text-xl text-slate-800">{editingId ? 'Edit Product' : 'Add New Product'}</Text>
               <button onClick={() => setIsModalOpen(false)} className="p-2 hover:bg-slate-100 rounded-full transition-colors cursor-pointer">
                 <X size={24} className="text-slate-400 hover:text-slate-600" />
               </button>
             </div>
             <div className="p-8 space-y-6">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">Product Name</label>
+                <Text as="label" className="block text-sm font-medium text-slate-700 mb-2">Product Name</Text>
                 <input
                   type="text" placeholder="e.g. iPhone 15 Pro"
                   className="w-full p-3 border border-slate-200 rounded-xl bg-slate-50 text-slate-800 placeholder-slate-400 focus:ring-2 focus:ring-blue-100 focus:bg-white outline-none transition-all"
@@ -216,7 +217,7 @@ const Inventory = ({ initialOpenModal = false }) => {
 
               <div className="grid grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">SKU</label>
+                  <Text as="label" className="block text-sm font-medium text-slate-700 mb-2">SKU</Text>
                   <input
                     type="text" placeholder="SKU-001"
                     className="w-full p-3 border border-slate-200 rounded-xl bg-slate-50 text-slate-800 placeholder-slate-400 focus:ring-2 focus:ring-blue-100 focus:bg-white outline-none transition-all"
@@ -224,7 +225,7 @@ const Inventory = ({ initialOpenModal = false }) => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">Category</label>
+                  <Text as="label" className="block text-sm font-medium text-slate-700 mb-2">Category</Text>
                   <select
                     className="w-full p-3 border border-slate-200 rounded-xl bg-slate-50 text-slate-800 focus:ring-2 focus:ring-blue-100 focus:bg-white outline-none transition-all cursor-pointer appearance-none"
                     value={newProduct.category} onChange={e => setNewProduct({ ...newProduct, category: e.target.value })}
@@ -238,7 +239,7 @@ const Inventory = ({ initialOpenModal = false }) => {
 
               <div className="grid grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">Price</label>
+                  <Text as="label" className="block text-sm font-medium text-slate-700 mb-2">Price</Text>
                   <input
                     type="number" placeholder="0.00"
                     className="w-full p-3 border border-slate-200 rounded-xl bg-slate-50 text-slate-800 placeholder-slate-400 focus:ring-2 focus:ring-blue-100 focus:bg-white outline-none transition-all"
@@ -246,7 +247,7 @@ const Inventory = ({ initialOpenModal = false }) => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">Cost</label>
+                  <Text as="label" className="block text-sm font-medium text-slate-700 mb-2">Cost</Text>
                   <input
                     type="number" placeholder="0.00"
                     className="w-full p-3 border border-slate-200 rounded-xl bg-slate-50 text-slate-800 placeholder-slate-400 focus:ring-2 focus:ring-blue-100 focus:bg-white outline-none transition-all"
@@ -254,7 +255,7 @@ const Inventory = ({ initialOpenModal = false }) => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">Stock</label>
+                  <Text as="label" className="block text-sm font-medium text-slate-700 mb-2">Stock</Text>
                   <input
                     type="number" placeholder="0"
                     className="w-full p-3 border border-slate-200 rounded-xl bg-slate-50 text-slate-800 placeholder-slate-400 focus:ring-2 focus:ring-blue-100 focus:bg-white outline-none transition-all"
@@ -264,8 +265,8 @@ const Inventory = ({ initialOpenModal = false }) => {
               </div>
             </div>
             <div className="px-8 py-6 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">
-              <button onClick={() => setIsModalOpen(false)} className="px-6 py-3 text-slate-500 hover:bg-slate-200 rounded-xl transition-colors font-bold cursor-pointer">Cancel</button>
-              <button onClick={handleSaveProduct} className="px-8 py-3 bg-[#1e293b] hover:bg-slate-800 text-white rounded-xl shadow-lg shadow-slate-300 transition-all transform hover:-translate-y-1 font-bold cursor-pointer">Save Product</button>
+              <button onClick={() => setIsModalOpen(false)} className="px-6 py-3 text-slate-500 hover:bg-slate-200 rounded-xl transition-colors font-bold cursor-pointer"><Text as="span">Cancel</Text></button>
+              <button onClick={handleSaveProduct} className="px-8 py-3 bg-[#1e293b] hover:bg-slate-800 text-white rounded-xl shadow-lg shadow-slate-300 transition-all transform hover:-translate-y-1 font-bold cursor-pointer"><Text as="span">Save Product</Text></button>
             </div>
           </div>
         </div>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Text } from './text';
 
 export const Badge = ({ children, variant = 'default', className = '' }) => {
     const baseStyles = "px-2 py-1 rounded text-xs font-bold transition-colors duration-200 inline-block";
@@ -16,8 +17,8 @@ export const Badge = ({ children, variant = 'default', className = '' }) => {
     const selectedVariant = variants[variant] || variants.default;
 
     return (
-        <span className={`${baseStyles} ${selectedVariant} ${className}`}>
+        <Text as="span" className={`${baseStyles} ${selectedVariant} ${className}`}>
             {children}
-        </span>
+        </Text>
     );
 };
