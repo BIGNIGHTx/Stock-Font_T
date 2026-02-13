@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Search, Plus, Filter, Edit3, Trash2, X, UploadCloud, Image as ImageIcon } from 'lucide-react';
+import { Badge } from '../components/badge';
 
 const Inventory = ({ initialOpenModal = false }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -167,12 +168,16 @@ const Inventory = ({ initialOpenModal = false }) => {
                 <tr key={product.id} className="hover:bg-slate-50 transition-colors duration-200 cursor-pointer group">
                   <td className="px-6 py-4 font-bold text-slate-800 group-hover:text-blue-600 transition-colors">{product.name}</td>
                   <td className="px-6 py-4 text-slate-500 font-mono">{product.sku}</td>
-                  <td className="px-6 py-4"><span className="px-2 py-1 bg-slate-100 text-slate-600 rounded text-xs font-bold">{product.category}</span></td>
+                  <td className="px-6 py-4">
+                    <Badge variant={product.category === 'Electronics' ? 'blue' : 'slate'}>
+                      {product.category}
+                    </Badge>
+                  </td>
                   <td className="px-6 py-4 text-slate-700 font-bold">฿{product.price.toLocaleString()}</td>
                   <td className="px-6 py-4">
-                    <span className={`px-2 py-1 rounded-full text-xs font-bold ${product.stock < 5 ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}`}>
+                    <Badge variant={product.stock >= 5 ? 'emerald' : 'rose'} className="w-8 text-right inline-block rounded-lg">
                       {product.stock}
-                    </span>
+                    </Badge>
                   </td>
                   <td className="px-6 py-4 text-right flex justify-end gap-2">
                     <button onClick={() => handleEdit(product)} className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-all duration-200 hover:scale-110 cursor-pointer">
