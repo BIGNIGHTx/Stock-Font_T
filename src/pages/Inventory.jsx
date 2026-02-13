@@ -3,8 +3,10 @@ import axios from 'axios';
 import { Search, Plus, Filter, Edit3, Trash2, X, UploadCloud, Image as ImageIcon } from 'lucide-react';
 import { Badge } from '../components/badge';
 import { Text } from '../components/text';
+import { useAlert } from '../contexts/AlertContext';
 
 const Inventory = ({ initialOpenModal = false }) => {
+  const { alert, confirm } = useAlert();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [products, setProducts] = useState([]);
@@ -44,11 +46,11 @@ const Inventory = ({ initialOpenModal = false }) => {
     // --- Validation ---
     const { name, sku, category, price, cost_price, stock } = newProduct;
     if (!name || !sku || !category || price === '' || cost_price === '' || stock === '') {
-      alert('กรุณากรอกข้อมูลให้ครบทุกช่อง');
+      await alert('กรุณากรอกข้อมูลให้ครบทุกช่อง', 'ข้อมูลไม่ครบ', 'warning');
       return;
     }
     if (isNaN(price) || isNaN(cost_price) || isNaN(stock) || parseFloat(price) <= 0 || parseFloat(cost_price) <= 0 || parseInt(stock) < 0) {
-      alert('ราคาขาย/ต้นทุนต้องเป็นตัวเลขบวก และ stock ต้องไม่ติดลบ');
+      await alert('ราคาขาย/ต้นทุนต้องเป็นตัวเลขบวก และ stock ต้องไม่ติดลบ', 'ข้อมูลไม่ถูกต้อง', 'warning');
       return;
     }
     try {
@@ -64,11 +66,11 @@ const Inventory = ({ initialOpenModal = false }) => {
       if (editingId) {
         // Update existing product
         await axios.put(`http://127.0.0.1:8000/products/${editingId}`, payload);
-        alert("อัปเดตสินค้าเรียบร้อย!");
+        await alert("อัปเดตสินค้าเรียบร้อย!", "สำเร็จ", "success");
       } else {
         // Create new product
         await axios.post('http://127.0.0.1:8000/products/', payload);
-        alert("บันทึกสินค้าเรียบร้อย!");
+        await alert("บันทึกสินค้าเรียบร้อย!", "สำเร็จ", "success");
       }
 
       setIsModalOpen(false);
@@ -76,7 +78,7 @@ const Inventory = ({ initialOpenModal = false }) => {
       resetForm();
     } catch (error) {
       console.error("Error saving product:", error);
-      alert(`เกิดข้อผิดพลาด: ${error.response?.data?.detail || error.message}`);
+      await alert(`เกิดข้อผิดพลาด: ${error.response?.data?.detail || error.message}`, 'Error', 'error');
     }
   };
 
@@ -100,12 +102,15 @@ const Inventory = ({ initialOpenModal = false }) => {
 
   // --- 3. ฟังก์ชันลบสินค้า ---
   const handleDelete = async (id) => {
-    if (confirm("ต้องการลบสินค้านี้ใช่หรือไม่?")) {
+    const isConfirmed = await confirm("ต้องการลบสินค้านี้ใช่หรือไม่?", "ยืนยันการลบ", "warning", "ลบสินค้า", "ยกเลิก");
+    if (isConfirmed) {
       try {
         await axios.delete(`http://127.0.0.1:8000/products/${id}`);
         fetchProducts(); // ดึงข้อมูลใหม่หลังลบ
+        await alert("ลบสินค้าเรียบร้อย", "สำเร็จ", "success");
       } catch (error) {
         console.error("Error deleting:", error);
+        await alert("ไม่สามารถลบสินค้าได้", "ผิดพลาด", "error");
       }
     }
   };
@@ -197,8 +202,11 @@ const Inventory = ({ initialOpenModal = false }) => {
 
       {/* Modal Add Product */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/20 backdrop-blur-sm p-4 animate-fade-in">
-          <div className="bg-white rounded-[2rem] shadow-2xl w-full max-w-lg overflow-hidden animate-slide-up border border-slate-100">
+        <div className="fixed inset-0 z-50 flex items-center justify-center animate-fade-in">
+          {/* Backdrop */}
+          <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => setIsModalOpen(false)}></div>
+
+          <div className="relative bg-white rounded-[2rem] shadow-2xl w-full max-w-lg overflow-hidden animate-slide-up border border-slate-100 transform transition-all">
             <div className="px-8 py-6 border-b border-slate-100 flex justify-between items-center bg-white">
               <Text as="h3" className="font-bold text-xl text-slate-800">{editingId ? 'Edit Product' : 'Add New Product'}</Text>
               <button onClick={() => setIsModalOpen(false)} className="p-2 hover:bg-slate-100 rounded-full transition-colors cursor-pointer">

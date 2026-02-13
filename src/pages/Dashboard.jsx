@@ -12,7 +12,7 @@ import {
   Bell,
   HelpCircle,
   Trash2,
-  Package // Re-added Package for legacy icon usage if needed, though Box is used now
+  Package
 } from 'lucide-react';
 import { Text } from '../components/text';
 import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
@@ -247,9 +247,10 @@ const Dashboard = ({ onNavigate }) => {
           title="Total Products"
           value={isLoading ? '-' : totalProducts}
           subLabel="Items in inventory"
-          icon={Box}
-          iconColor="text-blue-600"
-          iconBg="bg-blue-50"
+          icon={Package}
+          iconColor="text-[#26619C]"
+          iconBg="bg-[#26619C]/10"
+          iconStrokeWidth={2.25}
         />
 
         {/* Card 2: Gross Profit */}
@@ -556,12 +557,12 @@ const Dashboard = ({ onNavigate }) => {
 };
 
 // Reusable Soft Card Component
-const SoftCard = ({ title, value, subLabel, icon: Icon, iconColor, iconBg, subLabelColor = "text-slate-400" }) => {
+const SoftCard = ({ title, value, subLabel, icon: Icon, iconColor, iconBg, subLabelColor = "text-slate-400", iconSize = 24, iconStrokeWidth }) => {
   return (
     <div className="relative bg-white rounded-[2rem] p-6 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-slate-100 h-36 flex flex-col justify-between transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-xl cursor-pointer">
       <div className="absolute top-0 right-0 p-6">
         <div className={`p-2 rounded-xl ${iconBg} ${iconColor} shadow-sm`}>
-          <Icon size={24} />
+          <Icon size={iconSize} strokeWidth={iconStrokeWidth} />
         </div>
       </div>
 

@@ -17,6 +17,7 @@ import {
   AlertTriangle
 } from 'lucide-react';
 import { Text } from '../components/text';
+import { useAlert } from '../contexts/AlertContext';
 
 const Reports = () => {
   const [salesData, setSalesData] = useState([]);
@@ -24,6 +25,7 @@ const Reports = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   // View Control
+  const { alert, confirm } = useAlert();
   const [viewMode, setViewMode] = useState('daily'); // 'daily' | 'monthly'
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [selectedMonth, setSelectedMonth] = useState(new Date().toISOString().slice(0, 7)); // YYYY-MM
@@ -59,15 +61,17 @@ const Reports = () => {
 
   // --- 2. Delete Logic ---
   const handleDeleteSale = async (saleId) => {
-    if (!window.confirm("Are you sure you want to delete this sale? Stock will be restored.")) return;
+    const isConfirmed = await confirm("แน่ใจหรือไม่ที่จะลบรายการขายนี้? สต็อกจะถูกคืนกลับ", "ยืนยันการลบ", "warning", "ลบรายการ", "ยกเลิก");
+    if (!isConfirmed) return;
 
     try {
       await axios.delete(`http://127.0.0.1:8000/sales/${saleId}`);
       // Remove from local state
       setSalesData(prev => prev.filter(s => s.id !== saleId));
+      await alert("ลบรายการขายเรียบร้อยแล้ว", "สำเร็จ", "success");
     } catch (error) {
       console.error("Error deleting sale:", error);
-      alert("Failed to delete sale");
+      await alert("ไม่สามารถลบรายการขายได้", "ผิดพลาด", "error");
     }
   };
 
@@ -165,14 +169,14 @@ const Reports = () => {
                 type="date"
                 value={selectedDate}
                 onChange={(e) => setSelectedDate(e.target.value)}
-                className="px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm font-semibold outline-none focus:ring-2 focus:ring-blue-100 h-full cursor-pointer shadow-sm"
+                className="px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm font-semibold outline-none focus:ring-2 focus:ring-blue-100 h-full cursor-pointer shadow-sm [&::-webkit-calendar-picker-indicator]:cursor-pointer"
               />
             ) : (
               <input
                 type="month"
                 value={selectedMonth}
                 onChange={(e) => setSelectedMonth(e.target.value)}
-                className="px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm font-semibold outline-none focus:ring-2 focus:ring-blue-100 h-full cursor-pointer shadow-sm"
+                className="px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm font-semibold outline-none focus:ring-2 focus:ring-blue-100 h-full cursor-pointer shadow-sm [&::-webkit-calendar-picker-indicator]:cursor-pointer"
               />
             )}
           </div>

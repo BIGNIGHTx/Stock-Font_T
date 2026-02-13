@@ -25,9 +25,13 @@ export default {
         'dark-border': '#333333', // Subtle border
         'dark-text': '#E2E8F0',   // Light grey text (slate-200 equivalent)
         'dark-muted': '#94A3B8',  // Muted text (slate-400 equivalent)
+        lapis: '#26619C',         // Lapis Blue
       },
       animation: {
         wave: 'wave 2.5s infinite',
+        'fade-in': 'fade-in 0.3s ease-out',
+        'slide-up': 'slide-up 0.4s ease-out',
+        'scale-in': 'scale-in 0.2s ease-out',
       },
       keyframes: {
         wave: {
@@ -39,6 +43,18 @@ export default {
           '50%': { transform: 'rotate(10.0deg)' },
           '60%': { transform: 'rotate(0.0deg)' },
           '100%': { transform: 'rotate(0.0deg)' },
+        },
+        'fade-in': {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        'slide-up': {
+          '0%': { transform: 'translateY(20px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
+        'scale-in': {
+          '0%': { transform: 'scale(0.95)', opacity: '0' },
+          '100%': { transform: 'scale(1)', opacity: '1' },
         },
       },
     },
