@@ -13,12 +13,34 @@ const Sidebar = ({ activePage, setActivePage }) => {
   return (
     <aside className="w-64 bg-white dark:bg-dark-surface border-r border-gray-200 dark:border-dark-border flex flex-col h-screen fixed left-0 top-0 z-50 transition-colors duration-300">
       {/* Logo */}
-      <div className="h-16 flex items-center px-6 border-b border-gray-100 dark:border-dark-border">
-        <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
-          <span className="text-white font-bold text-xl">⚡</span>
+      <div className="h-24 flex items-center px-5 border-b border-gray-100 dark:border-dark-border bg-gray-50 dark:bg-dark-surface transition-all duration-300">
+        <img
+          src="/logo.jpg"
+          alt="SomBoon ElecTric Logo"
+          className="w-14 h-14 rounded-[18px] object-cover shadow-lg flex-shrink-0"
+        />
+        <div className="ml-3 flex flex-col justify-center overflow-hidden w-full pr-1">
+          <div className="font-extrabold leading-none tracking-tight">
+            <span className="block text-xl bg-gradient-to-r from-gray-600 via-black to-gray-600 dark:from-gray-400 dark:via-white dark:to-gray-400 bg-clip-text text-transparent animate-gradient bg-[length:200%_auto] pb-0.5">
+              SomBoon
+            </span>
+            <span className="block text-xl bg-gradient-to-r from-gray-600 via-black to-gray-600 dark:from-gray-400 dark:via-white dark:to-gray-400 bg-clip-text text-transparent animate-gradient bg-[length:200%_auto] delay-75">
+              ElecTric
+            </span>
+          </div>
+          <p className="text-[10px] text-gray-500 dark:text-gray-400 font-medium mt-1 tracking-wide uppercase">Stock Management</p>
         </div>
-        <h1 className="text-xl font-bold text-gray-800 dark:text-dark-text">ElectroManage</h1>
       </div>
+
+      <style jsx>{`
+        @keyframes gradient {
+          0% { background-position: 0% center; }
+          100% { background-position: 200% center; }
+        }
+        .animate-gradient {
+          animation: gradient 3s linear infinite;
+        }
+      `}</style>
 
       {/* Menu */}
       <nav className="flex-1 p-4 space-y-2">
