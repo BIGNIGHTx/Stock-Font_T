@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: 'class',
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -17,7 +18,29 @@ export default {
         warning: "#F59E0B",       // สีส้ม
         background: "#F8FAFC",    // สีพื้นหลัง App (เทาอ่อนมาก)
         surface: "#FFFFFF",       // สีพื้นหลัง Card (ขาว)
-      }
+
+        // Custom Dark Mode Colors
+        'dark-bg': '#121212',     // Dark Grey requested by user
+        'dark-surface': '#1E1E1E', // Slightly lighter for cards
+        'dark-border': '#333333', // Subtle border
+        'dark-text': '#E2E8F0',   // Light grey text (slate-200 equivalent)
+        'dark-muted': '#94A3B8',  // Muted text (slate-400 equivalent)
+      },
+      animation: {
+        wave: 'wave 2.5s infinite',
+      },
+      keyframes: {
+        wave: {
+          '0%': { transform: 'rotate(0.0deg)' },
+          '10%': { transform: 'rotate(14.0deg)' },
+          '20%': { transform: 'rotate(-8.0deg)' },
+          '30%': { transform: 'rotate(14.0deg)' },
+          '40%': { transform: 'rotate(-4.0deg)' },
+          '50%': { transform: 'rotate(10.0deg)' },
+          '60%': { transform: 'rotate(0.0deg)' },
+          '100%': { transform: 'rotate(0.0deg)' },
+        },
+      },
     },
   },
   plugins: [],

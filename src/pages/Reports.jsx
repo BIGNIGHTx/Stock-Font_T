@@ -1,9 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Calendar, Download, DollarSign, ShoppingBag, TrendingUp, Search, Filter, Trash2, ChevronLeft, ChevronRight, FileText } from 'lucide-react';
+import {
+  Calendar,
+  Download,
+  DollarSign,
+  ShoppingBag,
+  TrendingUp,
+  Search,
+  Filter,
+  Trash2,
+  ChevronLeft,
+  ChevronRight,
+  FileText,
+  Wallet,
+  Box,
+  AlertTriangle
+} from 'lucide-react';
 
 const Reports = () => {
   const [salesData, setSalesData] = useState([]);
+  const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   // View Control
@@ -11,9 +27,10 @@ const Reports = () => {
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [selectedMonth, setSelectedMonth] = useState(new Date().toISOString().slice(0, 7)); // YYYY-MM
 
-  // --- 1. Fetch Sales Data ---
+  // --- 1. Fetch Sales & Products Data ---
   useEffect(() => {
     fetchSales();
+    fetchProducts();
   }, []);
 
   const fetchSales = async () => {
@@ -27,6 +44,15 @@ const Reports = () => {
       console.error("Error fetching sales:", error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get('http://127.0.0.1:8000/products/');
+      setProducts(response.data);
+    } catch (error) {
+      console.error("Error fetching products:", error);
     }
   };
 
@@ -65,6 +91,18 @@ const Reports = () => {
   const totalRevenue = filteredSales.reduce((acc, curr) => acc + curr.total_price, 0);
   const totalUnits = filteredSales.reduce((acc, curr) => acc + curr.quantity, 0);
 
+  // Calculate COGS and Gross Profit
+  const totalCOGS = filteredSales.reduce((acc, sale) => {
+    const product = products.find(p => p.id === sale.product_id);
+    if (product) {
+      const costPrice = product.cost_price || (product.price * 0.6); // Fallback to 60% if no cost
+      return acc + (costPrice * sale.quantity);
+    }
+    return acc;
+  }, 0);
+
+  const grossProfit = totalRevenue - totalCOGS;
+
   // Best Seller Logic
   const productPerformance = filteredSales.reduce((acc, curr) => {
     const name = curr.product_name || 'Unknown';
@@ -80,8 +118,6 @@ const Reports = () => {
   // --- 5. Monthly Grouping Logic (For Monthly View Table) ---
   const getMonthlyGroupedData = () => {
     const grouped = {};
-    // Initialize days? No, just show days with sales appropriately or all days if needed.
-    // Let's list days descending
     filteredSales.forEach(sale => {
       const dateKey = sale.created_at.split('T')[0];
       if (!grouped[dateKey]) {
@@ -96,26 +132,26 @@ const Reports = () => {
 
 
   return (
-    <div className="p-8 max-w-7xl mx-auto space-y-8 animate-fade-in pb-20">
+    <div className="min-h-screen bg-[#F3F5F9] font-sans p-6 md:p-10 text-slate-700">
       {/* Header & Controls */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+      <div className="flex flex-col xl:flex-row justify-between items-start xl:items-end gap-6 mb-10">
         <div>
-          <h2 className="text-3xl font-bold text-slate-800">Sales Reports</h2>
-          <p className="text-slate-500 mt-1">Manage sales, view history, and export data.</p>
+          <h2 className="text-3xl font-bold text-slate-900 mb-2">Sales Reports</h2>
+          <p className="text-slate-500">Manage sales, view history, and export data.</p>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-3 bg-white p-2 rounded-xl border border-slate-200 shadow-sm">
+        <div className="flex flex-col sm:flex-row gap-3 w-full xl:w-auto">
           {/* View Toggle */}
-          <div className="flex bg-slate-100 p-1 rounded-lg">
+          <div className="flex bg-white p-1 rounded-xl shadow-sm border border-slate-200">
             <button
               onClick={() => setViewMode('daily')}
-              className={`px-4 py-2 rounded-md text-sm font-bold transition-all ${viewMode === 'daily' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+              className={`px-6 py-2 rounded-lg text-sm font-bold transition-all duration-200 cursor-pointer ${viewMode === 'daily' ? 'bg-slate-100 text-slate-800' : 'text-slate-500 hover:text-slate-700'}`}
             >
               Daily View
             </button>
             <button
               onClick={() => setViewMode('monthly')}
-              className={`px-4 py-2 rounded-md text-sm font-bold transition-all ${viewMode === 'monthly' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+              className={`px-6 py-2 rounded-lg text-sm font-bold transition-all duration-200 cursor-pointer ${viewMode === 'monthly' ? 'bg-slate-100 text-slate-800' : 'text-slate-500 hover:text-slate-700'}`}
             >
               Monthly Overview
             </button>
@@ -123,75 +159,83 @@ const Reports = () => {
 
           {/* Date Pickers */}
           <div className="relative">
-            <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
             {viewMode === 'daily' ? (
               <input
                 type="date"
                 value={selectedDate}
                 onChange={(e) => setSelectedDate(e.target.value)}
-                className="pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-lg text-slate-700 text-sm focus:ring-2 focus:ring-blue-500 outline-none h-full"
+                className="px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm font-semibold outline-none focus:ring-2 focus:ring-blue-100 h-full cursor-pointer shadow-sm"
               />
             ) : (
               <input
                 type="month"
                 value={selectedMonth}
                 onChange={(e) => setSelectedMonth(e.target.value)}
-                className="pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-lg text-slate-700 text-sm focus:ring-2 focus:ring-blue-500 outline-none h-full"
+                className="px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm font-semibold outline-none focus:ring-2 focus:ring-blue-100 h-full cursor-pointer shadow-sm"
               />
             )}
           </div>
         </div>
       </div>
 
-      {/* Summary Cards (Dynamic) */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-          <div className="flex justify-between items-start mb-4">
-            <p className="text-slate-500 font-medium text-sm">Total Revenue ({viewMode === 'daily' ? 'Day' : 'Month'})</p>
-            <div className="p-2 bg-green-50 text-green-600 rounded-lg"><DollarSign size={20} /></div>
-          </div>
-          <h3 className="text-3xl font-bold text-slate-800">
-            ฿{totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2 })}
-          </h3>
-        </div>
+      {/* Summary Cards (Using SoftCard from Dashboard) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-10">
+        <SoftCard
+          title={`Total Revenue (${viewMode === 'daily' ? 'Day' : 'Month'})`}
+          value={`฿${totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2 })}`}
+          subLabel="Gross Income"
+          icon={DollarSign}
+          iconColor="text-blue-600"
+          iconBg="bg-blue-50"
+        />
 
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-          <div className="flex justify-between items-start mb-4">
-            <p className="text-slate-500 font-medium text-sm">Total Units Sold</p>
-            <div className="p-2 bg-blue-50 text-blue-600 rounded-lg"><ShoppingBag size={20} /></div>
-          </div>
-          <h3 className="text-3xl font-bold text-slate-800">{totalUnits}</h3>
-          <p className="text-blue-600 text-xs font-bold mt-2">Items</p>
-        </div>
+        <SoftCard
+          title="Gross Profit"
+          value={`฿${grossProfit.toLocaleString(undefined, { minimumFractionDigits: 2 })}`}
+          subLabel={`${totalRevenue > 0 ? ((grossProfit / totalRevenue) * 100).toFixed(1) : 0}% Margin`}
+          subLabelColor={grossProfit >= 0 ? "text-emerald-600" : "text-red-600"}
+          icon={Wallet}
+          iconColor="text-emerald-600"
+          iconBg="bg-emerald-50"
+        />
 
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-          <div className="flex justify-between items-start mb-4">
-            <p className="text-slate-500 font-medium text-sm">Best Seller</p>
-            <div className="p-2 bg-purple-50 text-purple-600 rounded-lg"><TrendingUp size={20} /></div>
-          </div>
-          <h3 className="text-lg font-bold text-slate-800 truncate">{topProduct.name}</h3>
-          <p className="text-slate-500 text-xs mt-2">{topProduct.sold} units sold</p>
-        </div>
+        <SoftCard
+          title="Total Units Sold"
+          value={totalUnits.toString()}
+          subLabel="Items sold"
+          icon={ShoppingBag}
+          iconColor="text-purple-600"
+          iconBg="bg-purple-50"
+        />
+
+        <SoftCard
+          title="Best Seller"
+          value={topProduct.name}
+          subLabel={`${topProduct.sold} units sold`}
+          icon={TrendingUp}
+          iconColor="text-orange-600"
+          iconBg="bg-orange-50"
+        />
       </div>
 
-      {/* Main Content Table - Switches based on View Mode */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div className="p-5 border-b border-slate-100 flex justify-between items-center">
-          <h3 className="font-bold text-slate-800 text-lg flex items-center gap-2">
-            <FileText size={20} className="text-slate-400" />
-            {viewMode === 'daily' ? `Transactions: ${new Date(selectedDate).toLocaleDateString('th-TH')}` : `Daily Breakthrough: ${selectedMonth}`}
-          </h3>
-          <span className="text-xs font-bold px-2 py-1 bg-slate-100 text-slate-500 rounded">
-            {filteredSales.length} Records
-          </span>
+      {/* Main Content Table */}
+      <div className="bg-white rounded-[2.5rem] p-8 shadow-[0_2px_40px_-10px_rgba(0,0,0,0.04)] border border-slate-100 mb-10">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+          <div>
+            <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+              <FileText size={20} className="text-slate-400" />
+              {viewMode === 'daily' ? `Transactions: ${new Date(selectedDate).toLocaleDateString('th-TH')}` : `Daily Breakthrough: ${selectedMonth}`}
+            </h3>
+            <p className="text-slate-400 text-sm mt-1">{filteredSales.length} Records found</p>
+          </div>
         </div>
 
         <div className="overflow-x-auto">
           {isLoading ? (
             <div className="p-12 text-center text-slate-400">Loading data...</div>
           ) : (
-            <table className="w-full text-left text-sm">
-              <thead className="bg-slate-50 text-slate-500 border-b border-slate-200 uppercase text-xs font-semibold">
+            <table className="w-full text-left text-sm text-slate-600">
+              <thead className="text-xs text-slate-500 uppercase bg-slate-50 border-b border-slate-100 font-semibold">
                 {viewMode === 'daily' ? (
                   <tr>
                     <th className="px-6 py-4">Time</th>
@@ -213,8 +257,8 @@ const Reports = () => {
                 {viewMode === 'daily' ? (
                   // --- DAILY VIEW ROWS ---
                   filteredSales.length > 0 ? filteredSales.map((sale) => (
-                    <tr key={sale.id} className="hover:bg-slate-50 transition-colors group">
-                      <td className="px-6 py-4 font-mono text-slate-500">
+                    <tr key={sale.id} className="hover:bg-slate-50 transition-colors group cursor-pointer">
+                      <td className="px-6 py-4 font-mono text-slate-400">
                         {new Date(sale.created_at).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })}
                       </td>
                       <td className="px-6 py-4 font-bold text-slate-700">{sale.product_name}</td>
@@ -242,7 +286,7 @@ const Reports = () => {
                 ) : (
                   // --- MONTHLY VIEW ROWS ---
                   getMonthlyGroupedData().length > 0 ? getMonthlyGroupedData().map((dayData) => (
-                    <tr key={dayData.date} className="hover:bg-slate-50 transition-colors">
+                    <tr key={dayData.date} className="hover:bg-slate-50 transition-colors cursor-pointer">
                       <td className="px-6 py-4 font-bold text-slate-700">
                         {new Date(dayData.date).toLocaleDateString('th-TH', { weekday: 'short', day: 'numeric', month: 'short' })}
                       </td>
@@ -263,6 +307,28 @@ const Reports = () => {
           )}
         </div>
       </div>
+    </div>
+  );
+};
+
+// Reusable Soft Card Component (Same as Dashboard)
+const SoftCard = ({ title, value, subLabel, icon: Icon, iconColor, iconBg, subLabelColor = "text-slate-400" }) => {
+  return (
+    <div className="relative bg-white rounded-[2rem] p-6 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-slate-100 h-36 flex flex-col justify-between transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-xl cursor-pointer">
+      <div className="absolute top-0 right-0 p-6">
+        <div className={`p-2 rounded-xl ${iconBg} ${iconColor} shadow-sm`}>
+          <Icon size={24} />
+        </div>
+      </div>
+
+      <div>
+        <h3 className="text-slate-500 text-sm font-medium mb-1">{title}</h3>
+        <p className="text-3xl font-bold text-slate-800 tracking-tight truncate pr-10">{value}</p>
+      </div>
+
+      <p className={`text-xs font-semibold ${subLabelColor}`}>
+        {subLabel}
+      </p>
     </div>
   );
 };
