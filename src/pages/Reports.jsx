@@ -282,89 +282,62 @@ const Reports = () => {
           ) : (
             <table className="w-full text-left text-sm text-slate-600">
               <thead className="text-xs text-slate-500 uppercase bg-slate-50 border-b border-slate-100 font-semibold">
-                {viewMode === 'daily' ? (
-                  <tr>
-                    <th className="px-6 py-4"><Text as="span">Time</Text></th>
-                    <th className="px-6 py-4"><Text as="span">Product Name</Text></th>
-                    <th className="px-6 py-4 text-center"><Text as="span">Tax</Text></th>
-                    <th className="px-6 py-4 text-center"><Text as="span">Qty</Text></th>
-                    <th className="px-6 py-4 text-right"><Text as="span">Total</Text></th>
-                    <th className="px-6 py-4 text-center"><Text as="span">Action</Text></th>
-                  </tr>
-                ) : (
-                  <tr>
-                    <th className="px-6 py-4"><Text as="span">Date</Text></th>
-                    <th className="px-6 py-4 text-center"><Text as="span">Transactions</Text></th>
-                    <th className="px-6 py-4 text-center"><Text as="span">Items Sold</Text></th>
-                    <th className="px-6 py-4 text-right"><Text as="span">Total Revenue</Text></th>
-                  </tr>
-                )}
+                <tr>
+                  <th className="px-6 py-4"><Text as="span">Date & Time</Text></th>
+                  <th className="px-6 py-4"><Text as="span">Product Name</Text></th>
+                  <th className="px-6 py-4 text-center"><Text as="span">Tax</Text></th>
+                  <th className="px-6 py-4 text-center"><Text as="span">Qty</Text></th>
+                  <th className="px-6 py-4 text-right"><Text as="span">Total</Text></th>
+                  <th className="px-6 py-4 text-center"><Text as="span">Action</Text></th>
+                </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {viewMode === 'daily' ? (
-                  // --- DAILY VIEW ROWS ---
-                  filteredSales.length > 0 ? (
-                    filteredSales.map((sale) => {
-                      const product = products.find(p => p.id === sale.product_id);
-                      return (
-                        <tr key={sale.id} className="hover:bg-slate-50 transition-colors group cursor-pointer">
-                          <td className="px-6 py-4 font-mono text-slate-400">
-                            <Text as="span">{new Date(sale.created_at).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })}</Text>
-                          </td>
-                          <td className="px-6 py-4 font-bold text-slate-700">
-                            <Text as="span">
-                              {product && <span className="text-slate-400 text-xs mr-1 font-mono">[{product.sku}]</span>}
-                              {sale.product_name}
-                            </Text>
-                          </td>
-                          <td className="px-6 py-4 text-center">
-                            {product && product.hasVat ? (
-                              <span className="px-1.5 py-0.5 bg-purple-100 text-purple-600 rounded text-[10px] font-bold border border-purple-200">VAT</span>
-                            ) : (
-                              <span className="px-1.5 py-0.5 bg-slate-100 text-slate-500 rounded text-[10px] border border-slate-200">No VAT</span>
-                            )}
-                          </td>
-                          <td className="px-6 py-4 text-center">
-                            <span className="bg-slate-100 px-2 py-1 rounded text-xs font-bold text-slate-600"><Text as="span">x{sale.quantity}</Text></span>
-                          </td>
-                          <td className="px-6 py-4 text-right font-bold text-emerald-600">
-                            <Text as="span">฿{sale.total_price.toLocaleString()}</Text>
-                          </td>
-                          <td className="px-6 py-4 text-center">
-                            <button
-                              onClick={() => handleDeleteSale(sale.id)}
-                              className="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
-                              title="Delete Transaction"
-                            >
-                              <Trash2 size={18} />
-                            </button>
-                          </td>
-                        </tr>
-                      );
-                    })
-                  ) : (
-                    <tr>
-                      <td colSpan="6" className="px-6 py-12 text-center text-slate-400"><Text>No sales transactions found for this date.</Text></td>
-                    </tr>
-                  )
+                {filteredSales.length > 0 ? (
+                  filteredSales.map((sale) => {
+                    const product = products.find(p => p.id === sale.product_id);
+                    return (
+                      <tr key={sale.id} className="hover:bg-slate-50 transition-colors group cursor-pointer">
+                        <td className="px-6 py-4 font-mono text-slate-400">
+                          <div className="flex flex-col">
+                            <span className="font-bold text-slate-600">{new Date(sale.created_at).toLocaleDateString('th-TH')}</span>
+                            <span className="text-xs">{new Date(sale.created_at).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })}</span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 font-bold text-slate-700">
+                          <Text as="span">
+                            {product && <span className="text-slate-400 text-xs mr-1 font-mono">[{product.sku}]</span>}
+                            {sale.product_name}
+                          </Text>
+                        </td>
+                        <td className="px-6 py-4 text-center">
+                          {product && product.hasVat ? (
+                            <span className="px-1.5 py-0.5 bg-purple-100 text-purple-600 rounded text-[10px] font-bold border border-purple-200">VAT</span>
+                          ) : (
+                            <span className="px-1.5 py-0.5 bg-slate-100 text-slate-500 rounded text-[10px] border border-slate-200">No VAT</span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 text-center">
+                          <span className="bg-slate-100 px-2 py-1 rounded text-xs font-bold text-slate-600"><Text as="span">x{sale.quantity}</Text></span>
+                        </td>
+                        <td className="px-6 py-4 text-right font-bold text-emerald-600">
+                          <Text as="span">฿{sale.total_price.toLocaleString()}</Text>
+                        </td>
+                        <td className="px-6 py-4 text-center">
+                          <button
+                            onClick={() => handleDeleteSale(sale.id)}
+                            className="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
+                            title="Delete Transaction"
+                          >
+                            <Trash2 size={18} />
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })
                 ) : (
-                  // --- MONTHLY VIEW ROWS ---
-                  getMonthlyGroupedData().length > 0 ? getMonthlyGroupedData().map((dayData) => (
-                    <tr key={dayData.date} className="hover:bg-slate-50 transition-colors cursor-pointer">
-                      <td className="px-6 py-4 font-bold text-slate-700">
-                        <Text as="span">{new Date(dayData.date).toLocaleDateString('th-TH', { weekday: 'short', day: 'numeric', month: 'short' })}</Text>
-                      </td>
-                      <td className="px-6 py-4 text-center text-slate-600"><Text as="span">{dayData.transactions}</Text></td>
-                      <td className="px-6 py-4 text-center font-bold text-blue-600"><Text as="span">{dayData.units}</Text></td>
-                      <td className="px-6 py-4 text-right font-bold text-emerald-600">
-                        <Text as="span">฿{dayData.revenue.toLocaleString()}</Text>
-                      </td>
-                    </tr>
-                  )) : (
-                    <tr>
-                      <td colSpan="4" className="px-6 py-12 text-center text-slate-400"><Text>No sales data found for this month.</Text></td>
-                    </tr>
-                  )
+                  <tr>
+                    <td colSpan="6" className="px-6 py-12 text-center text-slate-400"><Text>No sales transactions found for this period.</Text></td>
+                  </tr>
                 )}
               </tbody>
             </table>

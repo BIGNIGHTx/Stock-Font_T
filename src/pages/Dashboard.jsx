@@ -92,7 +92,7 @@ const Dashboard = ({ onNavigate }) => {
   // --- Statistics Calculations ---
   const totalProducts = products.length;
   const totalRevenue = sales.reduce((acc, s) => acc + s.total_price, 0);
-  const lowStockProducts = products.filter(p => p.stock < 10).length;
+  const lowStockProducts = products.filter(p => p.stock <= 5).length;
 
   // Calculate COGS and Gross Profit
   const totalCOGS = sales.reduce((acc, sale) => {
@@ -321,7 +321,7 @@ const Dashboard = ({ onNavigate }) => {
                 </div>
                 <div>
                   <Text as="h3" className="font-bold text-xl text-red-900">Low Stock Items</Text>
-                  <Text className="text-red-600 text-sm">Products with stock less than 10 units</Text>
+                  <Text className="text-red-600 text-sm">Products with stock 5 units or less</Text>
                 </div>
               </div>
               <button
@@ -333,7 +333,7 @@ const Dashboard = ({ onNavigate }) => {
             </div>
 
             <div className="p-0 max-h-[60vh] overflow-y-auto">
-              {products.filter(p => p.stock < 10).length > 0 ? (
+              {products.filter(p => p.stock <= 5).length > 0 ? (
                 <table className="w-full text-left text-sm text-slate-600">
                   <thead className="bg-slate-50 border-b border-slate-100 text-slate-500 font-semibold uppercase text-xs sticky top-0">
                     <tr>
@@ -344,7 +344,7 @@ const Dashboard = ({ onNavigate }) => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
-                    {products.filter(p => p.stock < 10).map(p => (
+                    {products.filter(p => p.stock <= 5).map(p => (
                       <tr key={p.id} className="hover:bg-red-50/30 transition-colors">
                         <td className="px-6 py-4 font-bold text-slate-800">{p.name}</td>
                         <td className="px-6 py-4 text-center font-mono text-slate-500">{p.sku}</td>

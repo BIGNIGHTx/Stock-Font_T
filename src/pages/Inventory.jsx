@@ -33,6 +33,7 @@ const Inventory = ({ initialOpenModal = false }) => {
   // --- Filters ---
   const [stockFilter, setStockFilter] = useState('all');
   const [brandFilter, setBrandFilter] = useState('All');
+  const [vatFilter, setVatFilter] = useState('all'); // 'all', 'vat', 'novat'
 
   // --- Form State ---
   const [newProduct, setNewProduct] = useState({
@@ -152,7 +153,11 @@ const Inventory = ({ initialOpenModal = false }) => {
       matchesBrand = p.name.toLowerCase().includes(brandFilter.toLowerCase());
     }
 
-    return matchesSearch && matchesStock && matchesBrand;
+    let matchesVat = true;
+    if (vatFilter === 'vat') matchesVat = p.hasVat === true;
+    if (vatFilter === 'novat') matchesVat = p.hasVat === false;
+
+    return matchesSearch && matchesStock && matchesBrand && matchesVat;
   });
 
   const selectCategory = (catId) => {
@@ -161,6 +166,7 @@ const Inventory = ({ initialOpenModal = false }) => {
     setBrandFilter('All');
     setSearchTerm('');
     setStockFilter('all');
+    setVatFilter('all');
   };
 
   return (
@@ -240,8 +246,8 @@ const Inventory = ({ initialOpenModal = false }) => {
             ))}
           </div>
 
-          {/* Search & Stock Filters */}
-          <div className="bg-white p-4 rounded-[2rem] border border-slate-100 shadow-sm mb-6 flex flex-col md:flex-row gap-4 items-center">
+          {/* Search, Stock & VAT Filters */}
+          <div className="bg-white p-4 rounded-[2rem] border border-slate-100 shadow-sm mb-6 flex flex-col xl:flex-row gap-4 items-center">
             <div className="relative flex-1 w-full">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
               <input
@@ -252,21 +258,42 @@ const Inventory = ({ initialOpenModal = false }) => {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            <div className="flex gap-3 w-full md:w-auto">
-              <button
-                onClick={() => setStockFilter(stockFilter === 'normal' ? 'all' : 'normal')}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border flex-1 justify-center transition-all
-                        ${stockFilter === 'normal' ? 'bg-emerald-500 text-white border-emerald-500' : 'bg-emerald-50 text-emerald-600 border-emerald-100'}`}
-              >
-                <CheckCircle size={16} /> Green Stock
-              </button>
-              <button
-                onClick={() => setStockFilter(stockFilter === 'low' ? 'all' : 'low')}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border flex-1 justify-center transition-all
-                        ${stockFilter === 'low' ? 'bg-rose-500 text-white border-rose-500' : 'bg-rose-50 text-rose-600 border-rose-100'}`}
-              >
-                <AlertCircle size={16} /> Red Stock
-              </button>
+            <div className="flex flex-wrap gap-3 w-full xl:w-auto justify-center">
+              {/* Stock Filter */}
+              <div className="flex bg-slate-50 p-1 rounded-xl border border-slate-100">
+                <button
+                  onClick={() => setStockFilter(stockFilter === 'normal' ? 'all' : 'normal')}
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all
+                            ${stockFilter === 'normal' ? 'bg-white text-emerald-600 shadow-sm border border-slate-100' : 'text-slate-400 hover:text-slate-600'}`}
+                >
+                  <CheckCircle size={14} /> Green Stock
+                </button>
+                <button
+                  onClick={() => setStockFilter(stockFilter === 'low' ? 'all' : 'low')}
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all
+                            ${stockFilter === 'low' ? 'bg-white text-rose-500 shadow-sm border border-slate-100' : 'text-slate-400 hover:text-slate-600'}`}
+                >
+                  <AlertCircle size={14} /> Red Stock
+                </button>
+              </div>
+
+              {/* VAT Filter */}
+              <div className="flex bg-slate-50 p-1 rounded-xl border border-slate-100">
+                <button
+                  onClick={() => setVatFilter(vatFilter === 'vat' ? 'all' : 'vat')}
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all
+                            ${vatFilter === 'vat' ? 'bg-white text-purple-600 shadow-sm border border-slate-100' : 'text-slate-400 hover:text-slate-600'}`}
+                >
+                  VAT Only
+                </button>
+                <button
+                  onClick={() => setVatFilter(vatFilter === 'novat' ? 'all' : 'novat')}
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all
+                            ${vatFilter === 'novat' ? 'bg-white text-slate-600 shadow-sm border border-slate-100' : 'text-slate-400 hover:text-slate-600'}`}
+                >
+                  No VAT
+                </button>
+              </div>
             </div>
           </div>
 
