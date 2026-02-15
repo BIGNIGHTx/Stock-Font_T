@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Calendar, Search, Package, TrendingDown, CheckCircle, AlertCircle, Plus, Minus } from 'lucide-react';
+import { Calendar, Search, Package, TrendingDown, CheckCircle, Plus, Minus, Tag, ChevronDown } from 'lucide-react';
 import { Text } from '../components/text';
 
 const Sales = () => {
@@ -14,11 +14,34 @@ const Sales = () => {
     const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
     const [isSuccess, setIsSuccess] = useState(false);
 
+    // Custom Dropdown State
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    // eslint-disable-next-line no-undef
+    const dropdownRef = React.useRef(null);
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsDropdownOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
     // --- 1. ดึงข้อมูลสินค้าจาก Backend ---
     const fetchProducts = async () => {
         try {
             const response = await axios.get('http://127.0.0.1:8000/products/');
-            setProducts(response.data);
+            // Map hasVat ให้ชัวร์ว่ามีค่า (default false)
+            const mappedData = response.data.map(p => ({
+                ...p,
+                hasVat: p.has_vat !== undefined ? p.has_vat : (p.hasVat !== undefined ? p.hasVat : false)
+            }));
+            setProducts(mappedData);
         } catch (error) {
             console.error("Error fetching products:", error);
         }
@@ -40,7 +63,6 @@ const Sales = () => {
         if (!selectedProduct) return;
 
         try {
-            // เตรียมข้อมูลส่งให้ Backend
             const saleData = {
                 product_id: selectedProduct.id,
                 product_name: selectedProduct.name,
@@ -48,14 +70,11 @@ const Sales = () => {
                 total_price: parseFloat(totalAmount)
             };
 
-            // ยิงไปที่ API /sales/
             await axios.post('http://127.0.0.1:8000/sales/', saleData);
 
-            // เมื่อสำเร็จ:
             setIsSuccess(true);
-            fetchProducts(); // ดึงข้อมูลใหม่ทันที (เพื่อให้สต๊อกอัปเดต)
+            fetchProducts();
 
-            // Reset Form หลัง 2 วินาที
             setTimeout(() => {
                 setIsSuccess(false);
                 setQuantity(1);
@@ -98,27 +117,99 @@ const Sales = () => {
                             </div>
                         </div>
 
-                        {/* Product Selection */}
-                        <div className="mb-8">
+                        {/* Product Selection (Custom Dropdown) */}
+                        <div className="mb-8 relative" ref={dropdownRef}>
                             <Text as="label" className="block text-sm font-medium text-slate-700 mb-2">Select Product</Text>
-                            <div className="relative">
-                                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
-                                <select
-                                    value={selectedProductId}
-                                    onChange={(e) => {
-                                        setSelectedProductId(e.target.value);
-                                        setQuantity(1);
-                                    }}
-                                    className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl text-slate-800 text-lg focus:ring-2 focus:ring-blue-500 outline-none appearance-none cursor-pointer transition-all hover:bg-white"
-                                >
-                                    <option value="" disabled>-- Search or select a product --</option>
-                                    {products.map(p => (
-                                        <option key={p.id} value={p.id} disabled={p.stock === 0}>
-                                            {p.name} (Stock: {p.stock})
-                                        </option>
-                                    ))}
-                                </select>
+
+                            {/* Dropdown Trigger */}
+                            <div
+                                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                className={`w-full pl-12 pr-4 py-4 bg-slate-50 border ${isDropdownOpen ? 'border-blue-500 ring-2 ring-blue-100' : 'border-slate-200'} rounded-2xl text-slate-800 text-lg outline-none cursor-pointer transition-all hover:bg-white flex items-center justify-between`}
+                            >
+                                <div className="flex items-center gap-2 overflow-hidden">
+                                    <Search className="text-slate-400 mr-2 flex-shrink-0" size={20} />
+                                    {selectedProduct ? (
+                                        <div className="flex items-center gap-2 truncate">
+                                            <span className="truncate">{selectedProduct.name}</span>
+                                            {selectedProduct.hasVat ? (
+                                                <span className="flex-shrink-0 px-2 py-0.5 bg-purple-100 text-purple-600 rounded text-xs font-bold border border-purple-200">
+                                                    VAT
+                                                </span>
+                                            ) : (
+                                                <span className="flex-shrink-0 px-2 py-0.5 bg-slate-200 text-slate-500 rounded text-xs border border-slate-300">
+                                                    No VAT
+                                                </span>
+                                            )}
+                                        </div>
+                                    ) : (
+                                        <span className="text-slate-400">-- Search or select a product --</span>
+                                    )}
+                                </div>
+                                <div className="text-slate-400">
+                                    <ChevronDown size={20} className={`transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
+                                </div>
                             </div>
+
+                            {/* Dropdown Menu */}
+                            {isDropdownOpen && (
+                                <div className="absolute z-50 w-full mt-2 bg-white border border-slate-100 rounded-2xl shadow-xl max-h-80 overflow-y-auto animate-fade-in-up">
+                                    {/* Search Input inside Dropdown (Optional but good for UX) */}
+                                    <div className="p-2 sticky top-0 bg-white border-b border-slate-50">
+                                        <input
+                                            type="text"
+                                            placeholder="Type to search..."
+                                            className="w-full px-4 py-2 bg-slate-50 rounded-xl text-sm outline-none border border-transparent focus:border-blue-200 focus:bg-white transition-all"
+                                            onClick={(e) => e.stopPropagation()}
+                                            onChange={(e) => {
+                                                // Implement search logic if needed, or just filter visually
+                                                // For now, simple client-side filter could be added here
+                                            }}
+                                        />
+                                    </div>
+
+                                    {products.map(p => (
+                                        <div
+                                            key={p.id}
+                                            onClick={() => {
+                                                if (p.stock > 0) {
+                                                    setSelectedProductId(p.id.toString());
+                                                    setQuantity(1);
+                                                    setIsDropdownOpen(false);
+                                                }
+                                            }}
+                                            className={`px-4 py-3 flex justify-between items-center cursor-pointer transition-colors border-b border-slate-50 last:border-0
+                                                ${p.stock === 0 ? 'opacity-50 cursor-not-allowed bg-slate-50' : 'hover:bg-blue-50'}
+                                                ${selectedProductId === p.id.toString() ? 'bg-blue-50' : ''}
+                                            `}
+                                        >
+                                            <div className="flex flex-col">
+                                                <div className="flex items-center gap-2 font-medium text-slate-700">
+                                                    {p.name}
+                                                    {p.hasVat ? (
+                                                        <span className="px-1.5 py-0.5 bg-purple-100 text-purple-600 rounded text-[10px] font-bold border border-purple-200">
+                                                            VAT
+                                                        </span>
+                                                    ) : (
+                                                        <span className="px-1.5 py-0.5 bg-slate-100 text-slate-500 rounded text-[10px] border border-slate-200">
+                                                            No VAT
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <span className="text-xs text-slate-400">Price: ฿{p.price.toLocaleString()}</span>
+                                            </div>
+                                            <div className="text-right">
+                                                <span className={`text-xs font-bold ${p.stock > 0 ? 'text-green-600' : 'text-red-500'}`}>
+                                                    {p.stock > 0 ? `${p.stock} in stock` : 'Out of Stock'}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    ))}
+
+                                    {products.length === 0 && (
+                                        <div className="p-8 text-center text-slate-400 text-sm">No products found</div>
+                                    )}
+                                </div>
+                            )}
                         </div>
 
                         {/* Stock Preview Box */}
@@ -126,7 +217,7 @@ const Sales = () => {
                             <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200 mb-8 animate-slide-up">
                                 <div className="flex justify-between items-center mb-4">
                                     <div className="flex items-center gap-2 text-slate-700 font-semibold">
-                                        <Package size={20} /> <Text as="span">Stock Preview</Text>
+                                        <Package size={20} /> <Text as="span">Product Status</Text>
                                     </div>
                                     <span className={`px-2 py-1 rounded text-xs font-bold ${remainingStock < 0 ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}`}>
                                         <Text as="span">{remainingStock < 0 ? 'Insufficient Stock' : 'In Stock'}</Text>
@@ -179,10 +270,24 @@ const Sales = () => {
                             </div>
 
                             <div>
-                                <Text as="label" className="block text-sm font-medium text-slate-700 mb-2">Unit Price ($)</Text>
-                                <div className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-500 text-lg flex justify-between">
-                                    <Text as="span">฿ {selectedProduct ? selectedProduct.price.toLocaleString() : '0'}</Text>
-                                    <Text as="span" className="text-xs self-center uppercase">THB</Text>
+                                <Text as="label" className="block text-sm font-medium text-slate-700 mb-2">Unit Price / Tax</Text>
+                                <div className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-500 text-lg flex justify-between items-center">
+                                    <div className="flex items-center gap-2">
+                                        <Text as="span" className="font-bold text-slate-800">฿ {selectedProduct ? selectedProduct.price.toLocaleString() : '0'}</Text>
+
+                                        {/* --- VAT Badge (แสดงหลังเลือกสินค้า) --- */}
+                                        {selectedProduct && selectedProduct.hasVat && (
+                                            <span className="flex items-center gap-1 px-2 py-0.5 bg-purple-100 text-purple-600 rounded text-xs font-bold border border-purple-200 ml-2">
+                                                <Tag size={10} /> VAT
+                                            </span>
+                                        )}
+                                        {selectedProduct && !selectedProduct.hasVat && (
+                                            <span className="px-2 py-0.5 bg-slate-200 text-slate-500 rounded text-xs border border-slate-300 ml-2">
+                                                No VAT
+                                            </span>
+                                        )}
+                                    </div>
+                                    <Text as="span" className="text-xs uppercase">THB</Text>
                                 </div>
                             </div>
                         </div>
@@ -191,7 +296,9 @@ const Sales = () => {
                         <div className="mt-8 bg-white rounded-2xl p-6 flex justify-between items-center text-slate-800 shadow-sm border border-slate-200">
                             <div>
                                 <Text className="text-slate-400 text-sm">Total Amount</Text>
-                                <Text className="text-xs text-slate-400">Tax included</Text>
+                                <Text className="text-xs text-slate-400">
+                                    {selectedProduct?.hasVat ? 'VAT Included (ราคารวมภาษีแล้ว)' : 'No VAT (ราคายกเว้นภาษี)'}
+                                </Text>
                             </div>
                             <div className="text-3xl font-bold tracking-tight text-blue-600">
                                 <Text as="span">฿{parseFloat(totalAmount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</Text>

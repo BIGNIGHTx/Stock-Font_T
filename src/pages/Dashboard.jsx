@@ -51,7 +51,14 @@ const Dashboard = ({ onNavigate }) => {
           axios.get('http://127.0.0.1:8000/products/'),
           axios.get('http://127.0.0.1:8000/sales/')
         ]);
-        setProducts(productsRes.data);
+
+        // Map products to ensure hasVat is consistent
+        const mappedProducts = productsRes.data.map(p => ({
+          ...p,
+          hasVat: p.has_vat !== undefined ? p.has_vat : (p.hasVat !== undefined ? p.hasVat : false)
+        }));
+
+        setProducts(mappedProducts);
         setSales(salesRes.data);
         setIsLoading(false);
       } catch (error) {
@@ -342,7 +349,8 @@ const Dashboard = ({ onNavigate }) => {
           <div className="grid grid-cols-12 gap-4 px-6 py-3 bg-slate-50 rounded-xl text-xs font-bold text-slate-500 uppercase tracking-wider mb-4 min-w-[600px]">
             <div className="col-span-2"><Text as="span">Time</Text></div>
             <div className="col-span-4"><Text as="span">Product</Text></div>
-            <div className="col-span-2 text-center"><Text as="span">Qty</Text></div>
+            <div className="col-span-1 text-center"><Text as="span">Tax</Text></div>
+            <div className="col-span-1 text-center"><Text as="span">Qty</Text></div>
             <div className="col-span-2 text-right"><Text as="span">Total</Text></div>
             <div className="col-span-2 text-center"><Text as="span">Action</Text></div>
           </div>
@@ -357,10 +365,17 @@ const Dashboard = ({ onNavigate }) => {
                     <div className="col-span-2 font-mono text-slate-400">
                       <Text as="span">{new Date(sale.created_at).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })}</Text>
                     </div>
-                    <div className="col-span-4 font-medium text-slate-700">
+                    <div className="col-span-4 font-medium text-slate-700 flex flex-col justify-center">
                       <Text as="span">{product ? product.name : `Product ID: ${sale.product_id}`}</Text>
                     </div>
-                    <div className="col-span-2 text-center">
+                    <div className="col-span-1 text-center flex items-center justify-center">
+                      {product && product.hasVat ? (
+                        <span className="px-1.5 py-0.5 bg-purple-100 text-purple-600 rounded text-[10px] font-bold border border-purple-200">VAT</span>
+                      ) : (
+                        <span className="px-1.5 py-0.5 bg-slate-100 text-slate-500 rounded text-[10px] border border-slate-200">No VAT</span>
+                      )}
+                    </div>
+                    <div className="col-span-1 text-center">
                       <span className="inline-block bg-slate-100 text-slate-600 px-2 py-1 rounded text-xs font-bold">
                         <Text as="span">x{sale.quantity}</Text>
                       </span>

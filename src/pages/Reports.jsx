@@ -27,6 +27,7 @@ const Reports = () => {
   // View Control
   const { alert, confirm } = useAlert();
   const [viewMode, setViewMode] = useState('daily'); // 'daily' | 'monthly'
+  const [filterVat, setFilterVat] = useState('all'); // 'all' | 'vat' | 'no_vat'
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [selectedMonth, setSelectedMonth] = useState(new Date().toISOString().slice(0, 7)); // YYYY-MM
 
@@ -53,7 +54,12 @@ const Reports = () => {
   const fetchProducts = async () => {
     try {
       const response = await axios.get('http://127.0.0.1:8000/products/');
-      setProducts(response.data);
+      // Map products to ensure hasVat is consistent
+      const mappedProducts = response.data.map(p => ({
+        ...p,
+        hasVat: p.has_vat !== undefined ? p.has_vat : (p.hasVat !== undefined ? p.hasVat : false)
+      }));
+      setProducts(mappedProducts);
     } catch (error) {
       console.error("Error fetching products:", error);
     }
@@ -78,15 +84,28 @@ const Reports = () => {
   // --- 3. Filtering Logic ---
   const getFilteredSales = () => {
     return salesData.filter(sale => {
+      // 1. Date Filter
       if (!sale.created_at) return false;
       const saleDate = sale.created_at.split('T')[0]; // YYYY-MM-DD
-
+      let dateMatch = false;
       if (viewMode === 'daily') {
-        return saleDate === selectedDate;
+        dateMatch = saleDate === selectedDate;
       } else {
-        // Monthly: Check if YYYY-MM matches
-        return saleDate.startsWith(selectedMonth);
+        dateMatch = saleDate.startsWith(selectedMonth);
       }
+
+      if (!dateMatch) return false;
+
+      // 2. VAT Filter
+      if (filterVat === 'all') return true;
+
+      const product = products.find(p => p.id === sale.product_id);
+      if (!product) return false; // If product not found, maybe exclude or include based on policy? assuming exclude for safety
+
+      if (filterVat === 'vat') return product.hasVat === true;
+      if (filterVat === 'no_vat') return !product.hasVat;
+
+      return true;
     });
   };
 
@@ -159,6 +178,28 @@ const Reports = () => {
               className={`px-6 py-2 rounded-lg text-sm font-bold transition-all duration-200 cursor-pointer ${viewMode === 'monthly' ? 'bg-slate-100 text-slate-800' : 'text-slate-500 hover:text-slate-700'}`}
             >
               <Text as="span">Monthly Overview</Text>
+            </button>
+          </div>
+
+          {/* Vat Filter */}
+          <div className="flex bg-white p-1 rounded-xl shadow-sm border border-slate-200">
+            <button
+              onClick={() => setFilterVat('all')}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${filterVat === 'all' ? 'bg-slate-800 text-white' : 'text-slate-500 hover:bg-slate-50'}`}
+            >
+              All
+            </button>
+            <button
+              onClick={() => setFilterVat('vat')}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer flex items-center gap-1 ${filterVat === 'vat' ? 'bg-purple-100 text-purple-700' : 'text-slate-500 hover:bg-slate-50'}`}
+            >
+              VAT
+            </button>
+            <button
+              onClick={() => setFilterVat('no_vat')}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${filterVat === 'no_vat' ? 'bg-slate-200 text-slate-600' : 'text-slate-500 hover:bg-slate-50'}`}
+            >
+              No VAT
             </button>
           </div>
 
@@ -245,6 +286,7 @@ const Reports = () => {
                   <tr>
                     <th className="px-6 py-4"><Text as="span">Time</Text></th>
                     <th className="px-6 py-4"><Text as="span">Product Name</Text></th>
+                    <th className="px-6 py-4 text-center"><Text as="span">Tax</Text></th>
                     <th className="px-6 py-4 text-center"><Text as="span">Qty</Text></th>
                     <th className="px-6 py-4 text-right"><Text as="span">Total</Text></th>
                     <th className="px-6 py-4 text-center"><Text as="span">Action</Text></th>
@@ -261,31 +303,43 @@ const Reports = () => {
               <tbody className="divide-y divide-slate-100">
                 {viewMode === 'daily' ? (
                   // --- DAILY VIEW ROWS ---
-                  filteredSales.length > 0 ? filteredSales.map((sale) => (
-                    <tr key={sale.id} className="hover:bg-slate-50 transition-colors group cursor-pointer">
-                      <td className="px-6 py-4 font-mono text-slate-400">
-                        <Text as="span">{new Date(sale.created_at).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })}</Text>
-                      </td>
-                      <td className="px-6 py-4 font-bold text-slate-700"><Text as="span">{sale.product_name}</Text></td>
-                      <td className="px-6 py-4 text-center">
-                        <span className="bg-slate-100 px-2 py-1 rounded text-xs font-bold text-slate-600"><Text as="span">x{sale.quantity}</Text></span>
-                      </td>
-                      <td className="px-6 py-4 text-right font-bold text-emerald-600">
-                        <Text as="span">฿{sale.total_price.toLocaleString()}</Text>
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        <button
-                          onClick={() => handleDeleteSale(sale.id)}
-                          className="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
-                          title="Delete Transaction"
-                        >
-                          <Trash2 size={18} />
-                        </button>
-                      </td>
-                    </tr>
-                  )) : (
+                  filteredSales.length > 0 ? (
+                    filteredSales.map((sale) => {
+                      const product = products.find(p => p.id === sale.product_id);
+                      return (
+                        <tr key={sale.id} className="hover:bg-slate-50 transition-colors group cursor-pointer">
+                          <td className="px-6 py-4 font-mono text-slate-400">
+                            <Text as="span">{new Date(sale.created_at).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })}</Text>
+                          </td>
+                          <td className="px-6 py-4 font-bold text-slate-700"><Text as="span">{sale.product_name}</Text></td>
+                          <td className="px-6 py-4 text-center">
+                            {product && product.hasVat ? (
+                              <span className="px-1.5 py-0.5 bg-purple-100 text-purple-600 rounded text-[10px] font-bold border border-purple-200">VAT</span>
+                            ) : (
+                              <span className="px-1.5 py-0.5 bg-slate-100 text-slate-500 rounded text-[10px] border border-slate-200">No VAT</span>
+                            )}
+                          </td>
+                          <td className="px-6 py-4 text-center">
+                            <span className="bg-slate-100 px-2 py-1 rounded text-xs font-bold text-slate-600"><Text as="span">x{sale.quantity}</Text></span>
+                          </td>
+                          <td className="px-6 py-4 text-right font-bold text-emerald-600">
+                            <Text as="span">฿{sale.total_price.toLocaleString()}</Text>
+                          </td>
+                          <td className="px-6 py-4 text-center">
+                            <button
+                              onClick={() => handleDeleteSale(sale.id)}
+                              className="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
+                              title="Delete Transaction"
+                            >
+                              <Trash2 size={18} />
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  ) : (
                     <tr>
-                      <td colSpan="5" className="px-6 py-12 text-center text-slate-400"><Text>No sales transactions found for this date.</Text></td>
+                      <td colSpan="6" className="px-6 py-12 text-center text-slate-400"><Text>No sales transactions found for this date.</Text></td>
                     </tr>
                   )
                 ) : (
