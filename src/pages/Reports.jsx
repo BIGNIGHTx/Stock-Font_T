@@ -311,7 +311,12 @@ const Reports = () => {
                           <td className="px-6 py-4 font-mono text-slate-400">
                             <Text as="span">{new Date(sale.created_at).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })}</Text>
                           </td>
-                          <td className="px-6 py-4 font-bold text-slate-700"><Text as="span">{sale.product_name}</Text></td>
+                          <td className="px-6 py-4 font-bold text-slate-700">
+                            <Text as="span">
+                              {product && <span className="text-slate-400 text-xs mr-1 font-mono">[{product.sku}]</span>}
+                              {sale.product_name}
+                            </Text>
+                          </td>
                           <td className="px-6 py-4 text-center">
                             {product && product.hasVat ? (
                               <span className="px-1.5 py-0.5 bg-purple-100 text-purple-600 rounded text-[10px] font-bold border border-purple-200">VAT</span>

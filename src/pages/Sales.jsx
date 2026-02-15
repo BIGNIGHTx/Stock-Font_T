@@ -7,7 +7,18 @@ const Sales = () => {
     // State สำหรับเก็บข้อมูลสินค้าจริง
     const [products, setProducts] = useState([]);
 
+    // --- Const: หมวดหมู่ (Copy from Inventory) ---
+    // eslint-disable-next-line no-unused-vars
+    const CATEGORIES = [
+        { id: 'All', label: 'All Products', icon: <Package size={20} />, color: 'bg-slate-500' }, // Added All option
+        { id: 'Tv', label: 'TV', icon: null, color: 'bg-blue-500' },
+        { id: 'Fan', label: 'Fan', icon: null, color: 'bg-teal-500' },
+        { id: 'Refrigerator', label: 'Refrigerator', icon: null, color: 'bg-orange-500' },
+        { id: 'Washing Machine', label: 'Washing Machine', icon: null, color: 'bg-indigo-500' },
+    ];
+
     // Form State
+    const [selectedCategory, setSelectedCategory] = useState('All');
     const [selectedProductId, setSelectedProductId] = useState('');
     const [quantity, setQuantity] = useState(1);
     // eslint-disable-next-line no-unused-vars
@@ -50,6 +61,11 @@ const Sales = () => {
     useEffect(() => {
         fetchProducts();
     }, []);
+
+    // Filter Products by Category
+    const filteredProducts = selectedCategory === 'All'
+        ? products
+        : products.filter(p => p.category === selectedCategory);
 
     // หาตัวสินค้าที่ถูกเลือก
     const selectedProduct = products.find(p => p.id === parseInt(selectedProductId));
@@ -117,9 +133,25 @@ const Sales = () => {
                             </div>
                         </div>
 
+                        {/* Category Filters */}
+                        <div className="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-none">
+                            {CATEGORIES.map(cat => (
+                                <button
+                                    key={cat.id}
+                                    onClick={() => { setSelectedCategory(cat.id); setSelectedProductId(''); }}
+                                    className={`px-4 py-2 rounded-xl text-sm font-semibold whitespace-nowrap transition-all border
+                                        ${selectedCategory === cat.id
+                                            ? 'bg-slate-800 text-white border-slate-800 shadow-lg shadow-slate-200'
+                                            : 'bg-slate-50 text-slate-500 border-slate-100 hover:bg-slate-100'}`}
+                                >
+                                    {cat.label}
+                                </button>
+                            ))}
+                        </div>
+
                         {/* Product Selection (Custom Dropdown) */}
                         <div className="mb-8 relative" ref={dropdownRef}>
-                            <Text as="label" className="block text-sm font-medium text-slate-700 mb-2">Select Product</Text>
+                            <Text as="label" className="block text-sm font-medium text-slate-700 mb-2">Select Product {selectedCategory !== 'All' && `(${selectedCategory})`}</Text>
 
                             {/* Dropdown Trigger */}
                             <div
@@ -130,6 +162,7 @@ const Sales = () => {
                                     <Search className="text-slate-400 mr-2 flex-shrink-0" size={20} />
                                     {selectedProduct ? (
                                         <div className="flex items-center gap-2 truncate">
+                                            <span className="font-bold text-slate-500 text-sm">[{selectedProduct.sku}]</span>
                                             <span className="truncate">{selectedProduct.name}</span>
                                             {selectedProduct.hasVat ? (
                                                 <span className="flex-shrink-0 px-2 py-0.5 bg-purple-100 text-purple-600 rounded text-xs font-bold border border-purple-200">
@@ -142,7 +175,7 @@ const Sales = () => {
                                             )}
                                         </div>
                                     ) : (
-                                        <span className="text-slate-400">-- Search or select a product --</span>
+                                        <span className="text-slate-400">-- Select Product --</span>
                                     )}
                                 </div>
                                 <div className="text-slate-400">
@@ -167,7 +200,7 @@ const Sales = () => {
                                         />
                                     </div>
 
-                                    {products.map(p => (
+                                    {filteredProducts.map(p => (
                                         <div
                                             key={p.id}
                                             onClick={() => {
@@ -184,6 +217,7 @@ const Sales = () => {
                                         >
                                             <div className="flex flex-col">
                                                 <div className="flex items-center gap-2 font-medium text-slate-700">
+                                                    <span className="text-slate-500 font-bold text-xs">[{p.sku}]</span>
                                                     {p.name}
                                                     {p.hasVat ? (
                                                         <span className="px-1.5 py-0.5 bg-purple-100 text-purple-600 rounded text-[10px] font-bold border border-purple-200">
@@ -205,8 +239,8 @@ const Sales = () => {
                                         </div>
                                     ))}
 
-                                    {products.length === 0 && (
-                                        <div className="p-8 text-center text-slate-400 text-sm">No products found</div>
+                                    {filteredProducts.length === 0 && (
+                                        <div className="p-8 text-center text-slate-400 text-sm">No products found in this category</div>
                                     )}
                                 </div>
                             )}

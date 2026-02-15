@@ -26,6 +26,7 @@ const Dashboard = ({ onNavigate }) => {
 
   // Initialize selectedDate to today
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+  const [isLowStockModalOpen, setIsLowStockModalOpen] = useState(false);
 
   // Default range: Last 7 days (including today)
   const [chartStartDate, setChartStartDate] = useState(() => {
@@ -282,10 +283,13 @@ const Dashboard = ({ onNavigate }) => {
           iconBg="bg-green-50"
         />
 
-        {/* Card 4: Low Stock Alert (Special Style) */}
-        <div className="relative overflow-hidden bg-red-50/50 border border-red-100 rounded-[2rem] p-6 shadow-sm flex flex-col justify-between h-36 transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-xl cursor-pointer">
+        {/* Card 4: Low Stock Alert (Clickable) */}
+        <div
+          onClick={() => setIsLowStockModalOpen(true)}
+          className="relative overflow-hidden bg-red-50/50 border border-red-100 rounded-[2rem] p-6 shadow-sm flex flex-col justify-between h-36 transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-xl cursor-pointer group"
+        >
           <div className="absolute top-0 right-0 p-6">
-            <div className="bg-white/80 p-2 rounded-xl shadow-sm text-red-500">
+            <div className="bg-white/80 p-2 rounded-xl shadow-sm text-red-500 group-hover:scale-110 transition-transform">
               <AlertTriangle size={24} />
             </div>
           </div>
@@ -295,7 +299,7 @@ const Dashboard = ({ onNavigate }) => {
           </div>
           <div className="flex items-center gap-2 mt-2">
             <span className={`text-xs font-bold px-2 py-1 rounded-md ${lowStockProducts > 0 ? 'text-red-600 bg-red-100' : 'text-green-600 bg-green-100'}`}>
-              <Text as="span">{lowStockProducts > 0 ? 'Action Required' : 'All Good'}</Text>
+              <Text as="span">{lowStockProducts > 0 ? 'Click to View' : 'All Good'}</Text>
             </span>
             <Text as="span" className="text-xs text-red-400">
               {lowStockProducts > 0 ? 'restock needed' : 'stock healthy'}
@@ -304,6 +308,82 @@ const Dashboard = ({ onNavigate }) => {
         </div>
 
       </div>
+
+      {/* Low Stock Modal */}
+      {isLowStockModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center animate-fade-in">
+          <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => setIsLowStockModalOpen(false)}></div>
+          <div className="relative bg-white rounded-[2rem] shadow-2xl w-full max-w-2xl overflow-hidden animate-slide-up border border-slate-100 m-4">
+            <div className="px-8 py-6 border-b border-slate-100 flex justify-between items-center bg-red-50">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-red-100 text-red-600 rounded-xl">
+                  <AlertTriangle size={24} />
+                </div>
+                <div>
+                  <Text as="h3" className="font-bold text-xl text-red-900">Low Stock Items</Text>
+                  <Text className="text-red-600 text-sm">Products with stock less than 10 units</Text>
+                </div>
+              </div>
+              <button
+                onClick={() => setIsLowStockModalOpen(false)}
+                className="p-2 hover:bg-red-100 rounded-full text-red-400 hover:text-red-600 transition-colors"
+              >
+                <Trash2 size={24} className="rotate-45" /> {/* Using Trash2 as X icon for now, or import X */}
+              </button>
+            </div>
+
+            <div className="p-0 max-h-[60vh] overflow-y-auto">
+              {products.filter(p => p.stock < 10).length > 0 ? (
+                <table className="w-full text-left text-sm text-slate-600">
+                  <thead className="bg-slate-50 border-b border-slate-100 text-slate-500 font-semibold uppercase text-xs sticky top-0">
+                    <tr>
+                      <th className="px-6 py-4">Product Name</th>
+                      <th className="px-6 py-4 text-center">SKU</th>
+                      <th className="px-6 py-4 text-center">Status</th>
+                      <th className="px-6 py-4 text-center">Stock</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {products.filter(p => p.stock < 10).map(p => (
+                      <tr key={p.id} className="hover:bg-red-50/30 transition-colors">
+                        <td className="px-6 py-4 font-bold text-slate-800">{p.name}</td>
+                        <td className="px-6 py-4 text-center font-mono text-slate-500">{p.sku}</td>
+                        <td className="px-6 py-4 text-center">
+                          {p.stock === 0 ? (
+                            <span className="px-2 py-1 bg-red-100 text-red-600 rounded-md text-xs font-bold border border-red-200">Out of Stock</span>
+                          ) : (
+                            <span className="px-2 py-1 bg-orange-100 text-orange-600 rounded-md text-xs font-bold border border-orange-200">Low Stock</span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 text-center">
+                          <span className="text-red-600 font-bold text-lg">{p.stock}</span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <div className="p-12 text-center flex flex-col items-center gap-4 text-slate-400">
+                  <div className="w-16 h-16 bg-green-50 text-green-500 rounded-full flex items-center justify-center mb-2">
+                    <TrendingUp size={32} />
+                  </div>
+                  <Text className="text-lg font-semibold text-slate-600">All stocks are healthy!</Text>
+                  <Text>No items are currently below the low stock threshold.</Text>
+                </div>
+              )}
+            </div>
+
+            <div className="px-8 py-6 bg-slate-50 border-t border-slate-100 flex justify-end">
+              <button
+                onClick={() => setIsLowStockModalOpen(false)}
+                className="px-6 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl font-bold transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ================= Daily Section ================= */}
       <div className="bg-white rounded-[2.5rem] p-8 shadow-[0_2px_40px_-10px_rgba(0,0,0,0.04)] border border-slate-100 mb-10">
@@ -366,7 +446,14 @@ const Dashboard = ({ onNavigate }) => {
                       <Text as="span">{new Date(sale.created_at).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })}</Text>
                     </div>
                     <div className="col-span-4 font-medium text-slate-700 flex flex-col justify-center">
-                      <Text as="span">{product ? product.name : `Product ID: ${sale.product_id}`}</Text>
+                      <Text as="span">
+                        {product ? (
+                          <>
+                            <span className="text-slate-400 text-xs mr-1 font-bold">[{product.sku}]</span>
+                            {product.name}
+                          </>
+                        ) : `Product ID: ${sale.product_id}`}
+                      </Text>
                     </div>
                     <div className="col-span-1 text-center flex items-center justify-center">
                       {product && product.hasVat ? (
