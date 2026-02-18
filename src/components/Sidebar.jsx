@@ -1,6 +1,7 @@
 import React from 'react';
 import { LayoutDashboard, Package, ShoppingCart, BarChart3, Settings, LogOut } from 'lucide-react';
 import { Text } from '../components/text';
+import { AuroraText } from '@/components/ui/aurora-text';
 
 const Sidebar = ({ activePage, setActivePage }) => {
   const menuItems = [
@@ -20,28 +21,18 @@ const Sidebar = ({ activePage, setActivePage }) => {
           alt="SomBoon ElecTric Logo"
           className="w-14 h-14 rounded-[18px] object-cover shadow-lg flex-shrink-0"
         />
-        <div className="ml-3 flex flex-col justify-center overflow-hidden w-full pr-1">
-          <div className="font-extrabold leading-none tracking-tight">
-            <Text as="span" className="block text-xl bg-gradient-to-r from-gray-600 via-black to-gray-600 dark:from-gray-400 dark:via-white dark:to-gray-400 bg-clip-text text-transparent animate-gradient bg-[length:200%_auto] pb-0.5">
+        <div className="ml-3 flex flex-col justify-center w-full pr-1">
+          <div className="flex flex-col items-start leading-none">
+            <span className="text-xl font-black tracking-tight text-black mb-0.5">
               SomBoon
-            </Text>
-            <Text as="span" className="block text-xl bg-gradient-to-r from-gray-600 via-black to-gray-600 dark:from-gray-400 dark:via-white dark:to-gray-400 bg-clip-text text-transparent animate-gradient bg-[length:200%_auto] delay-75">
+            </span>
+            <AuroraText className="text-3xl font-extrabold tracking-tight -mt-1">
               ElecTric
-            </Text>
+            </AuroraText>
           </div>
-          <Text className="text-[10px] text-gray-500 dark:text-gray-400 font-medium mt-1 tracking-wide uppercase">Stock Management</Text>
+          <Text className="text-[10px] text-gray-500 dark:text-gray-400 font-medium mt-1.5 tracking-wide uppercase">Stock Management</Text>
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes gradient {
-          0% { background-position: 0% center; }
-          100% { background-position: 200% center; }
-        }
-        .animate-gradient {
-          animation: gradient 3s linear infinite;
-        }
-      `}</style>
 
       {/* Menu */}
       <nav className="flex-1 p-4 space-y-2">
