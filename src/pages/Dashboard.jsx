@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { AuroraText } from "@/components/ui/aurora-text"
 import axios from 'axios';
 import {
   Box,
