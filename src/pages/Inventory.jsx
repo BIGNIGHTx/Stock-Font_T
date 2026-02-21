@@ -10,10 +10,42 @@ import { useAlert } from '../contexts/AlertContext';
 
 // --- Const: หมวดหมู่และแบรนด์ ---
 const CATEGORIES = [
-  { id: 'Tv', label: 'TV / โทรทัศน์', icon: <Tv size={32} />, color: 'bg-blue-500' },
-  { id: 'Fan', label: 'Fan / พัดลม', icon: <Wind size={32} />, color: 'bg-teal-500' },
-  { id: 'Refrigerator', label: 'Refrigerator / ตู้เย็น', icon: <Thermometer size={32} />, color: 'bg-orange-500' },
-  { id: 'Washing Machine', label: 'Washing Machine / เครื่องซักผ้า', icon: <Layers size={32} />, color: 'bg-indigo-500' },
+  {
+    id: 'Tv',
+    name: "TV",
+    thai: "โทรทัศน์",
+    image:
+      "https://images.unsplash.com/photo-1717295248230-93ea71f48f92?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8VFZ8ZW58MHx8MHx8fDA%3D",
+    action: "View Collection",
+    icon: "arrow_forward",
+  },
+  {
+    id: 'Fan',
+    name: "Fan",
+    thai: "พัดลม",
+    image:
+      "https://media.istockphoto.com/id/1150705585/th/%E0%B8%A3%E0%B8%B9%E0%B8%9B%E0%B8%96%E0%B9%88%E0%B8%B2%E0%B8%A2/%E0%B8%A0%E0%B8%B2%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%A2%E0%B8%B0%E0%B9%83%E0%B8%81%E0%B8%A5%E0%B9%89%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%9E%E0%B8%B1%E0%B8%94%E0%B8%A5%E0%B8%A1%E0%B8%95%E0%B8%B1%E0%B9%89%E0%B8%87%E0%B8%9E%E0%B8%B7%E0%B9%89%E0%B8%99%E0%B9%84%E0%B8%9F%E0%B8%9F%E0%B9%89%E0%B8%B2.jpg?s=612x612&w=0&k=20&c=vX1hV1muUVa96MZpx4jJd6Ujl54pQX6Z8eIyyrdkLvw=",
+    action: "View Collection",
+    icon: "arrow_forward",
+  },
+  {
+    id: 'Refrigerator',
+    name: "Refrigerator",
+    thai: "ตู้เย็น",
+    image:
+      "https://media.istockphoto.com/id/2162681544/th/%E0%B8%A3%E0%B8%B9%E0%B8%9B%E0%B8%96%E0%B9%88%E0%B8%B2%E0%B8%A2/%E0%B8%AB%E0%B9%89%E0%B8%AD%E0%B8%87%E0%B8%84%E0%B8%A3%E0%B8%B1%E0%B8%A7%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%97%E0%B8%B1%E0%B8%99%E0%B8%AA%E0%B8%A1%E0%B8%B1%E0%B8%A2%E0%B8%9E%E0%B8%A3%E0%B9%89%E0%B8%AD%E0%B8%A1%E0%B8%A1%E0%B8%B8%E0%B8%A1%E0%B8%A1%E0%B8%AD%E0%B8%87%E0%B8%94%E0%B9%89%E0%B8%B2%E0%B8%99%E0%B8%AB%E0%B8%99%E0%B9%89%E0%B8%B2%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%95%E0%B8%B9%E0%B9%89%E0%B9%80%E0%B8%A2%E0%B9%87%E0%B8%99%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%95%E0%B8%B9%E0%B9%89%E0%B8%AA%E0%B8%B5%E0%B8%82%E0%B8%B2%E0%B8%A7.jpg?s=612x612&w=0&k=20&c=_tw1MIr3359DcIqBmiaVymUxQFWSJYNnBzlzxfA9YrI=",
+    action: "Restock",
+    icon: "add_shopping_cart",
+  },
+  {
+    id: 'Washing Machine',
+    name: "Washing Machine",
+    thai: "เครื่องซักผ้า",
+    image:
+      "https://media.istockphoto.com/id/171578869/th/%E0%B8%A3%E0%B8%B9%E0%B8%9B%E0%B8%96%E0%B9%88%E0%B8%B2%E0%B8%A2/%E0%B9%80%E0%B8%84%E0%B8%A3%E0%B8%B7%E0%B9%88%E0%B8%AD%E0%B8%87%E0%B8%8B%E0%B8%B1%E0%B8%81%E0%B8%9C%E0%B9%89%E0%B8%B2.jpg?s=612x612&w=0&k=20&c=r1VoicB7w53Eo-5zAhY0aX-xf4biIVgUEVR_lwILdFM=",
+    action: "Restock",
+    icon: "add_shopping_cart",
+  },
 ];
 
 const BRANDS = ['All', 'Samsung', 'LG', 'Mitsubishi', 'Sharp', 'Hitachi', 'Panasonic'];
@@ -173,56 +205,93 @@ const Inventory = ({ initialOpenModal = false }) => {
     <div className="min-h-screen bg-[#F3F5F9] font-sans p-6 md:p-10 text-slate-700 animate-fade-in pb-20">
 
       {/* Header Section */}
-      <div className="flex justify-between items-center mb-8">
-        <div className="flex items-center gap-4">
-          {currentView === 'products' && (
+      {currentView === 'products' ? (
+        <div className="flex justify-between items-center mb-8 animate-fade-in">
+          <div className="flex items-center gap-4">
             <button
               onClick={() => setCurrentView('categories')}
               className="p-3 bg-white rounded-xl shadow-sm border border-slate-200 hover:bg-slate-50 transition-all text-slate-600"
             >
               <ArrowLeft size={20} />
             </button>
-          )}
-          <div>
-            <Text as="h2" className="text-3xl font-bold text-slate-900">
-              {currentView === 'categories' ? 'Innovation Stock' : `${activeCategory} Stock`}
-            </Text>
-            <Text className="text-slate-500 text-sm mt-1">
-              {currentView === 'categories' ? 'Select a category to manage' : 'Manage your inventory'}
-            </Text>
+            <div>
+              <Text as="h2" className="text-3xl font-bold text-slate-900">
+                {`${activeCategory} Stock`}
+              </Text>
+              <Text className="text-slate-500 text-sm mt-1">
+                Manage your inventory
+              </Text>
+            </div>
           </div>
-        </div>
 
-        {currentView === 'products' && (
           <button
             onClick={() => { resetForm(); setIsModalOpen(true); }}
             className="flex items-center px-6 py-3 bg-[#1e293b] text-white rounded-xl font-semibold shadow-lg shadow-slate-300 hover:bg-slate-800 transition-all transform active:scale-95"
           >
             <Plus size={18} className="mr-2" /> <Text as="span">Add Product</Text>
           </button>
-        )}
-      </div>
+        </div>
+      ) : (
+        <div className="text-center mb-16 max-w-3xl mx-auto pt-8 animate-fade-in relative">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-display font-medium text-slate-900 mb-6 tracking-tight">
+            Inventory <span className="text-[#D4AF37] italic font-serif">Categories</span>
+          </h1>
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <div className="h-[1px] w-12 bg-slate-300"></div>
+            <div className="w-2 h-2 rounded-full bg-[#D4AF37]"></div>
+            <div className="h-[1px] w-12 bg-slate-300"></div>
+          </div>
+          <p className="text-slate-500 text-lg leading-relaxed font-body max-w-xl mx-auto">
+            Browse through our premium collection of household essentials, meticulously cataloged for your convenience.
+          </p>
+        </div>
+      )}
 
       {/* --- VIEW 1: CATEGORY DASHBOARD --- */}
       {currentView === 'categories' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {CATEGORIES.map((cat) => (
-            <div
-              key={cat.id}
-              onClick={() => selectCategory(cat.id)}
-              className="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100 cursor-pointer hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group flex flex-col items-center text-center gap-4"
-            >
-              <div className={`w-20 h-20 rounded-full ${cat.color} text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform`}>
-                {cat.icon}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 max-w-[1600px] w-full mx-auto animate-fade-in">
+          {CATEGORIES.map((cat) => {
+            const itemCount = products.filter(p => p.category === cat.id).length;
+            return (
+              <div
+                key={cat.id}
+                onClick={() => selectCategory(cat.id)}
+                className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 cursor-pointer border border-transparent hover:border-slate-100"
+              >
+                {/* Image Section */}
+                <div className="relative h-64 overflow-hidden bg-slate-100">
+                  <img
+                    src={cat.image}
+                    alt={cat.name}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+
+                  {/* Badge */}
+                  <div className="absolute top-4 right-4 z-20">
+                    <span
+                      className={`inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold tracking-wide shadow-sm ${itemCount === 0
+                        ? "bg-red-500 text-white"
+                        : "bg-white text-slate-700"
+                        }`}
+                    >
+                      {itemCount} Items
+                    </span>
+                  </div>
+                </div>
+
+                {/* Content Section */}
+                <div className="p-8 bg-white">
+                  <div className="w-10 h-[2px] bg-primary mb-5 group-hover:w-16 transition-all duration-500"></div>
+                  <h3 className="text-xl font-display font-bold text-slate-900 mb-1">
+                    {cat.name}
+                  </h3>
+                  <p className="text-sm font-body text-slate-500 font-light">
+                    {cat.thai}
+                  </p>
+                </div>
               </div>
-              <div>
-                <Text as="h3" className="text-xl font-bold text-slate-800">{cat.label}</Text>
-                <Text className="text-slate-400 text-sm mt-1">
-                  {products.filter(p => p.category === cat.id).length} Items
-                </Text>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 

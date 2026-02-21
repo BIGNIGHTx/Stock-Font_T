@@ -9,15 +9,30 @@ export default {
     extend: {
       fontFamily: {
         sans: ['Inter', 'sans-serif'], // ใช้ Font Inter ตามดีไซน์
+        display: ["Playfair Display", "serif"],
+        body: ["Lato", "sans-serif"],
+      },
+      boxShadow: {
+        luxury: "0 20px 40px -10px rgba(0, 0, 0, 0.5)",
+        glow: "0 0 20px rgba(212, 175, 55, 0.15)",
+      },
+      borderRadius: {
+        DEFAULT: "1rem",
+        xl: "1.5rem",
       },
       colors: {
-        primary: "#2563EB",       // สีน้ำเงินปุ่มกด / Logo
+        primary: "#D4AF37",       // Luxury Gold from user request (replaced old blue)
         secondary: "#64748B",     // สีเทาข้อความรอง
         success: "#10B981",       // สีเขียว (ยอดบวก)
         danger: "#EF4444",        // สีแดง (แจ้งเตือน)
         warning: "#F59E0B",       // สีส้ม
         background: "#F8FAFC",    // สีพื้นหลัง App (เทาอ่อนมาก)
         surface: "#FFFFFF",       // สีพื้นหลัง Card (ขาว)
+
+        "background-light": "#F3F4F6",
+        "background-dark": "#121212",
+        "card-dark": "#1E1E1E",
+        "card-hover": "#252525",
 
         // Custom Dark Mode Colors
         'dark-bg': '#121212',     // Dark Grey requested by user
