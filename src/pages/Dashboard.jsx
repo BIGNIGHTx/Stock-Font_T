@@ -93,10 +93,12 @@ const Dashboard = ({ onNavigate }) => {
   const grossProfit = totalRevenue - totalCOGS;
   const profitMargin = totalRevenue > 0 ? ((grossProfit / totalRevenue) * 100).toFixed(1) : 0;
 
-  const dailySales = sales.filter(s => {
-    if (!s.created_at) return false;
-    try { return s.created_at.startsWith(selectedDate); } catch { return false; }
-  });
+  const dailySales = sales
+    .filter(s => {
+      if (!s.created_at) return false;
+      try { return s.created_at.startsWith(selectedDate); } catch { return false; }
+    })
+    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
   const dailyRevenue = dailySales.reduce((acc, s) => acc + s.total_price, 0);
   const dailyItemsSold = dailySales.reduce((acc, s) => acc + s.quantity, 0);
