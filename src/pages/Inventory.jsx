@@ -206,7 +206,7 @@ const Inventory = ({ initialOpenModal = false }) => {
 
       {/* Header Section */}
       {currentView === 'products' ? (
-        <div className="flex justify-between items-center mb-8 animate-fade-in">
+        <div className="flex justify-between items-center mb-6 animate-fade-in">
           <div className="flex items-center gap-4">
             <button
               onClick={() => setCurrentView('categories')}
@@ -232,11 +232,11 @@ const Inventory = ({ initialOpenModal = false }) => {
           </button>
         </div>
       ) : (
-        <div className="text-center mb-16 max-w-3xl mx-auto pt-8 animate-fade-in relative">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-display font-medium text-slate-900 mb-6 tracking-tight">
+        <div className="text-center mb-8 max-w-3xl mx-auto pt-2 animate-fade-in relative">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-display font-medium text-slate-900 mb-4 tracking-tight">
             Inventory <span className="text-[#D4AF37] italic font-serif">Categories</span>
           </h1>
-          <div className="flex items-center justify-center gap-4 mb-6">
+          <div className="flex items-center justify-center gap-4 mb-4">
             <div className="h-[1px] w-12 bg-slate-300"></div>
             <div className="w-2 h-2 rounded-full bg-[#D4AF37]"></div>
             <div className="h-[1px] w-12 bg-slate-300"></div>
