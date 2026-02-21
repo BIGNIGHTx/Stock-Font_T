@@ -182,33 +182,33 @@ const Dashboard = ({ onNavigate }) => {
 
         {/* ===== MAIN CONTENT AREA ===== */}
         {/* The content sits inside a white-ish panel that fills the max-width container */}
-        <div className="flex-1 bg-[#F3F5F9] p-6 md:p-10 text-slate-700">
+        <div className="flex-1 bg-[#F3F5F9] p-4 md:p-6 text-slate-700">
 
           {/* ================= Header Section ================= */}
-          <header className="flex flex-col xl:flex-row justify-between items-start xl:items-end gap-6 mb-10">
+          <header className="flex flex-row justify-between items-center gap-4 mb-5">
             <div>
-              <Text as="h1" className="text-3xl font-bold text-slate-900 mb-2">Welcome back, Admin!</Text>
-              <Text className="text-slate-500">Here's what's happening with your store today.</Text>
+              <Text as="h1" className="text-2xl font-bold text-slate-900 mb-0.5">Welcome back, Admin!</Text>
+              <Text className="text-slate-500 text-sm">Here's what's happening with your store today.</Text>
             </div>
 
-            <div className="flex flex-col md:flex-row items-center gap-6 w-full xl:w-auto">
+            <div className="flex flex-row items-center gap-4">
               <div className="text-right hidden md:block">
-                <Text className="text-3xl font-mono font-bold text-slate-800 tracking-tight">
+                <Text className="text-2xl font-mono font-bold text-slate-800 tracking-tight">
                   {currentDateTime.toLocaleTimeString('th-TH', { hour12: false })}
                 </Text>
-                <Text className="text-sm font-medium text-slate-400">{formattedDate}</Text>
+                <Text className="text-xs font-medium text-slate-400">{formattedDate}</Text>
               </div>
 
-              <div className="flex gap-3 w-full md:w-auto">
-                <button className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3 bg-white border border-slate-200 rounded-xl font-semibold text-slate-600 shadow-sm hover:bg-slate-50 transition-all cursor-pointer">
-                  <Download size={18} />
+              <div className="flex gap-2">
+                <button className="flex items-center justify-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-xl font-semibold text-slate-600 shadow-sm hover:bg-slate-50 transition-all cursor-pointer text-sm">
+                  <Download size={16} />
                   <Text as="span">Export</Text>
                 </button>
                 <button
                   onClick={() => onNavigate && onNavigate('inventory', { openAddModal: true })}
-                  className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3 bg-[#1e293b] text-white rounded-xl font-semibold shadow-lg shadow-slate-300 hover:bg-slate-800 transition-all transform active:scale-95 cursor-pointer"
+                  className="flex items-center justify-center gap-2 px-4 py-2 bg-[#1e293b] text-white rounded-xl font-semibold shadow-lg shadow-slate-300 hover:bg-slate-800 transition-all transform active:scale-95 cursor-pointer text-sm"
                 >
-                  <Plus size={18} />
+                  <Plus size={16} />
                   <Text as="span">Add Product</Text>
                 </button>
               </div>
@@ -216,7 +216,7 @@ const Dashboard = ({ onNavigate }) => {
           </header>
 
           {/* ================= Stats Grid ================= */}
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-10">
+          <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 mb-5">
 
             <SoftCard
               title="Total Products"
@@ -250,19 +250,19 @@ const Dashboard = ({ onNavigate }) => {
 
             <div
               onClick={() => setIsLowStockModalOpen(true)}
-              className="relative overflow-hidden bg-red-50/50 border border-red-100 rounded-[2rem] p-6 shadow-sm flex flex-col justify-between h-36 transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-xl cursor-pointer group"
+              className="relative overflow-hidden bg-red-50/50 border border-red-100 rounded-[2rem] p-4 shadow-sm flex flex-col justify-between h-28 transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-xl cursor-pointer group"
             >
-              <div className="absolute top-0 right-0 p-6">
+              <div className="absolute top-0 right-0 p-4">
                 <div className="bg-white/80 p-2 rounded-xl shadow-sm text-red-500 group-hover:scale-110 transition-transform">
-                  <AlertTriangle size={24} />
+                  <AlertTriangle size={20} />
                 </div>
               </div>
               <div>
-                <Text as="h3" className="text-red-800 text-sm font-semibold mb-1">Low Stock Alert</Text>
-                <Text className="text-3xl font-bold text-slate-800">{isLoading ? '-' : `${lowStockProducts} Items`}</Text>
+                <Text as="h3" className="text-red-800 text-xs font-semibold mb-1">Low Stock Alert</Text>
+                <Text className="text-2xl font-bold text-slate-800">{isLoading ? '-' : `${lowStockProducts} Items`}</Text>
               </div>
-              <div className="flex items-center gap-2 mt-2">
-                <span className={`text-xs font-bold px-2 py-1 rounded-md ${lowStockProducts > 0 ? 'text-red-600 bg-red-100' : 'text-green-600 bg-green-100'}`}>
+              <div className="flex items-center gap-2">
+                <span className={`text-xs font-bold px-2 py-0.5 rounded-md ${lowStockProducts > 0 ? 'text-red-600 bg-red-100' : 'text-green-600 bg-green-100'}`}>
                   <Text as="span">{lowStockProducts > 0 ? 'Click to View' : 'All Good'}</Text>
                 </span>
                 <Text as="span" className="text-xs text-red-400">
@@ -339,237 +339,245 @@ const Dashboard = ({ onNavigate }) => {
             </div>
           )}
 
-          {/* ================= Daily Section ================= */}
-          <div className="bg-white rounded-[2.5rem] p-8 shadow-[0_2px_40px_-10px_rgba(0,0,0,0.04)] border border-slate-100 mb-10">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-              <div>
-                <Text as="h2" className="text-lg font-bold text-slate-800 flex items-center gap-2">
-                  Of the Day <span className="px-3 py-1 bg-slate-100 rounded-full text-xs text-slate-500 font-normal">
-                    <Text as="span">{selectedDateFormatted}</Text>
-                  </span>
-                </Text>
-                <Text className="text-slate-400 text-sm mt-1">Detailed breakdown of sales for the selected date</Text>
-              </div>
+          {/* ================= Bottom 2-column Layout ================= */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 pb-6">
 
-              <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 px-4 py-2 rounded-xl">
-                <Text as="span" className="text-sm text-slate-500 font-medium">Select Date:</Text>
-                <input
-                  type="date"
-                  value={selectedDate}
-                  onChange={(e) => setSelectedDate(e.target.value)}
-                  className="bg-transparent text-slate-700 font-semibold focus:outline-none text-sm cursor-pointer [&::-webkit-calendar-picker-indicator]:cursor-pointer"
-                />
+            {/* Left Column: Of the Day + Table */}
+            <div className="lg:col-span-2">
+              <div className="bg-white rounded-[2rem] p-5 shadow-[0_2px_40px_-10px_rgba(0,0,0,0.04)] border border-slate-100">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-3">
+                  <div>
+                    <Text as="h2" className="text-base font-bold text-slate-800 flex items-center gap-2">
+                      Of the Day <span className="px-3 py-1 bg-slate-100 rounded-full text-xs text-slate-500 font-normal">
+                        <Text as="span">{selectedDateFormatted}</Text>
+                      </span>
+                    </Text>
+                    <Text className="text-slate-400 text-xs mt-0.5">Detailed breakdown of sales for the selected date</Text>
+                  </div>
+
+                  <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl">
+                    <Text as="span" className="text-xs text-slate-500 font-medium">Select Date:</Text>
+                    <input
+                      type="date"
+                      value={selectedDate}
+                      onChange={(e) => setSelectedDate(e.target.value)}
+                      className="bg-transparent text-slate-700 font-semibold focus:outline-none text-xs cursor-pointer [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex flex-col md:flex-row gap-3 mb-4">
+                  <div className="flex-1 bg-[#F0F4FF] rounded-xl p-3 border border-blue-50">
+                    <Text as="h4" className="text-blue-800 text-[10px] font-bold uppercase tracking-wider mb-1">Daily Revenue</Text>
+                    <Text className="text-xl font-bold text-slate-800">฿{dailyRevenue.toLocaleString()}</Text>
+                  </div>
+                  <div className="flex-1 bg-[#FFF8F0] rounded-xl p-3 border border-orange-50">
+                    <Text as="h4" className="text-orange-800 text-[10px] font-bold uppercase tracking-wider mb-1">Items Sold</Text>
+                    <Text className="text-xl font-bold text-slate-800">{dailyItemsSold}</Text>
+                  </div>
+                </div>
+
+                <div className="w-full overflow-x-auto">
+                  <div className="grid grid-cols-12 gap-4 px-4 py-2 bg-slate-50 rounded-xl text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 min-w-[500px]">
+                    <div className="col-span-2"><Text as="span">Time</Text></div>
+                    <div className="col-span-4"><Text as="span">Product</Text></div>
+                    <div className="col-span-1 text-center"><Text as="span">Tax</Text></div>
+                    <div className="col-span-1 text-center"><Text as="span">Qty</Text></div>
+                    <div className="col-span-2 text-right"><Text as="span">Total</Text></div>
+                    <div className="col-span-2 text-center"><Text as="span">Action</Text></div>
+                  </div>
+
+                  {dailySales.length > 0 ? (
+                    <div className="space-y-1 min-w-[500px]">
+                      {dailySales.map((sale, idx) => {
+                        const product = products.find(p => p.id === sale.product_id);
+                        return (
+                          <div key={idx} className="grid grid-cols-12 gap-4 px-4 py-3 hover:bg-slate-50 rounded-xl transition-colors items-center border-b border-slate-50 last:border-0 text-sm">
+                            <div className="col-span-2 font-mono text-slate-400">
+                              <Text as="span">{new Date(sale.created_at).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })}</Text>
+                            </div>
+                            <div className="col-span-4 font-medium text-slate-700 flex flex-col justify-center">
+                              <Text as="span">
+                                {product ? (
+                                  <><span className="text-slate-400 text-xs mr-1 font-bold">[{product.sku}]</span>{product.name}</>
+                                ) : `Product ID: ${sale.product_id}`}
+                              </Text>
+                            </div>
+                            <div className="col-span-1 text-center flex items-center justify-center">
+                              {product && product.hasVat
+                                ? <span className="px-1.5 py-0.5 bg-purple-100 text-purple-600 rounded text-[10px] font-bold border border-purple-200">VAT</span>
+                                : <span className="px-1.5 py-0.5 bg-slate-100 text-slate-500 rounded text-[10px] border border-slate-200">No VAT</span>}
+                            </div>
+                            <div className="col-span-1 text-center">
+                              <span className="inline-block bg-slate-100 text-slate-600 px-2 py-1 rounded text-xs font-bold">
+                                <Text as="span">x{sale.quantity}</Text>
+                              </span>
+                            </div>
+                            <div className="col-span-2 text-right font-bold text-emerald-600">
+                              <Text as="span">฿{sale.total_price.toLocaleString()}</Text>
+                            </div>
+                            <div className="col-span-2 text-center">
+                              <button
+                                onClick={() => handleDeleteSale(sale.id)}
+                                className="p-2 text-red-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-all cursor-pointer"
+                                title="Delete Sale"
+                              >
+                                <Trash2 size={16} />
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center py-10 text-slate-300">
+                      <Box size={40} strokeWidth={1} className="mb-3 text-slate-200" />
+                      <Text className="font-medium text-sm">No sales recorded for this date</Text>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
-            <div className="flex flex-col md:flex-row gap-6 mb-10">
-              <div className="flex-1 bg-[#F0F4FF] rounded-2xl p-6 border border-blue-50">
-                <Text as="h4" className="text-blue-800 text-xs font-bold uppercase tracking-wider mb-2">Daily Revenue</Text>
-                <Text className="text-3xl font-bold text-slate-800">฿{dailyRevenue.toLocaleString()}</Text>
-              </div>
-              <div className="flex-1 bg-[#FFF8F0] rounded-2xl p-6 border border-orange-50">
-                <Text as="h4" className="text-orange-800 text-xs font-bold uppercase tracking-wider mb-2">Items Sold</Text>
-                <Text className="text-3xl font-bold text-slate-800">{dailyItemsSold}</Text>
-              </div>
-            </div>
+            {/* Right Column: Inventory by Category + Sales Trends */}
+            <div className="lg:col-span-1 flex flex-col gap-4">
 
-            <div className="w-full overflow-x-auto">
-              <div className="grid grid-cols-12 gap-4 px-6 py-3 bg-slate-50 rounded-xl text-xs font-bold text-slate-500 uppercase tracking-wider mb-4 min-w-[600px]">
-                <div className="col-span-2"><Text as="span">Time</Text></div>
-                <div className="col-span-4"><Text as="span">Product</Text></div>
-                <div className="col-span-1 text-center"><Text as="span">Tax</Text></div>
-                <div className="col-span-1 text-center"><Text as="span">Qty</Text></div>
-                <div className="col-span-2 text-right"><Text as="span">Total</Text></div>
-                <div className="col-span-2 text-center"><Text as="span">Action</Text></div>
-              </div>
+              {/* Inventory by Category */}
+              <div className="bg-white rounded-[2rem] p-5 border border-slate-100 shadow-sm flex flex-col hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.1)] transition-all duration-500 ease-out hover:-translate-y-2 cursor-pointer">
+                <div className="mb-3">
+                  <Text as="h3" className="text-base font-bold text-slate-800">Inventory by Category</Text>
+                  <Text className="text-xs text-slate-400">Stock value distribution</Text>
+                </div>
 
-              {dailySales.length > 0 ? (
-                <div className="space-y-2 min-w-[600px]">
-                  {dailySales.map((sale, idx) => {
-                    const product = products.find(p => p.id === sale.product_id);
-                    return (
-                      <div key={idx} className="grid grid-cols-12 gap-4 px-6 py-4 hover:bg-slate-50 rounded-xl transition-colors items-center border-b border-slate-50 last:border-0 text-sm">
-                        <div className="col-span-2 font-mono text-slate-400">
-                          <Text as="span">{new Date(sale.created_at).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })}</Text>
-                        </div>
-                        <div className="col-span-4 font-medium text-slate-700 flex flex-col justify-center">
-                          <Text as="span">
-                            {product ? (
-                              <><span className="text-slate-400 text-xs mr-1 font-bold">[{product.sku}]</span>{product.name}</>
-                            ) : `Product ID: ${sale.product_id}`}
+                {isLoading ? (
+                  <div className="flex-1 flex items-center justify-center text-slate-400"><Text>Loading...</Text></div>
+                ) : pieData.length > 0 ? (
+                  <>
+                    <div className="flex items-center justify-center relative">
+                      <div className="w-36 h-36">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <PieChart>
+                            <Pie data={pieData} innerRadius={45} outerRadius={62} paddingAngle={5} dataKey="value">
+                              {pieData.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={entry.color} strokeWidth={0} />
+                              ))}
+                            </Pie>
+                          </PieChart>
+                        </ResponsiveContainer>
+                        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                          <Text as="span" className="text-2xl font-bold text-slate-800">
+                            {totalStockValue > 0 ? Math.round((topCategory.value / totalStockValue) * 100) : 0}%
                           </Text>
+                          <Text as="span" className="text-xs text-slate-400">{topCategory.name}</Text>
                         </div>
-                        <div className="col-span-1 text-center flex items-center justify-center">
-                          {product && product.hasVat
-                            ? <span className="px-1.5 py-0.5 bg-purple-100 text-purple-600 rounded text-[10px] font-bold border border-purple-200">VAT</span>
-                            : <span className="px-1.5 py-0.5 bg-slate-100 text-slate-500 rounded text-[10px] border border-slate-200">No VAT</span>}
-                        </div>
-                        <div className="col-span-1 text-center">
-                          <span className="inline-block bg-slate-100 text-slate-600 px-2 py-1 rounded text-xs font-bold">
-                            <Text as="span">x{sale.quantity}</Text>
-                          </span>
-                        </div>
-                        <div className="col-span-2 text-right font-bold text-emerald-600">
-                          <Text as="span">฿{sale.total_price.toLocaleString()}</Text>
-                        </div>
-                        <div className="col-span-2 text-center">
-                          <button
-                            onClick={() => handleDeleteSale(sale.id)}
-                            className="p-2 text-red-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-all cursor-pointer"
-                            title="Delete Sale"
-                          >
-                            <Trash2 size={16} />
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : (
-                <div className="flex flex-col items-center justify-center py-16 text-slate-300">
-                  <Box size={48} strokeWidth={1} className="mb-4 text-slate-200" />
-                  <Text className="font-medium">No sales recorded for this date</Text>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* ================= Charts Section ================= */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-10">
-
-            <div className="lg:col-span-2 bg-white rounded-[2rem] p-8 border border-slate-100 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.1)] transition-all duration-500 ease-out hover:-translate-y-2 cursor-pointer">
-              <div className="flex justify-between items-center mb-6">
-                <div>
-                  <Text as="h3" className="text-lg font-bold text-slate-800">Sales Trends</Text>
-                  <Text className="text-sm text-slate-400">
-                    Revenue: {new Date(chartDays[0]).toLocaleDateString('th-TH', { day: 'numeric', month: 'short' })} - {new Date(chartDays[chartDays.length - 1]).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' })}
-                  </Text>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="flex flex-col">
-                    <Text as="span" className="text-[10px] text-slate-400 font-medium">From</Text>
-                    <input
-                      type="date"
-                      value={chartStartDate}
-                      max={chartEndDate}
-                      onChange={(e) => {
-                        const newStart = e.target.value;
-                        setChartStartDate(newStart);
-                        const start = new Date(newStart);
-                        const end = new Date(chartEndDate);
-                        const diffDays = Math.ceil(Math.abs(end - start) / (1000 * 60 * 60 * 24));
-                        if (diffDays > 6) {
-                          const newEnd = new Date(start);
-                          newEnd.setDate(start.getDate() + 6);
-                          setChartEndDate(newEnd.toISOString().split('T')[0]);
-                        }
-                      }}
-                      className="bg-slate-50 border border-slate-200 text-slate-600 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-1.5 outline-none shadow-sm cursor-pointer hover:border-blue-300 transition-colors [&::-webkit-calendar-picker-indicator]:cursor-pointer"
-                    />
-                  </div>
-                  <div className="flex flex-col">
-                    <Text as="span" className="text-[10px] text-slate-400 font-medium">To (Max 7 Days)</Text>
-                    <input
-                      type="date"
-                      value={chartEndDate}
-                      min={chartStartDate}
-                      onChange={(e) => {
-                        const newEnd = e.target.value;
-                        setChartEndDate(newEnd);
-                        const end = new Date(newEnd);
-                        const start = new Date(chartStartDate);
-                        const diffDays = Math.ceil(Math.abs(end - start) / (1000 * 60 * 60 * 24));
-                        if (diffDays > 6) {
-                          const newStart = new Date(end);
-                          newStart.setDate(end.getDate() - 6);
-                          setChartStartDate(newStart.toISOString().split('T')[0]);
-                        }
-                      }}
-                      className="bg-slate-50 border border-slate-200 text-slate-600 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-1.5 outline-none shadow-sm cursor-pointer hover:border-blue-300 transition-colors [&::-webkit-calendar-picker-indicator]:cursor-pointer"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {isLoading ? (
-                <div className="h-64 flex items-center justify-center text-slate-400"><Text>Loading chart...</Text></div>
-              ) : sales.length === 0 ? (
-                <div className="h-64 flex flex-col items-center justify-center text-slate-400">
-                  <TrendingUp size={48} className="mb-3 opacity-20" />
-                  <Text className="font-medium">No sales data yet</Text>
-                </div>
-              ) : (
-                <div className="h-64 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart
-                      data={salesByDay}
-                      onClick={(data) => {
-                        if (data && data.activePayload && data.activePayload.length > 0) {
-                          setSelectedDate(data.activePayload[0].payload.dateStr);
-                        }
-                      }}
-                      className="cursor-pointer"
-                    >
-                      <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 10 }} dy={10} interval={0} />
-                      <Tooltip
-                        cursor={{ fill: 'rgba(241, 245, 249, 0.5)' }}
-                        contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
-                        formatter={(value) => [`฿${value.toLocaleString()}`, 'Revenue']}
-                        labelStyle={{ color: '#64748b' }}
-                      />
-                      <Bar dataKey="val" fill="#3B82F6" radius={[4, 4, 0, 0]} barSize={20} activeBar={{ fill: '#2563EB' }} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-              )}
-            </div>
-
-            <div className="bg-white rounded-[2rem] p-6 border border-slate-100 shadow-sm flex flex-col hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.1)] transition-all duration-500 ease-out hover:-translate-y-2 cursor-pointer">
-              <div className="mb-4">
-                <Text as="h3" className="text-lg font-bold text-slate-800">Inventory by Category</Text>
-                <Text className="text-sm text-slate-400">Stock value distribution</Text>
-              </div>
-
-              {isLoading ? (
-                <div className="flex-1 flex items-center justify-center text-slate-400"><Text>Loading...</Text></div>
-              ) : pieData.length > 0 ? (
-                <>
-                  <div className="flex-1 flex items-center justify-center relative">
-                    <div className="w-48 h-48">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <PieChart>
-                          <Pie data={pieData} innerRadius={60} outerRadius={80} paddingAngle={5} dataKey="value">
-                            {pieData.map((entry, index) => (
-                              <Cell key={`cell-${index}`} fill={entry.color} strokeWidth={0} />
-                            ))}
-                          </Pie>
-                        </PieChart>
-                      </ResponsiveContainer>
-                      <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                        <Text as="span" className="text-3xl font-bold text-slate-800">
-                          {totalStockValue > 0 ? Math.round((topCategory.value / totalStockValue) * 100) : 0}%
-                        </Text>
-                        <Text as="span" className="text-xs text-slate-400">{topCategory.name}</Text>
                       </div>
                     </div>
-                  </div>
-                  <div className="mt-4 space-y-3">
-                    {pieData.slice(0, 4).map((item) => (
-                      <div key={item.name} className="flex justify-between items-center text-sm">
-                        <div className="flex items-center">
-                          <div className="w-3 h-3 rounded-full mr-2" style={{ backgroundColor: item.color }}></div>
-                          <Text as="span" className="text-slate-600">{item.name}</Text>
+                    <div className="mt-3 space-y-2">
+                      {pieData.slice(0, 4).map((item) => (
+                        <div key={item.name} className="flex justify-between items-center text-xs">
+                          <div className="flex items-center">
+                            <div className="w-2.5 h-2.5 rounded-full mr-2" style={{ backgroundColor: item.color }}></div>
+                            <Text as="span" className="text-slate-600">{item.name}</Text>
+                          </div>
+                          <Text as="span" className="font-bold text-slate-800">฿{item.value.toLocaleString()}</Text>
                         </div>
-                        <Text as="span" className="font-bold text-slate-800">฿{item.value.toLocaleString()}</Text>
-                      </div>
-                    ))}
-                  </div>
-                </>
-              ) : (
-                <div className="flex-1 flex items-center justify-center text-slate-400"><Text>No data available</Text></div>
-              )}
-            </div>
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  <div className="flex-1 flex items-center justify-center text-slate-400"><Text>No data available</Text></div>
+                )}
+              </div>
 
+              {/* Sales Trends Chart */}
+              <div className="bg-white rounded-[2rem] p-5 border border-slate-100 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.1)] transition-all duration-500 ease-out hover:-translate-y-2 cursor-pointer flex-1">
+                <div className="flex justify-between items-start mb-3">
+                  <div>
+                    <Text as="h3" className="text-base font-bold text-slate-800">Sales Trends</Text>
+                    <Text className="text-xs text-slate-400">
+                      {new Date(chartDays[0]).toLocaleDateString('th-TH', { day: 'numeric', month: 'short' })} - {new Date(chartDays[chartDays.length - 1]).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' })}
+                    </Text>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <div className="flex flex-col">
+                      <Text as="span" className="text-[9px] text-slate-400 font-medium">From</Text>
+                      <input
+                        type="date"
+                        value={chartStartDate}
+                        max={chartEndDate}
+                        onChange={(e) => {
+                          const newStart = e.target.value;
+                          setChartStartDate(newStart);
+                          const start = new Date(newStart);
+                          const end = new Date(chartEndDate);
+                          const diffDays = Math.ceil(Math.abs(end - start) / (1000 * 60 * 60 * 24));
+                          if (diffDays > 6) {
+                            const newEnd = new Date(start);
+                            newEnd.setDate(start.getDate() + 6);
+                            setChartEndDate(newEnd.toISOString().split('T')[0]);
+                          }
+                        }}
+                        className="bg-slate-50 border border-slate-200 text-slate-600 text-[10px] rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-1 outline-none shadow-sm cursor-pointer hover:border-blue-300 transition-colors [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                      />
+                    </div>
+                    <div className="flex flex-col">
+                      <Text as="span" className="text-[9px] text-slate-400 font-medium">To</Text>
+                      <input
+                        type="date"
+                        value={chartEndDate}
+                        min={chartStartDate}
+                        onChange={(e) => {
+                          const newEnd = e.target.value;
+                          setChartEndDate(newEnd);
+                          const end = new Date(newEnd);
+                          const start = new Date(chartStartDate);
+                          const diffDays = Math.ceil(Math.abs(end - start) / (1000 * 60 * 60 * 24));
+                          if (diffDays > 6) {
+                            const newStart = new Date(end);
+                            newStart.setDate(end.getDate() - 6);
+                            setChartStartDate(newStart.toISOString().split('T')[0]);
+                          }
+                        }}
+                        className="bg-slate-50 border border-slate-200 text-slate-600 text-[10px] rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-1 outline-none shadow-sm cursor-pointer hover:border-blue-300 transition-colors [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {isLoading ? (
+                  <div className="h-36 flex items-center justify-center text-slate-400"><Text>Loading chart...</Text></div>
+                ) : sales.length === 0 ? (
+                  <div className="h-36 flex flex-col items-center justify-center text-slate-400">
+                    <TrendingUp size={36} className="mb-2 opacity-20" />
+                    <Text className="font-medium text-sm">No sales data yet</Text>
+                  </div>
+                ) : (
+                  <div className="h-36 w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart
+                        data={salesByDay}
+                        onClick={(data) => {
+                          if (data && data.activePayload && data.activePayload.length > 0) {
+                            setSelectedDate(data.activePayload[0].payload.dateStr);
+                          }
+                        }}
+                        className="cursor-pointer"
+                      >
+                        <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 9 }} dy={8} interval={0} />
+                        <Tooltip
+                          cursor={{ fill: 'rgba(241, 245, 249, 0.5)' }}
+                          contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+                          formatter={(value) => [`฿${value.toLocaleString()}`, 'Revenue']}
+                          labelStyle={{ color: '#64748b' }}
+                        />
+                        <Bar dataKey="val" fill="#3B82F6" radius={[4, 4, 0, 0]} barSize={14} activeBar={{ fill: '#2563EB' }} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                )}
+              </div>
+
+            </div>
           </div>
         </div>
         {/* END MAIN CONTENT */}
@@ -582,17 +590,17 @@ const Dashboard = ({ onNavigate }) => {
 };
 
 // Reusable Soft Card Component (unchanged)
-const SoftCard = ({ title, value, subLabel, icon: Icon, iconColor, iconBg, subLabelColor = "text-slate-400", iconSize = 24, iconStrokeWidth }) => {
+const SoftCard = ({ title, value, subLabel, icon: Icon, iconColor, iconBg, subLabelColor = "text-slate-400", iconSize = 20, iconStrokeWidth }) => {
   return (
-    <div className="relative bg-white rounded-[2rem] p-6 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-slate-100 h-36 flex flex-col justify-between transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-xl cursor-pointer">
-      <div className="absolute top-0 right-0 p-6">
+    <div className="relative bg-white rounded-[2rem] p-4 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-slate-100 h-28 flex flex-col justify-between transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-xl cursor-pointer">
+      <div className="absolute top-0 right-0 p-4">
         <div className={`p-2 rounded-xl ${iconBg} ${iconColor} shadow-sm`}>
           <Icon size={iconSize} strokeWidth={iconStrokeWidth} />
         </div>
       </div>
       <div>
-        <Text as="h3" className="text-slate-500 text-sm font-medium mb-1">{title}</Text>
-        <Text className="text-3xl font-bold text-slate-800 tracking-tight">{value}</Text>
+        <Text as="h3" className="text-slate-500 text-xs font-medium mb-1">{title}</Text>
+        <Text className="text-xl font-bold text-slate-800 tracking-tight">{value}</Text>
       </div>
       <Text className={`text-xs font-semibold ${subLabelColor}`}>{subLabel}</Text>
     </div>

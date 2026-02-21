@@ -13,8 +13,8 @@ const RecentTransactions = ({ recentSales = [] }) => {
     });
 
     return (
-        <div id="recent-transactions-section" className="bg-white rounded-[24px] p-8 w-full shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-slate-100 h-fit mb-8 transition-all duration-500">
-            <div className="flex items-center gap-3 mb-6">
+        <div id="recent-transactions-section" className="bg-white rounded-[24px] p-5 w-full shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-slate-100 h-fit mb-4 transition-all duration-500">
+            <div className="flex items-center gap-3 mb-4">
                 <div className="bg-[#8BA3BA] p-1.5 rounded-full text-white">
                     <Clock size={20} />
                 </div>
@@ -23,7 +23,7 @@ const RecentTransactions = ({ recentSales = [] }) => {
                 </h2>
             </div>
 
-            <hr className="border-slate-100 mb-6" />
+            <hr className="border-slate-100 mb-4" />
 
             <div className="relative">
                 {todaySales.length > 1 && (
@@ -175,31 +175,29 @@ const Sales = () => {
     return (
         /* ===== Outer wrapper — centered, same bg ===== */
         <div className="min-h-screen bg-[#F3F5F9] font-sans flex justify-center animate-fade-in">
-            <div className="w-full max-w-[1280px] p-6 md:p-10 text-slate-700 pb-20">
+            <div className="w-full max-w-[1280px] px-6 py-4 md:px-10 md:py-5 text-slate-700">
 
                 {/* Header */}
-                <div className="text-center mb-10 max-w-3xl mx-auto pt-2 animate-fade-in relative">
-                    <h1 className="text-4xl sm:text-5xl lg:text-6xl font-display font-medium text-slate-900 mb-4 tracking-tight">
-                        Point of <span className="text-blue-600 italic font-serif">Sale</span>
-                    </h1>
-                    <div className="flex items-center justify-center gap-4 mb-4">
-                        <div className="h-[1px] w-12 bg-slate-300"></div>
-                        <div className="w-2 h-2 rounded-full bg-blue-600"></div>
-                        <div className="h-[1px] w-12 bg-slate-300"></div>
+                <div className="flex items-center justify-between mb-4 animate-fade-in">
+                    <div className="flex items-center gap-3">
+                        <h1 className="text-2xl sm:text-3xl font-display font-medium text-slate-900 tracking-tight">
+                            Point of <span className="text-blue-600 italic font-serif">Sale</span>
+                        </h1>
+                        <div className="h-5 w-[1px] bg-slate-300 hidden sm:block"></div>
+                        <p className="text-slate-500 text-sm hidden sm:block">
+                            Real-time stock deduction system.
+                        </p>
                     </div>
-                    <p className="text-slate-500 text-lg leading-relaxed font-body max-w-xl mx-auto flex items-center justify-center gap-2">
-                        Real-time stock deduction system.
-                        <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold flex items-center gap-1 shadow-sm border border-green-200 ml-2">
-                            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div> <Text as="span">DB Connected</Text>
-                        </span>
-                    </p>
+                    <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold flex items-center gap-1 shadow-sm border border-green-200">
+                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div> <Text as="span">DB Connected</Text>
+                    </span>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
                     {/* Left Column: Input Form */}
-                    <div className="lg:col-span-2 space-y-6">
-                        <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)]">
-                            <div className="flex justify-between items-center mb-6">
+                    <div className="lg:col-span-2 space-y-4">
+                        <div className="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)]">
+                            <div className="flex justify-between items-center mb-4">
                                 <Text as="h3" className="font-bold text-lg text-slate-800">Transaction Details</Text>
                                 <div className="relative">
                                     <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
@@ -213,7 +211,7 @@ const Sales = () => {
                             </div>
 
                             {/* Category Filters */}
-                            <div className="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-none">
+                            <div className="flex gap-2 mb-4 overflow-x-auto pb-1 scrollbar-none">
                                 {CATEGORIES.map(cat => (
                                     <button
                                         key={cat.id}
@@ -229,7 +227,7 @@ const Sales = () => {
                             </div>
 
                             {/* Product Selection (Custom Dropdown) */}
-                            <div className="mb-8 relative" ref={dropdownRef}>
+                            <div className="mb-5 relative" ref={dropdownRef}>
                                 <Text as="label" className="block text-sm font-medium text-slate-700 mb-2">Select Product {selectedCategory !== 'All' && `(${selectedCategory})`}</Text>
 
                                 <div
@@ -313,7 +311,7 @@ const Sales = () => {
 
                             {/* Stock Preview Box */}
                             {selectedProduct && (
-                                <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200 mb-8 animate-slide-up">
+                                <div className="bg-slate-50 rounded-2xl p-4 border border-slate-200 mb-4 animate-slide-up">
                                     <div className="flex justify-between items-center mb-4">
                                         <div className="flex items-center gap-2 text-slate-700 font-semibold">
                                             <Package size={20} /> <Text as="span">Product Status</Text>
@@ -339,7 +337,7 @@ const Sales = () => {
                             )}
 
                             {/* Quantity & Price Row */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
                                 <div>
                                     <Text as="label" className="block text-sm font-medium text-slate-700 mb-2">Quantity</Text>
                                     <div className="flex items-center">
@@ -387,20 +385,20 @@ const Sales = () => {
                             </div>
 
                             {/* Total Amount */}
-                            <div className="mt-8 bg-white rounded-2xl p-6 flex justify-between items-center text-slate-800 shadow-sm border border-slate-200">
+                            <div className="mt-5 bg-white rounded-2xl p-4 flex justify-between items-center text-slate-800 shadow-sm border border-slate-200">
                                 <div>
                                     <Text className="text-slate-400 text-sm">Total Amount</Text>
                                     <Text className="text-xs text-slate-400">
                                         {selectedProduct?.hasVat ? 'VAT Included (ราคารวมภาษีแล้ว)' : 'No VAT (ราคายกเว้นภาษี)'}
                                     </Text>
                                 </div>
-                                <div className="text-3xl font-bold tracking-tight text-blue-600">
+                                <div className="text-2xl font-bold tracking-tight text-blue-600">
                                     <Text as="span">฿ {parseFloat(totalAmount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</Text>
                                 </div>
                             </div>
 
                             {/* Action Buttons */}
-                            <div className="mt-8 flex justify-end gap-4">
+                            <div className="mt-4 flex justify-end gap-4">
                                 <button
                                     onClick={handleConfirmSale}
                                     disabled={!selectedProduct || remainingStock < 0 || isSuccess}
