@@ -4,13 +4,10 @@ import { Calendar, Search, Package, TrendingDown, CheckCircle, Plus, Minus, Tag,
 import { Text } from '../components/text';
 
 const RecentTransactions = ({ recentSales = [] }) => {
-    // กรองให้เหลือเฉพาะรายการที่ขายได้ในวันนี้ (อิงจาก created_at ถ้ามี)
-    const today = new Date().toLocaleDateString('en-CA'); // 'en-CA' gives YYYY-MM-DD
+    const today = new Date().toLocaleDateString('en-CA');
     const todaySales = recentSales.filter(sale => {
         const saleDate = sale.created_at || sale.sale_date;
         if (!saleDate) return false;
-
-        // เปรียบเทียบเป็นวันที่แบบ Local จะได้ตรงกับคำว่า "วันนี้"
         const d = new Date(saleDate);
         return d.toLocaleDateString('en-CA') === today;
     });
@@ -29,7 +26,6 @@ const RecentTransactions = ({ recentSales = [] }) => {
             <hr className="border-slate-100 mb-6" />
 
             <div className="relative">
-                {/* Vertical Timeline Line */}
                 {todaySales.length > 1 && (
                     <div className="absolute top-2 left-[5px] bottom-4 w-[2px] bg-slate-100 z-0"></div>
                 )}
@@ -42,20 +38,15 @@ const RecentTransactions = ({ recentSales = [] }) => {
 
                         return (
                             <div key={item.id} className={`relative flex justify-between items-start pl-6 ${isLatest ? 'animate-slide-up bg-slate-50/50 p-2 -ml-2 rounded-xl transition-all duration-500' : ''}`}>
-                                {/* Timeline Dot */}
                                 <div className={`absolute ${isLatest ? 'left-[7px] top-[14px]' : 'left-[-1px] top-1.5'} w-3 h-3 bg-[#DEE5ED] rounded-full border-[3px] border-white box-content z-10 transition-all`}></div>
 
-                                {/* Left Column: Product & Time */}
                                 <div className="flex flex-col mt-[-2px]">
                                     <span className="text-base font-semibold text-slate-700">
                                         {item.product_name} <span className="text-sm font-normal text-slate-400 ml-1">x{item.quantity}</span>
                                     </span>
-                                    <span className="text-sm text-slate-400 mt-1">
-                                        {timeStr}
-                                    </span>
+                                    <span className="text-sm text-slate-400 mt-1">{timeStr}</span>
                                 </div>
 
-                                {/* Right Column: Price & Status */}
                                 <div className="flex flex-col items-end mt-[-2px]">
                                     <span className="text-base font-bold tracking-tight text-[#FA5252]">
                                         ฿ {parseFloat(item.total_price).toLocaleString(undefined, { minimumFractionDigits: 2 })}
@@ -79,36 +70,28 @@ const RecentTransactions = ({ recentSales = [] }) => {
 };
 
 const Sales = () => {
-    // State สำหรับเก็บข้อมูลสินค้าจริง
     const [products, setProducts] = useState([]);
-
-    // State สำหรับเก็บข้อมูลการขายจริง
     const [recentSales, setRecentSales] = useState([]);
 
-    // --- Const: หมวดหมู่ (Copy from Inventory) ---
     // eslint-disable-next-line no-unused-vars
     const CATEGORIES = [
-        { id: 'All', label: 'All Products', icon: <Package size={20} />, color: 'bg-slate-500' }, // Added All option
+        { id: 'All', label: 'All Products', icon: <Package size={20} />, color: 'bg-slate-500' },
         { id: 'Tv', label: 'TV', icon: null, color: 'bg-blue-500' },
         { id: 'Fan', label: 'Fan', icon: null, color: 'bg-teal-500' },
         { id: 'Refrigerator', label: 'Refrigerator', icon: null, color: 'bg-orange-500' },
         { id: 'Washing Machine', label: 'Washing Machine', icon: null, color: 'bg-indigo-500' },
     ];
 
-    // Form State
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [selectedProductId, setSelectedProductId] = useState('');
     const [quantity, setQuantity] = useState(1);
     // eslint-disable-next-line no-unused-vars
     const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
     const [isSuccess, setIsSuccess] = useState(false);
-
-    // Custom Dropdown State
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     // eslint-disable-next-line no-undef
     const dropdownRef = React.useRef(null);
 
-    // Close dropdown when clicking outside
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -116,16 +99,12 @@ const Sales = () => {
             }
         };
         document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
+        return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-    // --- 1. ดึงข้อมูลสินค้าจาก Backend ---
     const fetchProducts = async () => {
         try {
             const response = await axios.get('http://127.0.0.1:8000/products/');
-            // Map hasVat ให้ชัวร์ว่ามีค่า (default false)
             const mappedData = response.data.map(p => ({
                 ...p,
                 hasVat: p.has_vat !== undefined ? p.has_vat : (p.hasVat !== undefined ? p.hasVat : false)
@@ -136,11 +115,9 @@ const Sales = () => {
         }
     };
 
-    // --- ดึงข้อมูลการขายจริงจาก Backend ---
     const fetchSales = async () => {
         try {
             const response = await axios.get('http://127.0.0.1:8000/sales/');
-            // นำข้อมูลการขายมาเรียงจากใหม่สุดไปเก่าสุดโดยเช็คทั้ง created_at หรือ sale_date
             const sortedSales = response.data.sort((a, b) => {
                 const dateA = a.created_at || a.sale_date;
                 const dateB = b.created_at || b.sale_date;
@@ -157,22 +134,16 @@ const Sales = () => {
         fetchSales();
     }, []);
 
-    // Filter Products by Category
     const filteredProducts = selectedCategory === 'All'
         ? products
         : products.filter(p => p.category === selectedCategory);
 
-    // หาตัวสินค้าที่ถูกเลือก
     const selectedProduct = products.find(p => p.id === parseInt(selectedProductId));
-
-    // คำนวณยอดเงินและสต๊อกที่เหลือ
     const totalAmount = selectedProduct ? (selectedProduct.price * quantity).toFixed(2) : '0.00';
     const remainingStock = selectedProduct ? selectedProduct.stock - quantity : 0;
 
-    // --- 2. ฟังก์ชันยืนยันการขาย (ยิง API) ---
     const handleConfirmSale = async () => {
         if (!selectedProduct) return;
-
         try {
             const saleData = {
                 product_id: selectedProduct.id,
@@ -180,36 +151,21 @@ const Sales = () => {
                 quantity: parseInt(quantity),
                 total_price: parseFloat(totalAmount)
             };
-
             await axios.post('http://127.0.0.1:8000/sales/', saleData);
-
             setIsSuccess(true);
-
-            // รีเซ็ตฟอร์มทันทีเพื่อให้ขายสินค้าชิ้นต่อไปได้เลย ไม่ต้องรอ
             setQuantity(1);
             setSelectedProductId('');
-
             fetchProducts();
-            fetchSales(); // โหลดข้อมูลการขายใหม่หลังจากสร้างเสร็จ
-
-            // เด้งไปหน้า Today แบบ Smooth ทันที
+            fetchSales();
             setTimeout(() => {
                 const recentSection = document.getElementById('recent-transactions-section');
                 if (recentSection) {
                     recentSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    // เพิ่ม Effect ไฮไลท์
                     recentSection.classList.add('ring-4', 'ring-blue-100');
-                    setTimeout(() => {
-                        recentSection.classList.remove('ring-4', 'ring-blue-100');
-                    }, 1500);
+                    setTimeout(() => recentSection.classList.remove('ring-4', 'ring-blue-100'), 1500);
                 }
             }, 100);
-
-            // เอาสถานะปุ่มสำเร็จออกหลังจากผ่านไป 1.5 วิ (แต่ฟอร์มรีเซ็ตไปพร้อมให้กรอกใหม่แล้ว)
-            setTimeout(() => {
-                setIsSuccess(false);
-            }, 1500);
-
+            setTimeout(() => setIsSuccess(false), 1500);
         } catch (error) {
             console.error("Sales Error:", error);
             alert("เกิดข้อผิดพลาด: สต๊อกอาจไม่พอ หรือระบบมีปัญหา");
@@ -217,271 +173,256 @@ const Sales = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#F3F5F9] font-sans p-6 md:p-10 text-slate-700 animate-fade-in pb-20">
-            {/* Header matches Inventory.jsx typography style */}
-            <div className="text-center mb-10 max-w-3xl mx-auto pt-2 animate-fade-in relative">
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-display font-medium text-slate-900 mb-4 tracking-tight">
-                    Point of <span className="text-blue-600 italic font-serif">Sale</span>
-                </h1>
-                <div className="flex items-center justify-center gap-4 mb-4">
-                    <div className="h-[1px] w-12 bg-slate-300"></div>
-                    <div className="w-2 h-2 rounded-full bg-blue-600"></div>
-                    <div className="h-[1px] w-12 bg-slate-300"></div>
+        /* ===== Outer wrapper — centered, same bg ===== */
+        <div className="min-h-screen bg-[#F3F5F9] font-sans flex justify-center animate-fade-in">
+            <div className="w-full max-w-[1280px] p-6 md:p-10 text-slate-700 pb-20">
+
+                {/* Header */}
+                <div className="text-center mb-10 max-w-3xl mx-auto pt-2 animate-fade-in relative">
+                    <h1 className="text-4xl sm:text-5xl lg:text-6xl font-display font-medium text-slate-900 mb-4 tracking-tight">
+                        Point of <span className="text-blue-600 italic font-serif">Sale</span>
+                    </h1>
+                    <div className="flex items-center justify-center gap-4 mb-4">
+                        <div className="h-[1px] w-12 bg-slate-300"></div>
+                        <div className="w-2 h-2 rounded-full bg-blue-600"></div>
+                        <div className="h-[1px] w-12 bg-slate-300"></div>
+                    </div>
+                    <p className="text-slate-500 text-lg leading-relaxed font-body max-w-xl mx-auto flex items-center justify-center gap-2">
+                        Real-time stock deduction system.
+                        <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold flex items-center gap-1 shadow-sm border border-green-200 ml-2">
+                            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div> <Text as="span">DB Connected</Text>
+                        </span>
+                    </p>
                 </div>
-                <p className="text-slate-500 text-lg leading-relaxed font-body max-w-xl mx-auto flex items-center justify-center gap-2">
-                    Real-time stock deduction system.
-                    <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold flex items-center gap-1 shadow-sm border border-green-200 ml-2">
-                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div> <Text as="span">DB Connected</Text>
-                    </span>
-                </p>
-            </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Left Column: Input Form */}
-                <div className="lg:col-span-2 space-y-6">
-
-                    <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)]">
-                        <div className="flex justify-between items-center mb-6">
-                            <Text as="h3" className="font-bold text-lg text-slate-800">Transaction Details</Text>
-                            <div className="relative">
-                                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-                                <input
-                                    type="date"
-                                    value={date}
-                                    disabled
-                                    className="pl-10 pr-4 py-2 border border-slate-200 bg-slate-50 rounded-lg text-sm text-slate-500 outline-none"
-                                />
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    {/* Left Column: Input Form */}
+                    <div className="lg:col-span-2 space-y-6">
+                        <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)]">
+                            <div className="flex justify-between items-center mb-6">
+                                <Text as="h3" className="font-bold text-lg text-slate-800">Transaction Details</Text>
+                                <div className="relative">
+                                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+                                    <input
+                                        type="date"
+                                        value={date}
+                                        disabled
+                                        className="pl-10 pr-4 py-2 border border-slate-200 bg-slate-50 rounded-lg text-sm text-slate-500 outline-none"
+                                    />
+                                </div>
                             </div>
-                        </div>
 
-                        {/* Category Filters */}
-                        <div className="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-none">
-                            {CATEGORIES.map(cat => (
-                                <button
-                                    key={cat.id}
-                                    onClick={() => { setSelectedCategory(cat.id); setSelectedProductId(''); }}
-                                    className={`px-4 py-2 rounded-xl text-sm font-semibold whitespace-nowrap transition-all border
+                            {/* Category Filters */}
+                            <div className="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-none">
+                                {CATEGORIES.map(cat => (
+                                    <button
+                                        key={cat.id}
+                                        onClick={() => { setSelectedCategory(cat.id); setSelectedProductId(''); }}
+                                        className={`px-4 py-2 rounded-xl text-sm font-semibold whitespace-nowrap transition-all border
                                         ${selectedCategory === cat.id
-                                            ? 'bg-slate-800 text-white border-slate-800 shadow-lg shadow-slate-200'
-                                            : 'bg-slate-50 text-slate-500 border-slate-100 hover:bg-slate-100'}`}
-                                >
-                                    {cat.label}
-                                </button>
-                            ))}
-                        </div>
-
-                        {/* Product Selection (Custom Dropdown) */}
-                        <div className="mb-8 relative" ref={dropdownRef}>
-                            <Text as="label" className="block text-sm font-medium text-slate-700 mb-2">Select Product {selectedCategory !== 'All' && `(${selectedCategory})`}</Text>
-
-                            {/* Dropdown Trigger */}
-                            <div
-                                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                                className={`w-full pl-12 pr-4 py-4 bg-slate-50 border ${isDropdownOpen ? 'border-blue-500 ring-2 ring-blue-100' : 'border-slate-200'} rounded-2xl text-slate-800 text-lg outline-none cursor-pointer transition-all hover:bg-white flex items-center justify-between`}
-                            >
-                                <div className="flex items-center gap-2 overflow-hidden">
-                                    <Search className="text-slate-400 mr-2 flex-shrink-0" size={20} />
-                                    {selectedProduct ? (
-                                        <div className="flex items-center gap-2 truncate">
-                                            <span className="font-bold text-slate-500 text-sm">[{selectedProduct.sku}]</span>
-                                            <span className="truncate">{selectedProduct.name}</span>
-                                            {selectedProduct.hasVat ? (
-                                                <span className="flex-shrink-0 px-2 py-0.5 bg-purple-100 text-purple-600 rounded text-xs font-bold border border-purple-200">
-                                                    VAT
-                                                </span>
-                                            ) : (
-                                                <span className="flex-shrink-0 px-2 py-0.5 bg-slate-200 text-slate-500 rounded text-xs border border-slate-300">
-                                                    No VAT
-                                                </span>
-                                            )}
-                                        </div>
-                                    ) : (
-                                        <span className="text-slate-400">-- Select Product --</span>
-                                    )}
-                                </div>
-                                <div className="text-slate-400">
-                                    <ChevronDown size={20} className={`transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
-                                </div>
+                                                ? 'bg-slate-800 text-white border-slate-800 shadow-lg shadow-slate-200'
+                                                : 'bg-slate-50 text-slate-500 border-slate-100 hover:bg-slate-100'}`}
+                                    >
+                                        {cat.label}
+                                    </button>
+                                ))}
                             </div>
 
-                            {/* Dropdown Menu */}
-                            {isDropdownOpen && (
-                                <div className="absolute z-50 w-full mt-2 bg-white border border-slate-100 rounded-2xl shadow-xl max-h-80 overflow-y-auto animate-fade-in-up">
-                                    {/* Search Input inside Dropdown (Optional but good for UX) */}
-                                    <div className="p-2 sticky top-0 bg-white border-b border-slate-50">
-                                        <input
-                                            type="text"
-                                            placeholder="Type to search..."
-                                            className="w-full px-4 py-2 bg-slate-50 rounded-xl text-sm outline-none border border-transparent focus:border-blue-200 focus:bg-white transition-all"
-                                            onClick={(e) => e.stopPropagation()}
-                                            onChange={(e) => {
-                                                // Implement search logic if needed, or just filter visually
-                                                // For now, simple client-side filter could be added here
-                                            }}
-                                        />
-                                    </div>
+                            {/* Product Selection (Custom Dropdown) */}
+                            <div className="mb-8 relative" ref={dropdownRef}>
+                                <Text as="label" className="block text-sm font-medium text-slate-700 mb-2">Select Product {selectedCategory !== 'All' && `(${selectedCategory})`}</Text>
 
-                                    {filteredProducts.map(p => (
-                                        <div
-                                            key={p.id}
-                                            onClick={() => {
-                                                if (p.stock > 0) {
-                                                    setSelectedProductId(p.id.toString());
-                                                    setQuantity(1);
-                                                    setIsDropdownOpen(false);
-                                                }
-                                            }}
-                                            className={`px-4 py-3 flex justify-between items-center cursor-pointer transition-colors border-b border-slate-50 last:border-0
+                                <div
+                                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                    className={`w-full pl-12 pr-4 py-4 bg-slate-50 border ${isDropdownOpen ? 'border-blue-500 ring-2 ring-blue-100' : 'border-slate-200'} rounded-2xl text-slate-800 text-lg outline-none cursor-pointer transition-all hover:bg-white flex items-center justify-between`}
+                                >
+                                    <div className="flex items-center gap-2 overflow-hidden">
+                                        <Search className="text-slate-400 mr-2 flex-shrink-0" size={20} />
+                                        {selectedProduct ? (
+                                            <div className="flex items-center gap-2 truncate">
+                                                <span className="font-bold text-slate-500 text-sm">[{selectedProduct.sku}]</span>
+                                                <span className="truncate">{selectedProduct.name}</span>
+                                                {selectedProduct.hasVat ? (
+                                                    <span className="flex-shrink-0 px-2 py-0.5 bg-purple-100 text-purple-600 rounded text-xs font-bold border border-purple-200">VAT</span>
+                                                ) : (
+                                                    <span className="flex-shrink-0 px-2 py-0.5 bg-slate-200 text-slate-500 rounded text-xs border border-slate-300">No VAT</span>
+                                                )}
+                                            </div>
+                                        ) : (
+                                            <span className="text-slate-400">-- Select Product --</span>
+                                        )}
+                                    </div>
+                                    <div className="text-slate-400">
+                                        <ChevronDown size={20} className={`transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
+                                    </div>
+                                </div>
+
+                                {isDropdownOpen && (
+                                    <div className="absolute z-50 w-full mt-2 bg-white border border-slate-100 rounded-2xl shadow-xl max-h-80 overflow-y-auto animate-fade-in-up">
+                                        <div className="p-2 sticky top-0 bg-white border-b border-slate-50">
+                                            <input
+                                                type="text"
+                                                placeholder="Type to search..."
+                                                className="w-full px-4 py-2 bg-slate-50 rounded-xl text-sm outline-none border border-transparent focus:border-blue-200 focus:bg-white transition-all"
+                                                onClick={(e) => e.stopPropagation()}
+                                                onChange={(e) => { }}
+                                            />
+                                        </div>
+
+                                        {filteredProducts.map(p => (
+                                            <div
+                                                key={p.id}
+                                                onClick={() => {
+                                                    if (p.stock > 0) {
+                                                        setSelectedProductId(p.id.toString());
+                                                        setQuantity(1);
+                                                        setIsDropdownOpen(false);
+                                                    }
+                                                }}
+                                                className={`px-4 py-3 flex justify-between items-center cursor-pointer transition-colors border-b border-slate-50 last:border-0
                                                 ${p.stock === 0 ? 'opacity-50 cursor-not-allowed bg-slate-50' : 'hover:bg-blue-50'}
                                                 ${selectedProductId === p.id.toString() ? 'bg-blue-50' : ''}
                                             `}
-                                        >
-                                            <div className="flex flex-col">
-                                                <div className="flex items-center gap-2 font-medium text-slate-700">
-                                                    <span className="text-slate-500 font-bold text-xs">[{p.sku}]</span>
-                                                    {p.name}
-                                                    {p.hasVat ? (
-                                                        <span className="px-1.5 py-0.5 bg-purple-100 text-purple-600 rounded text-[10px] font-bold border border-purple-200">
-                                                            VAT
-                                                        </span>
-                                                    ) : (
-                                                        <span className="px-1.5 py-0.5 bg-slate-100 text-slate-500 rounded text-[10px] border border-slate-200">
-                                                            No VAT
-                                                        </span>
-                                                    )}
+                                            >
+                                                <div className="flex flex-col">
+                                                    <div className="flex items-center gap-2 font-medium text-slate-700">
+                                                        <span className="text-slate-500 font-bold text-xs">[{p.sku}]</span>
+                                                        {p.name}
+                                                        {p.hasVat ? (
+                                                            <span className="px-1.5 py-0.5 bg-purple-100 text-purple-600 rounded text-[10px] font-bold border border-purple-200">VAT</span>
+                                                        ) : (
+                                                            <span className="px-1.5 py-0.5 bg-slate-100 text-slate-500 rounded text-[10px] border border-slate-200">No VAT</span>
+                                                        )}
+                                                    </div>
+                                                    <span className="text-xs text-slate-400">Price: ฿ {p.price.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
                                                 </div>
-                                                <span className="text-xs text-slate-400">Price: ฿ {p.price.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                                                <div className="text-right">
+                                                    <span className={`text-xs font-bold ${p.stock > 0 ? 'text-green-600' : 'text-red-500'}`}>
+                                                        {p.stock > 0 ? `${p.stock} in stock` : 'Out of Stock'}
+                                                    </span>
+                                                </div>
                                             </div>
-                                            <div className="text-right">
-                                                <span className={`text-xs font-bold ${p.stock > 0 ? 'text-green-600' : 'text-red-500'}`}>
-                                                    {p.stock > 0 ? `${p.stock} in stock` : 'Out of Stock'}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    ))}
+                                        ))}
 
-                                    {filteredProducts.length === 0 && (
-                                        <div className="p-8 text-center text-slate-400 text-sm">No products found in this category</div>
-                                    )}
+                                        {filteredProducts.length === 0 && (
+                                            <div className="p-8 text-center text-slate-400 text-sm">No products found in this category</div>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Stock Preview Box */}
+                            {selectedProduct && (
+                                <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200 mb-8 animate-slide-up">
+                                    <div className="flex justify-between items-center mb-4">
+                                        <div className="flex items-center gap-2 text-slate-700 font-semibold">
+                                            <Package size={20} /> <Text as="span">Product Status</Text>
+                                        </div>
+                                        <span className={`px-2 py-1 rounded text-xs font-bold ${remainingStock < 0 ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}`}>
+                                            <Text as="span">{remainingStock < 0 ? 'Insufficient Stock' : 'In Stock'}</Text>
+                                        </span>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="bg-white p-4 rounded-xl border border-slate-200">
+                                            <Text className="text-xs text-slate-400 mb-1">Current Stock</Text>
+                                            <Text className="text-2xl font-bold text-slate-800">{selectedProduct.stock} <Text as="span" className="text-sm font-normal text-slate-400">units</Text></Text>
+                                        </div>
+                                        <div className="bg-white p-4 rounded-xl border border-slate-200 relative overflow-hidden">
+                                            <Text className="text-xs text-blue-500 mb-1 font-bold">Projected Remaining</Text>
+                                            <Text className={`text-2xl font-bold ${remainingStock < 5 ? 'text-orange-500' : 'text-blue-600'}`}>
+                                                {remainingStock} <Text as="span" className="text-sm font-normal text-slate-400">units</Text>
+                                            </Text>
+                                            <TrendingDown className="absolute right-2 bottom-2 text-slate-100" size={40} />
+                                        </div>
+                                    </div>
                                 </div>
                             )}
-                        </div>
 
-                        {/* Stock Preview Box */}
-                        {selectedProduct && (
-                            <div className="bg-slate-50 rounded-2xl p-6 border border-slate-200 mb-8 animate-slide-up">
-                                <div className="flex justify-between items-center mb-4">
-                                    <div className="flex items-center gap-2 text-slate-700 font-semibold">
-                                        <Package size={20} /> <Text as="span">Product Status</Text>
+                            {/* Quantity & Price Row */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
+                                <div>
+                                    <Text as="label" className="block text-sm font-medium text-slate-700 mb-2">Quantity</Text>
+                                    <div className="flex items-center">
+                                        <button
+                                            onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                                            className="p-3 border border-slate-200 rounded-l-xl hover:bg-slate-50 text-slate-600 bg-white transition-colors cursor-pointer disabled:cursor-not-allowed"
+                                            disabled={!selectedProduct}
+                                        >
+                                            <Minus size={18} />
+                                        </button>
+                                        <input
+                                            type="number"
+                                            value={quantity}
+                                            onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
+                                            className="w-full py-3 text-center border-y border-slate-200 text-lg font-bold outline-none bg-white text-slate-800"
+                                            disabled={!selectedProduct}
+                                        />
+                                        <button
+                                            onClick={() => setQuantity(Math.min(selectedProduct ? selectedProduct.stock : 99, quantity + 1))}
+                                            className="p-3 border border-slate-200 rounded-r-xl hover:bg-slate-50 text-slate-600 bg-white transition-colors cursor-pointer disabled:cursor-not-allowed"
+                                            disabled={!selectedProduct}
+                                        >
+                                            <Plus size={18} />
+                                        </button>
                                     </div>
-                                    <span className={`px-2 py-1 rounded text-xs font-bold ${remainingStock < 0 ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}`}>
-                                        <Text as="span">{remainingStock < 0 ? 'Insufficient Stock' : 'In Stock'}</Text>
-                                    </span>
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="bg-white p-4 rounded-xl border border-slate-200">
-                                        <Text className="text-xs text-slate-400 mb-1">Current Stock</Text>
-                                        <Text className="text-2xl font-bold text-slate-800">{selectedProduct.stock} <Text as="span" className="text-sm font-normal text-slate-400">units</Text></Text>
+                                <div>
+                                    <Text as="label" className="block text-sm font-medium text-slate-700 mb-2">Unit Price / Tax</Text>
+                                    <div className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-500 text-lg flex justify-between items-center">
+                                        <div className="flex items-center gap-2">
+                                            <Text as="span" className="font-bold text-slate-800">฿ {selectedProduct ? selectedProduct.price.toLocaleString() : '0'}</Text>
+                                            {selectedProduct && selectedProduct.hasVat && (
+                                                <span className="flex items-center gap-1 px-2 py-0.5 bg-purple-100 text-purple-600 rounded text-xs font-bold border border-purple-200 ml-2">
+                                                    <Tag size={10} /> VAT
+                                                </span>
+                                            )}
+                                            {selectedProduct && !selectedProduct.hasVat && (
+                                                <span className="px-2 py-0.5 bg-slate-200 text-slate-500 rounded text-xs border border-slate-300 ml-2">No VAT</span>
+                                            )}
+                                        </div>
+                                        <Text as="span" className="text-xs uppercase">THB</Text>
                                     </div>
-                                    <div className="bg-white p-4 rounded-xl border border-slate-200 relative overflow-hidden">
-                                        <Text className="text-xs text-blue-500 mb-1 font-bold">Projected Remaining</Text>
-                                        <Text className={`text-2xl font-bold ${remainingStock < 5 ? 'text-orange-500' : 'text-blue-600'}`}>
-                                            {remainingStock} <Text as="span" className="text-sm font-normal text-slate-400">units</Text>
-                                        </Text>
-                                        <TrendingDown className="absolute right-2 bottom-2 text-slate-100" size={40} />
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Quantity & Price Row */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
-                            <div>
-                                <Text as="label" className="block text-sm font-medium text-slate-700 mb-2">Quantity</Text>
-                                <div className="flex items-center">
-                                    <button
-                                        onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                                        className="p-3 border border-slate-200 rounded-l-xl hover:bg-slate-50 text-slate-600 bg-white transition-colors cursor-pointer disabled:cursor-not-allowed"
-                                        disabled={!selectedProduct}
-                                    >
-                                        <Minus size={18} />
-                                    </button>
-                                    <input
-                                        type="number"
-                                        value={quantity}
-                                        onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
-                                        className="w-full py-3 text-center border-y border-slate-200 text-lg font-bold outline-none bg-white text-slate-800"
-                                        disabled={!selectedProduct}
-                                    />
-                                    <button
-                                        onClick={() => setQuantity(Math.min(selectedProduct ? selectedProduct.stock : 99, quantity + 1))}
-                                        className="p-3 border border-slate-200 rounded-r-xl hover:bg-slate-50 text-slate-600 bg-white transition-colors cursor-pointer disabled:cursor-not-allowed"
-                                        disabled={!selectedProduct}
-                                    >
-                                        <Plus size={18} />
-                                    </button>
                                 </div>
                             </div>
 
-                            <div>
-                                <Text as="label" className="block text-sm font-medium text-slate-700 mb-2">Unit Price / Tax</Text>
-                                <div className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-500 text-lg flex justify-between items-center">
-                                    <div className="flex items-center gap-2">
-                                        <Text as="span" className="font-bold text-slate-800">฿ {selectedProduct ? selectedProduct.price.toLocaleString() : '0'}</Text>
-
-                                        {/* --- VAT Badge (แสดงหลังเลือกสินค้า) --- */}
-                                        {selectedProduct && selectedProduct.hasVat && (
-                                            <span className="flex items-center gap-1 px-2 py-0.5 bg-purple-100 text-purple-600 rounded text-xs font-bold border border-purple-200 ml-2">
-                                                <Tag size={10} /> VAT
-                                            </span>
-                                        )}
-                                        {selectedProduct && !selectedProduct.hasVat && (
-                                            <span className="px-2 py-0.5 bg-slate-200 text-slate-500 rounded text-xs border border-slate-300 ml-2">
-                                                No VAT
-                                            </span>
-                                        )}
-                                    </div>
-                                    <Text as="span" className="text-xs uppercase">THB</Text>
+                            {/* Total Amount */}
+                            <div className="mt-8 bg-white rounded-2xl p-6 flex justify-between items-center text-slate-800 shadow-sm border border-slate-200">
+                                <div>
+                                    <Text className="text-slate-400 text-sm">Total Amount</Text>
+                                    <Text className="text-xs text-slate-400">
+                                        {selectedProduct?.hasVat ? 'VAT Included (ราคารวมภาษีแล้ว)' : 'No VAT (ราคายกเว้นภาษี)'}
+                                    </Text>
+                                </div>
+                                <div className="text-3xl font-bold tracking-tight text-blue-600">
+                                    <Text as="span">฿ {parseFloat(totalAmount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</Text>
                                 </div>
                             </div>
-                        </div>
 
-                        {/* Total Amount (Bright Version) */}
-                        <div className="mt-8 bg-white rounded-2xl p-6 flex justify-between items-center text-slate-800 shadow-sm border border-slate-200">
-                            <div>
-                                <Text className="text-slate-400 text-sm">Total Amount</Text>
-                                <Text className="text-xs text-slate-400">
-                                    {selectedProduct?.hasVat ? 'VAT Included (ราคารวมภาษีแล้ว)' : 'No VAT (ราคายกเว้นภาษี)'}
-                                </Text>
-                            </div>
-                            <div className="text-3xl font-bold tracking-tight text-blue-600">
-                                <Text as="span">฿ {parseFloat(totalAmount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</Text>
+                            {/* Action Buttons */}
+                            <div className="mt-8 flex justify-end gap-4">
+                                <button
+                                    onClick={handleConfirmSale}
+                                    disabled={!selectedProduct || remainingStock < 0 || isSuccess}
+                                    className={`px-8 py-3 rounded-xl font-bold text-white shadow-lg transition-all flex items-center gap-2 cursor-pointer
+                                    ${isSuccess
+                                            ? 'bg-green-600 hover:bg-green-700'
+                                            : 'bg-slate-800 hover:bg-slate-900 shadow-slate-300'
+                                        } disabled:opacity-50 disabled:cursor-not-allowed`}
+                                >
+                                    {isSuccess ? <CheckCircle size={20} /> : null}
+                                    <Text as="span">{isSuccess ? 'Sale Confirmed!' : 'Confirm Sale'}</Text>
+                                </button>
                             </div>
                         </div>
+                    </div>
 
-                        {/* Action Buttons */}
-                        <div className="mt-8 flex justify-end gap-4">
-                            <button
-                                onClick={handleConfirmSale}
-                                disabled={!selectedProduct || remainingStock < 0 || isSuccess}
-                                className={`px-8 py-3 rounded-xl font-bold text-white shadow-lg transition-all flex items-center gap-2 cursor-pointer
-                        ${isSuccess
-                                        ? 'bg-green-600 hover:bg-green-700'
-                                        : 'bg-slate-800 hover:bg-slate-900 shadow-slate-300'
-                                    } disabled:opacity-50 disabled:cursor-not-allowed`}
-                            >
-                                {isSuccess ? <CheckCircle size={20} /> : null}
-                                <Text as="span">{isSuccess ? 'Sale Confirmed!' : 'Confirm Sale'}</Text>
-                            </button>
-                        </div>
+                    {/* Right Column: Recent Transactions */}
+                    <div className="lg:col-span-1">
+                        <RecentTransactions recentSales={recentSales} />
                     </div>
                 </div>
 
-                {/* Right Column: Recent Transactions */}
-                <div className="lg:col-span-1">
-                    <RecentTransactions recentSales={recentSales} />
-                </div>
             </div>
         </div>
     );
