@@ -1,11 +1,89 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Calendar, Search, Package, TrendingDown, CheckCircle, Plus, Minus, Tag, ChevronDown } from 'lucide-react';
+import { Calendar, Search, Package, TrendingDown, CheckCircle, Plus, Minus, Tag, ChevronDown, Clock } from 'lucide-react';
 import { Text } from '../components/text';
+
+const RecentTransactions = ({ recentSales = [] }) => {
+    // กรองให้เหลือเฉพาะรายการที่ขายได้ในวันนี้ (อิงจาก created_at ถ้ามี)
+    const today = new Date().toLocaleDateString('en-CA'); // 'en-CA' gives YYYY-MM-DD
+    const todaySales = recentSales.filter(sale => {
+        const saleDate = sale.created_at || sale.sale_date;
+        if (!saleDate) return false;
+
+        // เปรียบเทียบเป็นวันที่แบบ Local จะได้ตรงกับคำว่า "วันนี้"
+        const d = new Date(saleDate);
+        return d.toLocaleDateString('en-CA') === today;
+    });
+
+    return (
+        <div id="recent-transactions-section" className="bg-white rounded-[24px] p-8 w-full shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-slate-100 h-fit mb-8 transition-all duration-500">
+            <div className="flex items-center gap-3 mb-6">
+                <div className="bg-[#8BA3BA] p-1.5 rounded-full text-white">
+                    <Clock size={20} />
+                </div>
+                <h2 className="text-xl font-bold text-[#1E293B] tracking-tight">
+                    Today's Sales
+                </h2>
+            </div>
+
+            <hr className="border-slate-100 mb-6" />
+
+            <div className="relative">
+                {/* Vertical Timeline Line */}
+                {todaySales.length > 1 && (
+                    <div className="absolute top-2 left-[5px] bottom-4 w-[2px] bg-slate-100 z-0"></div>
+                )}
+
+                <div className="flex flex-col gap-6 relative z-10">
+                    {todaySales.length > 0 ? todaySales.map((item, index) => {
+                        const dateObj = new Date(item.created_at || item.sale_date);
+                        const timeStr = dateObj.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+                        const isLatest = index === 0;
+
+                        return (
+                            <div key={item.id} className={`relative flex justify-between items-start pl-6 ${isLatest ? 'animate-slide-up bg-slate-50/50 p-2 -ml-2 rounded-xl transition-all duration-500' : ''}`}>
+                                {/* Timeline Dot */}
+                                <div className={`absolute ${isLatest ? 'left-[7px] top-[14px]' : 'left-[-1px] top-1.5'} w-3 h-3 bg-[#DEE5ED] rounded-full border-[3px] border-white box-content z-10 transition-all`}></div>
+
+                                {/* Left Column: Product & Time */}
+                                <div className="flex flex-col mt-[-2px]">
+                                    <span className="text-base font-semibold text-slate-700">
+                                        {item.product_name} <span className="text-sm font-normal text-slate-400 ml-1">x{item.quantity}</span>
+                                    </span>
+                                    <span className="text-sm text-slate-400 mt-1">
+                                        {timeStr}
+                                    </span>
+                                </div>
+
+                                {/* Right Column: Price & Status */}
+                                <div className="flex flex-col items-end mt-[-2px]">
+                                    <span className="text-base font-bold tracking-tight text-[#FA5252]">
+                                        ฿ {parseFloat(item.total_price).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                                    </span>
+                                    <div className="mt-1.5 font-bold flex items-center px-2 py-0.5 rounded-lg bg-[#FEF2F2] text-[#FA5252] text-[11px] border border-red-100/50">
+                                        <Minus size={12} className="mr-1" />
+                                        Sold out
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    }) : (
+                        <div className="py-8 text-center text-slate-400 text-sm">
+                            No sales recorded today yet.
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+};
 
 const Sales = () => {
     // State สำหรับเก็บข้อมูลสินค้าจริง
     const [products, setProducts] = useState([]);
+
+    // State สำหรับเก็บข้อมูลการขายจริง
+    const [recentSales, setRecentSales] = useState([]);
 
     // --- Const: หมวดหมู่ (Copy from Inventory) ---
     // eslint-disable-next-line no-unused-vars
@@ -58,8 +136,25 @@ const Sales = () => {
         }
     };
 
+    // --- ดึงข้อมูลการขายจริงจาก Backend ---
+    const fetchSales = async () => {
+        try {
+            const response = await axios.get('http://127.0.0.1:8000/sales/');
+            // นำข้อมูลการขายมาเรียงจากใหม่สุดไปเก่าสุดโดยเช็คทั้ง created_at หรือ sale_date
+            const sortedSales = response.data.sort((a, b) => {
+                const dateA = a.created_at || a.sale_date;
+                const dateB = b.created_at || b.sale_date;
+                return new Date(dateB) - new Date(dateA);
+            });
+            setRecentSales(sortedSales);
+        } catch (error) {
+            console.error("Error fetching sales:", error);
+        }
+    };
+
     useEffect(() => {
         fetchProducts();
+        fetchSales();
     }, []);
 
     // Filter Products by Category
@@ -89,13 +184,31 @@ const Sales = () => {
             await axios.post('http://127.0.0.1:8000/sales/', saleData);
 
             setIsSuccess(true);
-            fetchProducts();
 
+            // รีเซ็ตฟอร์มทันทีเพื่อให้ขายสินค้าชิ้นต่อไปได้เลย ไม่ต้องรอ
+            setQuantity(1);
+            setSelectedProductId('');
+
+            fetchProducts();
+            fetchSales(); // โหลดข้อมูลการขายใหม่หลังจากสร้างเสร็จ
+
+            // เด้งไปหน้า Today แบบ Smooth ทันที
+            setTimeout(() => {
+                const recentSection = document.getElementById('recent-transactions-section');
+                if (recentSection) {
+                    recentSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    // เพิ่ม Effect ไฮไลท์
+                    recentSection.classList.add('ring-4', 'ring-blue-100');
+                    setTimeout(() => {
+                        recentSection.classList.remove('ring-4', 'ring-blue-100');
+                    }, 1500);
+                }
+            }, 100);
+
+            // เอาสถานะปุ่มสำเร็จออกหลังจากผ่านไป 1.5 วิ (แต่ฟอร์มรีเซ็ตไปพร้อมให้กรอกใหม่แล้ว)
             setTimeout(() => {
                 setIsSuccess(false);
-                setQuantity(1);
-                setSelectedProductId('');
-            }, 2000);
+            }, 1500);
 
         } catch (error) {
             console.error("Sales Error:", error);
@@ -105,14 +218,22 @@ const Sales = () => {
 
     return (
         <div className="min-h-screen bg-[#F3F5F9] font-sans p-6 md:p-10 text-slate-700 animate-fade-in pb-20">
-            <div className="mb-8">
-                <div className="flex items-center gap-3 mb-2">
-                    <Text as="h2" className="text-3xl font-bold text-slate-900">Record New Sale (Live POS)</Text>
-                    <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold flex items-center gap-1">
+            {/* Header matches Inventory.jsx typography style */}
+            <div className="text-center mb-10 max-w-3xl mx-auto pt-2 animate-fade-in relative">
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-display font-medium text-slate-900 mb-4 tracking-tight">
+                    Point of <span className="text-blue-600 italic font-serif">Sale</span>
+                </h1>
+                <div className="flex items-center justify-center gap-4 mb-4">
+                    <div className="h-[1px] w-12 bg-slate-300"></div>
+                    <div className="w-2 h-2 rounded-full bg-blue-600"></div>
+                    <div className="h-[1px] w-12 bg-slate-300"></div>
+                </div>
+                <p className="text-slate-500 text-lg leading-relaxed font-body max-w-xl mx-auto flex items-center justify-center gap-2">
+                    Real-time stock deduction system.
+                    <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold flex items-center gap-1 shadow-sm border border-green-200 ml-2">
                         <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div> <Text as="span">DB Connected</Text>
                     </span>
-                </div>
-                <Text className="text-slate-500">Real-time stock deduction system.</Text>
+                </p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -229,7 +350,7 @@ const Sales = () => {
                                                         </span>
                                                     )}
                                                 </div>
-                                                <span className="text-xs text-slate-400">Price: ฿{p.price.toLocaleString()}</span>
+                                                <span className="text-xs text-slate-400">Price: ฿ {p.price.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
                                             </div>
                                             <div className="text-right">
                                                 <span className={`text-xs font-bold ${p.stock > 0 ? 'text-green-600' : 'text-red-500'}`}>
@@ -281,7 +402,7 @@ const Sales = () => {
                                 <div className="flex items-center">
                                     <button
                                         onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                                        className="p-3 border border-slate-200 rounded-l-xl hover:bg-slate-50 text-slate-600 bg-white transition-colors"
+                                        className="p-3 border border-slate-200 rounded-l-xl hover:bg-slate-50 text-slate-600 bg-white transition-colors cursor-pointer disabled:cursor-not-allowed"
                                         disabled={!selectedProduct}
                                     >
                                         <Minus size={18} />
@@ -295,7 +416,7 @@ const Sales = () => {
                                     />
                                     <button
                                         onClick={() => setQuantity(Math.min(selectedProduct ? selectedProduct.stock : 99, quantity + 1))}
-                                        className="p-3 border border-slate-200 rounded-r-xl hover:bg-slate-50 text-slate-600 bg-white transition-colors"
+                                        className="p-3 border border-slate-200 rounded-r-xl hover:bg-slate-50 text-slate-600 bg-white transition-colors cursor-pointer disabled:cursor-not-allowed"
                                         disabled={!selectedProduct}
                                     >
                                         <Plus size={18} />
@@ -335,7 +456,7 @@ const Sales = () => {
                                 </Text>
                             </div>
                             <div className="text-3xl font-bold tracking-tight text-blue-600">
-                                <Text as="span">฿{parseFloat(totalAmount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</Text>
+                                <Text as="span">฿ {parseFloat(totalAmount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</Text>
                             </div>
                         </div>
 
@@ -344,7 +465,7 @@ const Sales = () => {
                             <button
                                 onClick={handleConfirmSale}
                                 disabled={!selectedProduct || remainingStock < 0 || isSuccess}
-                                className={`px-8 py-3 rounded-xl font-bold text-white shadow-lg transition-all flex items-center gap-2
+                                className={`px-8 py-3 rounded-xl font-bold text-white shadow-lg transition-all flex items-center gap-2 cursor-pointer
                         ${isSuccess
                                         ? 'bg-green-600 hover:bg-green-700'
                                         : 'bg-slate-800 hover:bg-slate-900 shadow-slate-300'
@@ -355,6 +476,11 @@ const Sales = () => {
                             </button>
                         </div>
                     </div>
+                </div>
+
+                {/* Right Column: Recent Transactions */}
+                <div className="lg:col-span-1">
+                    <RecentTransactions recentSales={recentSales} />
                 </div>
             </div>
         </div>
