@@ -4,7 +4,7 @@ import { Text } from '../components/text';
 
 const Settings = ({ darkMode, setDarkMode }) => {
     return (
-        <div className="p-8 max-w-4xl mx-auto space-y-8 animate-fade-in">
+        <div className="p-8 max-w-4xl mx-auto space-y-8">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
                 <div>
                     <Text as="h2" className="text-3xl font-bold text-gray-800 dark:text-dark-text">Settings</Text>

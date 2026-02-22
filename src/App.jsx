@@ -45,11 +45,13 @@ function App() {
         <div className="flex-1 flex flex-col">
           {/* Dynamic Page Content */}
           <main className="flex-1 overflow-y-auto bg-gray-50/50 dark:bg-dark-bg transition-colors duration-300">
-            {activePage === 'dashboard' && <Dashboard onNavigate={handleNavigate} />}
-            {activePage === 'inventory' && <Inventory initialOpenModal={pageParams?.openAddModal} />}
-            {activePage === 'sales' && <Sales />}
-            {activePage === 'reports' && <Reports />}
-            {activePage === 'settings' && <Settings darkMode={darkMode} setDarkMode={setDarkMode} />}
+            <div key={activePage} className="page-transition-container h-full">
+              {activePage === 'dashboard' && <Dashboard onNavigate={handleNavigate} />}
+              {activePage === 'inventory' && <Inventory initialOpenModal={pageParams?.openAddModal} />}
+              {activePage === 'sales' && <Sales />}
+              {activePage === 'reports' && <Reports />}
+              {activePage === 'settings' && <Settings darkMode={darkMode} setDarkMode={setDarkMode} />}
+            </div>
           </main>
         </div>
       </AlertProvider>

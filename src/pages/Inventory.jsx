@@ -254,11 +254,11 @@ const Inventory = ({ initialOpenModal = false }) => {
 
   return (
     <div className="min-h-screen bg-[#F3F5F9] font-sans flex flex-col items-center">
-      <div className="w-full max-w-[1280px] p-4 md:p-6 text-slate-700 animate-fade-in pb-10">
+      <div className="w-full max-w-[1280px] p-4 md:p-6 text-slate-700 pb-10">
 
         {/* ===== HEADER ===== */}
         {currentView === 'products' ? (
-          <div className="flex justify-between items-center mb-6 animate-fade-in">
+          <div className="flex justify-between items-center mb-6">
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setCurrentView('categories')}
@@ -282,7 +282,7 @@ const Inventory = ({ initialOpenModal = false }) => {
           </div>
         ) : (
           /* Categories Header — title centered, button floats right */
-          <div className="relative flex items-center justify-center mb-5 animate-fade-in min-h-[90px]">
+          <div className="relative flex items-center justify-center mb-5 min-h-[90px]">
             {/* Center title — truly centered in the page */}
             <div className="text-center">
               <h1 className="text-2xl sm:text-3xl font-display font-medium text-slate-900 mb-2 tracking-tight">
@@ -310,7 +310,7 @@ const Inventory = ({ initialOpenModal = false }) => {
 
         {/* ===== VIEW 1: CATEGORY CARDS ===== */}
         {currentView === 'categories' && (
-          <div className="grid grid-cols-2 md:grid-cols-2 xl:grid-cols-4 gap-4 max-w-[1600px] w-full mx-auto animate-fade-in">
+          <div className="grid grid-cols-2 md:grid-cols-2 xl:grid-cols-4 gap-4 max-w-[1600px] w-full mx-auto">
             {categories.map((cat) => {
               const itemCount = products.filter(p => p.category === cat.id).length;
               return (
@@ -362,7 +362,7 @@ const Inventory = ({ initialOpenModal = false }) => {
 
         {/* ===== VIEW 2: PRODUCT LIST ===== */}
         {currentView === 'products' && (
-          <div className="animate-slide-up">
+          <div className="">
 
             {/* Brand Filters — with hover + delete + add brand button */}
             <div className="flex gap-2 mt-1 pt-3 mb-3 overflow-x-auto pb-2 scrollbar-hide items-center">

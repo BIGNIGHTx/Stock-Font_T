@@ -174,11 +174,11 @@ const Sales = () => {
 
     return (
         /* ===== Outer wrapper — centered, same bg ===== */
-        <div className="min-h-screen bg-[#F3F5F9] font-sans flex justify-center animate-fade-in">
+        <div className="min-h-screen bg-[#F3F5F9] font-sans flex justify-center">
             <div className="w-full max-w-[1280px] px-6 py-4 md:px-10 md:py-5 text-slate-700">
 
                 {/* Header */}
-                <div className="flex items-center justify-between mb-4 animate-fade-in">
+                <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
                         <h1 className="text-2xl sm:text-3xl font-display font-medium text-slate-900 tracking-tight">
                             Point of <span className="text-blue-600 italic font-serif">Sale</span>
