@@ -216,7 +216,7 @@ const Sales = () => {
                                     <button
                                         key={cat.id}
                                         onClick={() => { setSelectedCategory(cat.id); setSelectedProductId(''); }}
-                                        className={`px-4 py-2 rounded-xl text-sm font-semibold whitespace-nowrap transition-all border
+                                        className={`px-4 py-2 rounded-xl text-sm font-semibold whitespace-nowrap transition-all border cursor-pointer
                                         ${selectedCategory === cat.id
                                                 ? 'bg-slate-800 text-white border-slate-800 shadow-lg shadow-slate-200'
                                                 : 'bg-slate-50 text-slate-500 border-slate-100 hover:bg-slate-100'}`}

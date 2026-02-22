@@ -326,7 +326,7 @@ const Reports = () => {
                           <td className="px-4 py-3 text-center">
                             <button
                               onClick={() => handleDeleteSale(sale.id)}
-                              className="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
+                              className="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors cursor-pointer"
                               title="Delete Transaction"
                             >
                               <Trash2 size={18} />
