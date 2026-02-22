@@ -9,160 +9,94 @@ import { Text } from '../components/text';
 import { useAlert } from '../contexts/AlertContext';
 
 const DEFAULT_BRANDS = ['Samsung', 'LG', 'Mitsubishi', 'Sharp', 'Hitachi', 'Panasonic'];
-
-const BASE_CATEGORIES = [
-  { id: 'all_products', name: 'All Products', thai: 'สินค้าทั้งหมด', image: 'https://images.unsplash.com/photo-1553413077-190dd305871c?w=600&auto=format&fit=crop&q=60' },
-];
-
 const API = 'http://127.0.0.1:8000';
+
+// "All Products" card เดียวที่ hardcode — ทุก category อื่นมาจาก DB ทั้งหมด
+const ALL_PRODUCTS_CARD = {
+  id: 'all_products',
+  name: 'All Products',
+  thai: 'สินค้าทั้งหมด',
+  image: 'https://images.unsplash.com/photo-1553413077-190dd305871c?w=600&auto=format&fit=crop&q=60',
+};
 
 const Inventory = ({ initialOpenModal = false }) => {
   const { alert, confirm } = useAlert();
 
-  // --- View State ---
   const [currentView, setCurrentView] = useState('categories');
   const [activeCategory, setActiveCategory] = useState(null);
-
-  // --- Categories & Brands (dynamic) ---
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // --- Filters ---
   const [stockFilter, setStockFilter] = useState('all');
   const [brandFilter, setBrandFilter] = useState('All');
   const [vatFilter, setVatFilter] = useState('all');
 
-  // --- Form State (product) ---
   const [newProduct, setNewProduct] = useState({
-    name: '', sku: '', category: 'Tv', price: '', cost_price: '', stock: '', hasVat: false
+    name: '', sku: '', category: '', price: '', cost_price: '', stock: '', hasVat: false
   });
-  const resetForm = () => {
-    setNewProduct({ name: '', sku: '', category: activeCategory || 'Tv', price: '', cost_price: '', stock: '', hasVat: false });
-    setEditingId(null);
-  };
   const [editingId, setEditingId] = useState(null);
 
-  // --- Category Modal ---
   const [isCatModalOpen, setIsCatModalOpen] = useState(false);
   const [newCat, setNewCat] = useState({ name: '', thai: '', image: '' });
   const [editingCatId, setEditingCatId] = useState(null);
 
-  // --- Add Brand Modal ---
   const [isBrandModalOpen, setIsBrandModalOpen] = useState(false);
   const [newBrandName, setNewBrandName] = useState('');
-
-  // --- Hovering brand (for delete X) ---
   const [hoveredBrand, setHoveredBrand] = useState(null);
 
   useEffect(() => {
     if (initialOpenModal) setIsModalOpen(true);
   }, [initialOpenModal]);
 
-  const DEFAULT_CATEGORY_IMAGES = {
-    tv: 'https://images.unsplash.com/photo-1717295248230-93ea71f48f92?w=600&auto=format&fit=crop&q=60',
-    television: 'https://images.unsplash.com/photo-1717295248230-93ea71f48f92?w=600&auto=format&fit=crop&q=60',
-    โทรทัศน์: 'https://images.unsplash.com/photo-1717295248230-93ea71f48f92?w=600&auto=format&fit=crop&q=60',
-    fan: 'https://media.istockphoto.com/id/1150705585/th/รูปถ่าย/ภาพระยะใกล้ของพัดลมตั้งพื้นไฟฟ้า.jpg?s=612x612&w=0&k=20&c=vX1hV1muUVa96MZpx4jJd6Ujl54pQX6Z8eIyyrdkLvw=',
-    พัดลม: 'https://media.istockphoto.com/id/1150705585/th/รูปถ่าย/ภาพระยะใกล้ของพัดลมตั้งพื้นไฟฟ้า.jpg?s=612x612&w=0&k=20&c=vX1hV1muUVa96MZpx4jJd6Ujl54pQX6Z8eIyyrdkLvw=',
-    refrigerator: 'https://images.unsplash.com/photo-1584568694244-14fbdf83bd30?w=600&auto=format&fit=crop&q=60',
-    fridge: 'https://images.unsplash.com/photo-1584568694244-14fbdf83bd30?w=600&auto=format&fit=crop&q=60',
-    ตู้เย็น: 'https://images.unsplash.com/photo-1584568694244-14fbdf83bd30?w=600&auto=format&fit=crop&q=60',
-    'washing machine': 'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?w=600&auto=format&fit=crop&q=60',
-    washing: 'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?w=600&auto=format&fit=crop&q=60',
-    เครื่องซักผ้า: 'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?w=600&auto=format&fit=crop&q=60',
-    'air conditioner': 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=600&auto=format&fit=crop&q=60',
-    air: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=600&auto=format&fit=crop&q=60',
-    แอร์: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=600&auto=format&fit=crop&q=60',
-    เครื่องปรับอากาศ: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=600&auto=format&fit=crop&q=60',
-    อะไหล่แอร์: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=600&auto=format&fit=crop&q=60',
-    microwave: 'https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?w=600&auto=format&fit=crop&q=60',
-    ไมโครเวฟ: 'https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?w=600&auto=format&fit=crop&q=60',
+  const resetForm = () => {
+    const firstCat = categories.find(c => c.id !== 'all_products');
+    setNewProduct({
+      name: '', sku: '',
+      category: activeCategory || (firstCat ? firstCat.name : ''),
+      price: '', cost_price: '', stock: '', hasVat: false
+    });
+    setEditingId(null);
   };
 
-  const getCategoryImage = (cat) => {
-    if (cat.image || cat.image_url) return cat.image || cat.image_url;
-    const key = (cat.name || '').toLowerCase().trim();
-    const thaiKey = (cat.thai || cat.name_thai || '').trim();
-    return DEFAULT_CATEGORY_IMAGES[key]
-      || DEFAULT_CATEGORY_IMAGES[thaiKey]
-      || 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&auto=format&fit=crop&q=60';
-  };
+  // ==================== FETCH ====================
 
-  const fetchCategories = async (productList = null) => {
-    let apiCats = [];
+  // ดึง Category จาก DB ล้วนๆ ไม่ hardcode
+  const fetchCategories = async () => {
     try {
       const res = await axios.get(`${API}/categories/`);
-      if (res.data) apiCats = res.data;
+      const apiCats = res.data || [];
+      // "All Products" ขึ้นก่อน แล้วตามด้วย DB
+      setCategories([
+        ALL_PRODUCTS_CARD,
+        ...apiCats.map(ac => ({
+          id: ac.id,
+          name: ac.name,
+          thai: ac.thai || '',
+          image: ac.image || 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&auto=format&fit=crop&q=60',
+        }))
+      ]);
     } catch (error) {
       console.warn('Categories API not available');
+      setCategories([ALL_PRODUCTS_CARD]);
     }
-
-    const prods = productList || products;
-
-    // Start with "All Products"
-    let combined = [...BASE_CATEGORIES];
-
-    // Add categories from API
-    apiCats.forEach(ac => {
-      combined.push({
-        id: ac.id,
-        name: ac.name,
-        thai: ac.thai || '',
-        image: ac.image || getCategoryImage(ac)
-      });
-    });
-
-    // Detect categories in products that are not in DB yet (for safety)
-    const productDerivedNames = [...new Set(prods.map(p => p.category).filter(Boolean))];
-    productDerivedNames.forEach(pcName => {
-      const exists = combined.find(c =>
-        String(c.name).toLowerCase() === String(pcName).toLowerCase() ||
-        String(c.id).toLowerCase() === String(pcName).toLowerCase()
-      );
-      if (!exists) {
-        combined.push({
-          id: pcName, // Use name as ID if not in DB
-          name: pcName,
-          thai: '',
-          image: getCategoryImage({ name: pcName })
-        });
-      }
-    });
-
-    const final = combined
-      .filter(c => {
-        const nameLower = String(c.name || '').toLowerCase();
-        // Keep the forbidden list if the user wants it, but usually best to let them delete them from DB
-        const forbidden = ['air conditioner', 'แอร์', 'clens', 'clense'];
-        return !forbidden.some(word => nameLower.includes(word));
-      })
-      .map(c => ({
-        ...c,
-        action: 'View Collection',
-        icon: 'arrow_forward',
-        image: c.image || getCategoryImage(c)
-      }));
-
-    setCategories(final);
   };
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get(`${API}/products/`);
-      const mappedData = response.data.map(p => ({
+      const res = await axios.get(`${API}/products/`);
+      const mapped = res.data.map(p => ({
         ...p,
-        hasVat: p.has_vat !== undefined ? p.has_vat : (p.hasVat !== undefined ? p.hasVat : false)
+        hasVat: p.has_vat !== undefined ? p.has_vat : (p.hasVat ?? false)
       }));
-      setProducts(mappedData);
+      setProducts(mapped);
       setIsLoading(false);
-      return mappedData;
+      return mapped;
     } catch (error) {
-      console.error("Error fetching products:", error);
+      console.error('Error fetching products:', error);
       setIsLoading(false);
       return [];
     }
@@ -181,105 +115,94 @@ const Inventory = ({ initialOpenModal = false }) => {
             seeded.push(r.data);
           } catch (_) { }
         }
-        if (seeded.length > 0) setBrands(seeded);
-        else setBrands(DEFAULT_BRANDS.map((n, i) => ({ id: `local_${i}`, name: n })));
+        setBrands(seeded.length > 0
+          ? seeded
+          : DEFAULT_BRANDS.map((n, i) => ({ id: `local_${i}`, name: n }))
+        );
       }
-    } catch (error) {
-      console.warn('Brands API unavailable, using defaults');
+    } catch {
       setBrands(DEFAULT_BRANDS.map((n, i) => ({ id: `local_${i}`, name: n })));
     }
   };
 
   useEffect(() => {
     const init = async () => {
-      const prods = await fetchProducts();
-      await fetchCategories(prods);
+      await fetchProducts();
+      await fetchCategories();
       await fetchBrands();
     };
     init();
   }, []);
 
+  // ==================== PRODUCT CRUD ====================
+
   const handleSaveProduct = async () => {
     const { name, sku, category, price, cost_price, stock, hasVat } = newProduct;
-
     if (!name || !sku || !category || price === '' || cost_price === '' || stock === '') {
       await alert('กรุณากรอกข้อมูลให้ครบทุกช่อง', 'ข้อมูลไม่ครบ', 'warning');
       return;
     }
-
     if (isNaN(price) || parseFloat(price) <= 0) {
       await alert('ราคาไม่ถูกต้อง', 'Warning', 'warning');
       return;
     }
-
     try {
       const payload = {
-        name,
-        sku,
-        category,
+        name, sku, category,
         price: parseFloat(price),
         cost_price: parseFloat(cost_price),
         stock: parseInt(stock),
         has_vat: hasVat,
         hasVat: hasVat
       };
-
       if (editingId) {
         await axios.put(`${API}/products/${editingId}`, payload);
-        await alert("อัปเดตสินค้าเรียบร้อย!", "สำเร็จ", "success");
+        await alert('อัปเดตสินค้าเรียบร้อย!', 'สำเร็จ', 'success');
       } else {
         await axios.post(`${API}/products/`, payload);
-        await alert("บันทึกสินค้าเรียบร้อย!", "สำเร็จ", "success");
+        await alert('บันทึกสินค้าเรียบร้อย!', 'สำเร็จ', 'success');
       }
-
       setIsModalOpen(false);
       resetForm();
-
-      const updatedProducts = await fetchProducts();
-      await fetchCategories(updatedProducts);
-
+      await fetchProducts();
     } catch (error) {
-      console.error(error);
       await alert(`Error: ${error.response?.data?.detail || error.message}`, 'Error', 'error');
     }
-  };
-
-  const selectCategory = (cat) => {
-    setActiveCategory(cat.name); // Always use the name for filtering products
-    setCurrentView('products');
-    setBrandFilter('All');
-    setSearchTerm('');
-    setStockFilter('all');
-    setVatFilter('all');
   };
 
   const handleEdit = (product) => {
     setEditingId(product.id);
     setNewProduct({
-      name: product.name,
-      sku: product.sku,
-      category: product.category,
-      price: product.price,
-      cost_price: product.cost_price,
-      stock: product.stock,
+      name: product.name, sku: product.sku,
+      category: product.category, price: product.price,
+      cost_price: product.cost_price, stock: product.stock,
       hasVat: product.hasVat
     });
     setIsModalOpen(true);
   };
 
   const handleDelete = async (id) => {
-    if (await confirm("ลบสินค้า?", "ยืนยัน", "warning")) {
+    if (await confirm('ลบสินค้า?', 'ยืนยัน', 'warning')) {
       try {
         await axios.delete(`${API}/products/${id}`);
-        fetchProducts();
-      } catch (error) {
-        await alert("ลบไม่สำเร็จ", "Error", "error");
+        await fetchProducts();
+      } catch {
+        await alert('ลบไม่สำเร็จ', 'Error', 'error');
       }
     }
   };
 
-  // ✅ FIX: handleAddCategory — เช็ค editingCatId เป็น numeric id จริงๆ ก่อน PUT
-  const handleAddCategory = async () => {
+  // ==================== CATEGORY CRUD ====================
+
+  // ✅ ทุก category มาจาก DB → มี numeric id เสมอ → PUT ได้เลย
+  const handleEditCategory = (cat, e) => {
+    e.stopPropagation();
+    setEditingCatId(cat.id);
+    setNewCat({ name: cat.name, thai: cat.thai || '', image: cat.image || '' });
+    setIsCatModalOpen(true);
+  };
+
+  const handleSaveCategory = async () => {
     if (!newCat.name.trim() || !newCat.thai.trim()) {
       await alert('กรุณากรอกชื่อ Category', 'ข้อมูลไม่ครบ', 'warning');
       return;
@@ -290,66 +213,47 @@ const Inventory = ({ initialOpenModal = false }) => {
       image: newCat.image.trim() || null,
     };
     try {
-      const isNumericId = editingCatId !== null && !isNaN(Number(editingCatId));
-
-      if (editingCatId && isNumericId) {
+      if (editingCatId) {
+        // PUT — Backend จะ update ชื่อ category ในสินค้าทุกตัวด้วยอัตโนมัติ
         await axios.put(`${API}/categories/${editingCatId}`, payload);
         await alert('อัปเดต Category เรียบร้อย!', 'สำเร็จ', 'success');
       } else {
+        // POST — เพิ่มใหม่
         await axios.post(`${API}/categories/`, payload);
         await alert('เพิ่ม Category เรียบร้อย!', 'สำเร็จ', 'success');
       }
       setEditingCatId(null);
-      await fetchCategories();
       setNewCat({ name: '', thai: '', image: '' });
       setIsCatModalOpen(false);
+      await fetchCategories();
+      await fetchProducts(); // refresh สินค้าด้วย เผื่อชื่อ category เปลี่ยน
     } catch (error) {
-      console.error('Category error:', error);
       await alert(`ผิดพลาด: ${error.response?.data?.detail || error.message}`, 'Error', 'error');
     }
   };
 
-  // ✅ FIX: handleEditCategory — ใช้ cat.name เป็น fallback แทน null เพื่อให้ modal รู้ว่ากำลัง Edit
-  const handleEditCategory = (cat, e) => {
-    e.stopPropagation();
-    const isNumericId = !isNaN(Number(cat.id)) && cat.id !== null && cat.id !== undefined;
-
-    // ถ้ามี numeric id → ใช้ id นั้น (PUT), ถ้าไม่มี → ใช้ชื่อเป็น marker (POST แต่ modal ยัง "Edit")
-    setEditingCatId(isNumericId ? cat.id : cat.name);
-    setNewCat({ name: cat.name, thai: cat.thai || '', image: cat.image || '' });
-    setIsCatModalOpen(true);
-  };
-
   const handleDeleteCategory = async (catId, e) => {
     e.stopPropagation();
-    const isNumericId = !isNaN(Number(catId)) && catId !== null && catId !== undefined;
-
     if (catId === 'all_products') {
-      await alert("ไม่สามารถลบหมวดหมู่เริ่มต้นของระบบได้", "แจ้งเตือน", "warning");
+      await alert('ไม่สามารถลบ All Products ได้', 'แจ้งเตือน', 'warning');
       return;
     }
-
-    if (!isNumericId) {
-      await alert("หมวดหมู่นี้พบล่าสุดในข้อมูลสินค้า แต่ไม่มีในฐานข้อมูล กรุณาตรวจสอบข้อมูลสินค้า", "แจ้งเตือน", "warning");
-      return;
-    }
-
-    if (await confirm(`ลบ Category "${catId}"?`, "ยืนยันการลบ", "warning")) {
+    if (await confirm('ลบ Category นี้?', 'ยืนยันการลบ', 'warning')) {
       try {
         await axios.delete(`${API}/categories/${catId}`);
         await fetchCategories();
       } catch (error) {
-        console.error('Delete category error:', error);
         await alert(`ลบไม่สำเร็จ: ${error.response?.data?.detail || error.message}`, 'Error', 'error');
       }
     }
   };
 
+  // ==================== BRAND CRUD ====================
+
   const handleAddBrand = async () => {
     const trimmed = newBrandName.trim();
     if (!trimmed) return;
-    const exists = brands.find(b => b.name.toLowerCase() === trimmed.toLowerCase());
-    if (exists) {
+    if (brands.find(b => b.name.toLowerCase() === trimmed.toLowerCase())) {
       await alert('มีแบรนด์นี้อยู่แล้ว', 'ซ้ำ', 'warning');
       return;
     }
@@ -366,36 +270,38 @@ const Inventory = ({ initialOpenModal = false }) => {
   const handleDeleteBrand = async (brand, e) => {
     e.stopPropagation();
     if (!brand.id || String(brand.id).startsWith('local_')) return;
-    if (await confirm(`ลบแบรนด์ "${brand.name}"?`, "ยืนยัน", "warning")) {
+    if (await confirm(`ลบแบรนด์ "${brand.name}"?`, 'ยืนยัน', 'warning')) {
       try {
         await axios.delete(`${API}/brands/${brand.id}`);
         setBrands(prev => prev.filter(b => b.id !== brand.id));
         if (brandFilter === brand.name) setBrandFilter('All');
-      } catch (error) {
-        await alert(`ลบไม่สำเร็จ`, 'Error', 'error');
+      } catch {
+        await alert('ลบไม่สำเร็จ', 'Error', 'error');
       }
     }
   };
+
+  // ==================== FILTER ====================
 
   const filteredProducts = products.filter(p => {
     if (activeCategory !== 'All Products') {
       if (String(p.category).toLowerCase().trim() !== String(activeCategory).toLowerCase().trim()) return false;
     }
-    const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    const matchesSearch =
+      p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       p.sku.toLowerCase().includes(searchTerm.toLowerCase());
     let matchesStock = true;
     if (stockFilter === 'normal') matchesStock = p.stock >= 5;
     if (stockFilter === 'low') matchesStock = p.stock < 5;
     let matchesBrand = true;
-    if (brandFilter !== 'All') {
-      matchesBrand = p.name.toLowerCase().includes(brandFilter.toLowerCase());
-    }
+    if (brandFilter !== 'All') matchesBrand = p.name.toLowerCase().includes(brandFilter.toLowerCase());
     let matchesVat = true;
     if (vatFilter === 'vat') matchesVat = p.hasVat === true;
     if (vatFilter === 'novat') matchesVat = p.hasVat === false;
     return matchesSearch && matchesStock && matchesBrand && matchesVat;
   });
 
+  // ==================== RENDER ====================
 
   return (
     <div className="min-h-screen bg-[#F3F5F9] font-sans flex flex-col items-center">
@@ -412,9 +318,7 @@ const Inventory = ({ initialOpenModal = false }) => {
                 <ArrowLeft size={20} />
               </button>
               <div>
-                <Text as="h2" className="text-2xl font-bold text-slate-900">
-                  {`${activeCategory} Stock`}
-                </Text>
+                <Text as="h2" className="text-2xl font-bold text-slate-900">{`${activeCategory} Stock`}</Text>
                 <Text className="text-slate-500 text-sm mt-0.5">Manage your inventory</Text>
               </div>
             </div>
@@ -444,8 +348,7 @@ const Inventory = ({ initialOpenModal = false }) => {
               onClick={() => { setNewCat({ name: '', thai: '', image: '' }); setEditingCatId(null); setIsCatModalOpen(true); }}
               className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-2 px-5 py-2.5 bg-[#1e293b] text-white rounded-xl font-semibold shadow-md hover:bg-slate-700 transition-all active:scale-95 text-sm whitespace-nowrap cursor-pointer"
             >
-              <Plus size={16} />
-              Add Category
+              <Plus size={16} /> Add Category
             </button>
           </div>
         )}
@@ -456,13 +359,23 @@ const Inventory = ({ initialOpenModal = false }) => {
             {categories.map((cat) => {
               const itemCount = cat.name === 'All Products'
                 ? products.length
-                : products.filter(p => p.category === cat.name || p.category === cat.id).length;
+                : products.filter(p =>
+                  String(p.category).toLowerCase().trim() === String(cat.name).toLowerCase().trim()
+                ).length;
               return (
                 <div
                   key={cat.id}
-                  onClick={() => selectCategory(cat)}
+                  onClick={() => {
+                    setActiveCategory(cat.name);
+                    setCurrentView('products');
+                    setBrandFilter('All');
+                    setSearchTerm('');
+                    setStockFilter('all');
+                    setVatFilter('all');
+                  }}
                   className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 cursor-pointer border border-transparent hover:border-slate-100 relative"
                 >
+                  {/* Edit/Delete — ซ่อนสำหรับ All Products */}
                   {cat.id !== 'all_products' && (
                     <div className="absolute top-3 left-3 z-30 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-200">
                       <button
@@ -483,18 +396,10 @@ const Inventory = ({ initialOpenModal = false }) => {
                   )}
 
                   <div className="relative h-32 overflow-hidden bg-slate-100">
-                    <img
-                      src={cat.image}
-                      alt={cat.name}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
+                    <img src={cat.image} alt={cat.name}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                     <div className="absolute top-4 right-4 z-20">
-                      <span
-                        className={`inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold tracking-wide shadow-sm ${itemCount === 0
-                          ? "bg-red-500 text-white"
-                          : "bg-green-500 text-white shadow-green-100"
-                          }`}
-                      >
+                      <span className={`inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold tracking-wide shadow-sm ${itemCount === 0 ? 'bg-red-500 text-white' : 'bg-green-500 text-white'}`}>
                         {itemCount} Items
                       </span>
                     </div>
@@ -513,19 +418,16 @@ const Inventory = ({ initialOpenModal = false }) => {
 
         {/* ===== VIEW 2: PRODUCT LIST ===== */}
         {currentView === 'products' && (
-          <div className="">
-
+          <div>
+            {/* Brand Filter */}
             <div className="flex gap-2 mt-1 pt-3 mb-3 overflow-x-auto pb-2 scrollbar-hide items-center">
               <div
                 onClick={() => setBrandFilter('All')}
                 className={`flex-shrink-0 flex items-center px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-all duration-200 border cursor-pointer select-none
-                  ${brandFilter === 'All'
-                    ? 'bg-blue-600 text-white border-blue-600 shadow-md'
-                    : 'bg-white text-slate-600 border-slate-200 hover:border-blue-400 hover:bg-blue-50 hover:shadow-sm'}`}
+                  ${brandFilter === 'All' ? 'bg-blue-600 text-white border-blue-600 shadow-md' : 'bg-white text-slate-600 border-slate-200 hover:border-blue-400 hover:bg-blue-50'}`}
               >
                 All
               </div>
-
               {brands.map(brand => (
                 <div
                   key={brand.id}
@@ -536,16 +438,12 @@ const Inventory = ({ initialOpenModal = false }) => {
                   <div
                     onClick={() => setBrandFilter(brand.name)}
                     className={`flex items-center px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-all duration-200 border cursor-pointer select-none
-                      ${brandFilter === brand.name
-                        ? 'bg-blue-600 text-white border-blue-600 shadow-md'
-                        : 'bg-white text-slate-600 border-slate-200 hover:border-blue-400 hover:bg-blue-50 hover:shadow-sm'}`}
+                      ${brandFilter === brand.name ? 'bg-blue-600 text-white border-blue-600 shadow-md' : 'bg-white text-slate-600 border-slate-200 hover:border-blue-400 hover:bg-blue-50'}`}
                   >
                     {brand.name}
                   </div>
-
                   <button
                     onClick={(e) => handleDeleteBrand(brand, e)}
-                    title={`ลบแบรนด์ ${brand.name}`}
                     className={`absolute -top-2 -right-2 z-10 w-5 h-5 rounded-full bg-red-500 hover:bg-red-600 text-white flex items-center justify-center shadow-md transition-all duration-150 cursor-pointer
                       ${hoveredBrand === brand.id ? 'opacity-100 scale-100' : 'opacity-0 scale-75 pointer-events-none'}`}
                   >
@@ -553,63 +451,47 @@ const Inventory = ({ initialOpenModal = false }) => {
                   </button>
                 </div>
               ))}
-
               <button
                 onClick={() => { setNewBrandName(''); setIsBrandModalOpen(true); }}
                 className="flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold border border-dashed border-slate-300 text-slate-500 hover:border-blue-400 hover:text-blue-500 hover:bg-blue-50 transition-all whitespace-nowrap cursor-pointer"
               >
-                <Plus size={14} />
-                Add Brand
+                <Plus size={14} /> Add Brand
               </button>
             </div>
 
+            {/* Search & Filters */}
             <div className="bg-white p-3 rounded-[2rem] border border-slate-100 shadow-sm mb-4 flex flex-col xl:flex-row gap-3 items-center">
               <div className="relative flex-1 w-full">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                <input
-                  type="text"
-                  placeholder={`Search in ${activeCategory}...`}
+                <input type="text" placeholder={`Search in ${activeCategory}...`}
                   className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-transparent focus:bg-white focus:border-blue-200 rounded-xl outline-none transition-colors"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
+                  value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
               </div>
               <div className="flex flex-wrap gap-3 w-full xl:w-auto justify-center">
                 <div className="flex bg-slate-50 p-1 rounded-xl border border-slate-100">
-                  <button
-                    onClick={() => setStockFilter(stockFilter === 'normal' ? 'all' : 'normal')}
-                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all
-                      ${stockFilter === 'normal' ? 'bg-white text-emerald-600 shadow-sm border border-slate-100' : 'text-slate-400 hover:text-slate-600'}`}
-                  >
+                  <button onClick={() => setStockFilter(stockFilter === 'normal' ? 'all' : 'normal')}
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${stockFilter === 'normal' ? 'bg-white text-emerald-600 shadow-sm border border-slate-100' : 'text-slate-400 hover:text-slate-600'}`}>
                     <CheckCircle size={14} /> Green Stock
                   </button>
-                  <button
-                    onClick={() => setStockFilter(stockFilter === 'low' ? 'all' : 'low')}
-                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all
-                      ${stockFilter === 'low' ? 'bg-white text-rose-500 shadow-sm border border-slate-100' : 'text-slate-400 hover:text-slate-600'}`}
-                  >
+                  <button onClick={() => setStockFilter(stockFilter === 'low' ? 'all' : 'low')}
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${stockFilter === 'low' ? 'bg-white text-rose-500 shadow-sm border border-slate-100' : 'text-slate-400 hover:text-slate-600'}`}>
                     <AlertCircle size={14} /> Red Stock
                   </button>
                 </div>
                 <div className="flex bg-slate-50 p-1 rounded-xl border border-slate-100">
-                  <button
-                    onClick={() => setVatFilter(vatFilter === 'vat' ? 'all' : 'vat')}
-                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all
-                      ${vatFilter === 'vat' ? 'bg-white text-purple-600 shadow-sm border border-slate-100' : 'text-slate-400 hover:text-slate-600'}`}
-                  >
+                  <button onClick={() => setVatFilter(vatFilter === 'vat' ? 'all' : 'vat')}
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${vatFilter === 'vat' ? 'bg-white text-purple-600 shadow-sm border border-slate-100' : 'text-slate-400 hover:text-slate-600'}`}>
                     VAT Only
                   </button>
-                  <button
-                    onClick={() => setVatFilter(vatFilter === 'novat' ? 'all' : 'novat')}
-                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all
-                      ${vatFilter === 'novat' ? 'bg-white text-slate-600 shadow-sm border border-slate-100' : 'text-slate-400 hover:text-slate-600'}`}
-                  >
+                  <button onClick={() => setVatFilter(vatFilter === 'novat' ? 'all' : 'novat')}
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${vatFilter === 'novat' ? 'bg-white text-slate-600 shadow-sm border border-slate-100' : 'text-slate-400 hover:text-slate-600'}`}>
                     No VAT
                   </button>
                 </div>
               </div>
             </div>
 
+            {/* Product Table */}
             <div className="bg-white rounded-[2rem] p-6 shadow-sm border border-slate-100 overflow-hidden">
               <table className="w-full text-left text-sm text-slate-600">
                 <thead className="bg-slate-50 border-b border-slate-100 text-slate-500 font-semibold uppercase text-xs">
@@ -622,31 +504,28 @@ const Inventory = ({ initialOpenModal = false }) => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                  {filteredProducts.length > 0 ? (
-                    filteredProducts.map((p) => (
-                      <tr key={p.id} className="hover:bg-slate-50 transition-colors group">
-                        <td className="px-4 py-3 font-bold text-slate-800 group-hover:text-blue-600">{p.name}</td>
-                        <td className="px-4 py-3 font-mono text-slate-500">{p.sku}</td>
-                        <td className="px-4 py-3">
-                          <div className="flex items-center gap-2">
-                            <span className="font-bold text-slate-700">฿{p.price.toLocaleString()}</span>
-                            {p.hasVat === true ? (
-                              <span className="px-2 py-0.5 rounded-md bg-purple-100 text-purple-600 text-[10px] font-bold border border-purple-200 cursor-pointer">VAT</span>
-                            ) : (
-                              <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-400 text-[10px] border border-slate-200 cursor-pointer">No VAT</span>
-                            )}
-                          </div>
-                        </td>
-                        <td className="px-4 py-3">
-                          <Badge variant={p.stock >= 5 ? 'emerald' : 'rose'} className="w-8 text-center inline-block cursor-pointer">{p.stock}</Badge>
-                        </td>
-                        <td className="px-4 py-3 text-right flex justify-end gap-2">
-                          <button onClick={() => handleEdit(p)} className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-full cursor-pointer"><Edit3 size={18} /></button>
-                          <button onClick={() => handleDelete(p.id)} className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-full cursor-pointer"><Trash2 size={18} /></button>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
+                  {filteredProducts.length > 0 ? filteredProducts.map(p => (
+                    <tr key={p.id} className="hover:bg-slate-50 transition-colors group">
+                      <td className="px-4 py-3 font-bold text-slate-800 group-hover:text-blue-600">{p.name}</td>
+                      <td className="px-4 py-3 font-mono text-slate-500">{p.sku}</td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-slate-700">฿{p.price.toLocaleString()}</span>
+                          {p.hasVat
+                            ? <span className="px-2 py-0.5 rounded-md bg-purple-100 text-purple-600 text-[10px] font-bold border border-purple-200">VAT</span>
+                            : <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-400 text-[10px] border border-slate-200">No VAT</span>
+                          }
+                        </div>
+                      </td>
+                      <td className="px-4 py-3">
+                        <Badge variant={p.stock >= 5 ? 'emerald' : 'rose'} className="w-8 text-center inline-block">{p.stock}</Badge>
+                      </td>
+                      <td className="px-4 py-3 text-right flex justify-end gap-2">
+                        <button onClick={() => handleEdit(p)} className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-full cursor-pointer"><Edit3 size={18} /></button>
+                        <button onClick={() => handleDelete(p.id)} className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-full cursor-pointer"><Trash2 size={18} /></button>
+                      </td>
+                    </tr>
+                  )) : (
                     <tr><td colSpan="5" className="px-6 py-12 text-center text-slate-400 italic">ไม่พบสินค้าในหมวดหมู่นี้หรือตามเงื่อนไขการกรอง</td></tr>
                   )}
                 </tbody>
@@ -667,36 +546,36 @@ const Inventory = ({ initialOpenModal = false }) => {
               <div className="p-8 space-y-6">
                 <div>
                   <Text as="label" className="block text-sm font-medium text-slate-700 mb-2">Product Name (Include Brand)</Text>
-                  <input type="text" placeholder="e.g. Samsung TV 55 Inch" className="w-full p-3 border rounded-xl bg-slate-50 outline-none focus:bg-white focus:ring-2 ring-blue-100"
+                  <input type="text" placeholder="e.g. Samsung TV 55 Inch"
+                    className="w-full p-3 border rounded-xl bg-slate-50 outline-none focus:bg-white focus:ring-2 ring-blue-100"
                     value={newProduct.name} onChange={e => setNewProduct({ ...newProduct, name: e.target.value })} />
                 </div>
                 <div className="grid grid-cols-2 gap-6">
                   <div>
                     <Text as="label" className="block text-sm font-medium text-slate-700 mb-2">SKU</Text>
-                    <input type="text" placeholder="SKU-001" className="w-full p-3 border rounded-xl bg-slate-50 outline-none focus:bg-white focus:ring-2 ring-blue-100"
+                    <input type="text" placeholder="SKU-001"
+                      className="w-full p-3 border rounded-xl bg-slate-50 outline-none focus:bg-white focus:ring-2 ring-blue-100"
                       value={newProduct.sku} onChange={e => setNewProduct({ ...newProduct, sku: e.target.value })} />
                   </div>
                   <div>
                     <Text as="label" className="block text-sm font-medium text-slate-700 mb-2">Category</Text>
                     <select className="w-full p-3 border rounded-xl bg-slate-50 outline-none focus:bg-white focus:ring-2 ring-blue-100"
                       value={newProduct.category} onChange={e => setNewProduct({ ...newProduct, category: e.target.value })}>
-                      {categories.map(c => <option key={c.id} value={c.name}>{c.name}</option>)}
+                      {categories.filter(c => c.id !== 'all_products').map(c =>
+                        <option key={c.id} value={c.name}>{c.name}</option>
+                      )}
                     </select>
                   </div>
                 </div>
                 <div>
                   <Text as="label" className="block text-sm font-medium text-slate-700 mb-2">Tax Type (VAT)</Text>
                   <div className="flex gap-4 p-1 bg-slate-50 rounded-xl border border-slate-200">
-                    <button
-                      onClick={() => setNewProduct({ ...newProduct, hasVat: false })}
-                      className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all ${!newProduct.hasVat ? 'bg-white shadow-sm text-slate-800 border border-slate-100' : 'text-slate-400 hover:text-slate-600'}`}
-                    >
+                    <button onClick={() => setNewProduct({ ...newProduct, hasVat: false })}
+                      className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all ${!newProduct.hasVat ? 'bg-white shadow-sm text-slate-800 border border-slate-100' : 'text-slate-400 hover:text-slate-600'}`}>
                       No VAT (ราคาปกติ)
                     </button>
-                    <button
-                      onClick={() => setNewProduct({ ...newProduct, hasVat: true })}
-                      className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all ${newProduct.hasVat ? 'bg-purple-500 shadow-md text-white' : 'text-slate-400 hover:text-slate-600'}`}
-                    >
+                    <button onClick={() => setNewProduct({ ...newProduct, hasVat: true })}
+                      className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all ${newProduct.hasVat ? 'bg-purple-500 shadow-md text-white' : 'text-slate-400 hover:text-slate-600'}`}>
                       VAT Included (มี VAT)
                     </button>
                   </div>
@@ -737,7 +616,6 @@ const Inventory = ({ initialOpenModal = false }) => {
                   <div className="w-9 h-9 rounded-xl bg-[#1e293b] flex items-center justify-center">
                     <Tag size={16} className="text-white" />
                   </div>
-                  {/* ✅ Title เปลี่ยนตาม editingCatId */}
                   <h3 className="font-bold text-xl text-slate-800">
                     {editingCatId ? 'Edit Category' : 'Add Category'}
                   </h3>
@@ -746,65 +624,44 @@ const Inventory = ({ initialOpenModal = false }) => {
                   <X size={24} className="text-slate-400 hover:text-slate-600" />
                 </button>
               </div>
-
               <div className="p-8 space-y-5">
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-2">
                     Category Name <span className="text-slate-400">(English)</span>
                   </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Air Conditioner"
+                  <input type="text" placeholder="e.g. Air Conditioner"
                     className="w-full p-3 border rounded-xl bg-slate-50 outline-none focus:bg-white focus:ring-2 ring-blue-100 transition-all"
-                    value={newCat.name}
-                    onChange={e => setNewCat({ ...newCat, name: e.target.value })}
-                  />
+                    value={newCat.name} onChange={e => setNewCat({ ...newCat, name: e.target.value })} />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    ชื่อภาษาไทย
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="เช่น เครื่องปรับอากาศ"
+                  <label className="block text-sm font-medium text-slate-700 mb-2">ชื่อภาษาไทย</label>
+                  <input type="text" placeholder="เช่น เครื่องปรับอากาศ"
                     className="w-full p-3 border rounded-xl bg-slate-50 outline-none focus:bg-white focus:ring-2 ring-blue-100 transition-all"
-                    value={newCat.thai}
-                    onChange={e => setNewCat({ ...newCat, thai: e.target.value })}
-                  />
+                    value={newCat.thai} onChange={e => setNewCat({ ...newCat, thai: e.target.value })} />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-2">
                     Image URL <span className="text-slate-400">(optional)</span>
                   </label>
-                  <input
-                    type="text"
-                    placeholder="https://..."
+                  <input type="text" placeholder="https://..."
                     className="w-full p-3 border rounded-xl bg-slate-50 outline-none focus:bg-white focus:ring-2 ring-blue-100 transition-all"
-                    value={newCat.image}
-                    onChange={e => setNewCat({ ...newCat, image: e.target.value })}
-                  />
+                    value={newCat.image} onChange={e => setNewCat({ ...newCat, image: e.target.value })} />
                   <p className="text-xs text-slate-400 mt-1.5">หากไม่กรอก จะใช้รูป default</p>
                 </div>
-
                 {newCat.image && (
                   <div className="rounded-xl overflow-hidden h-24 border border-slate-100">
-                    <img src={newCat.image} alt="preview" className="w-full h-full object-cover" onError={e => e.target.style.display = 'none'} />
+                    <img src={newCat.image} alt="preview" className="w-full h-full object-cover"
+                      onError={e => e.target.style.display = 'none'} />
                   </div>
                 )}
               </div>
-
               <div className="px-8 py-5 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">
-                <button
-                  onClick={() => { setIsCatModalOpen(false); setEditingCatId(null); }}
-                  className="px-6 py-2.5 text-slate-500 hover:bg-slate-200 rounded-xl font-semibold transition-all cursor-pointer"
-                >
+                <button onClick={() => { setIsCatModalOpen(false); setEditingCatId(null); }}
+                  className="px-6 py-2.5 text-slate-500 hover:bg-slate-200 rounded-xl font-semibold transition-all cursor-pointer">
                   Cancel
                 </button>
-                <button
-                  onClick={handleAddCategory}
-                  className="px-8 py-2.5 bg-[#1e293b] hover:bg-slate-700 text-white rounded-xl shadow font-semibold transition-all active:scale-95 cursor-pointer"
-                >
-                  {/* ✅ ปุ่มเปลี่ยนข้อความตาม editingCatId */}
+                <button onClick={handleSaveCategory}
+                  className="px-8 py-2.5 bg-[#1e293b] hover:bg-slate-700 text-white rounded-xl shadow font-semibold transition-all active:scale-95 cursor-pointer">
                   {editingCatId ? 'Save Changes' : 'Add Category'}
                 </button>
               </div>
@@ -825,15 +682,12 @@ const Inventory = ({ initialOpenModal = false }) => {
               </div>
               <div className="p-8">
                 <label className="block text-sm font-medium text-slate-700 mb-2">Brand Name</label>
-                <input
-                  type="text"
-                  placeholder="e.g. Sony"
+                <input type="text" placeholder="e.g. Sony"
                   className="w-full p-3 border rounded-xl bg-slate-50 outline-none focus:bg-white focus:ring-2 ring-blue-100 transition-all"
                   value={newBrandName}
                   onChange={e => setNewBrandName(e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && handleAddBrand()}
-                  autoFocus
-                />
+                  autoFocus />
                 <p className="text-xs text-slate-400 mt-2">กด Enter หรือปุ่ม Add Brand เพื่อเพิ่ม</p>
               </div>
               <div className="px-8 py-5 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">
