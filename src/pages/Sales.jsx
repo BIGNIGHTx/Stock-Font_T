@@ -128,7 +128,7 @@ const Sales = () => {
 
     // สร้าง Category buttons ไดนามิกจากข้อมูลสินค้าจริง
     const CAT_COLORS = ['bg-blue-500', 'bg-teal-500', 'bg-orange-500', 'bg-indigo-500', 'bg-pink-500', 'bg-amber-500', 'bg-emerald-500', 'bg-cyan-500'];
-    const uniqueCats = [...new Set(products.map(p => p.category).filter(Boolean))];
+    const uniqueCats = [...new Set(products.map(p => p.category).filter(cat => cat && cat !== 'YYYY'))];
     const CATEGORIES = [
         { id: 'All', label: 'All Products' },
         ...uniqueCats.map((cat, i) => ({ id: cat, label: cat, color: CAT_COLORS[i % CAT_COLORS.length] }))
