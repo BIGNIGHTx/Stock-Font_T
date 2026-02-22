@@ -8,47 +8,9 @@ import { Badge } from '../components/badge';
 import { Text } from '../components/text';
 import { useAlert } from '../contexts/AlertContext';
 
-// --- Const: หมวดหมู่และแบรนด์ (initial) ---
-const INITIAL_CATEGORIES = [
-  {
-    id: 'Tv',
-    name: "TV",
-    thai: "โทรทัศน์",
-    image:
-      "https://images.unsplash.com/photo-1717295248230-93ea71f48f92?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8VFZ8ZW58MHx8MHx8fDA%3D",
-    action: "View Collection",
-    icon: "arrow_forward",
-  },
-  {
-    id: 'Fan',
-    name: "Fan",
-    thai: "พัดลม",
-    image:
-      "https://media.istockphoto.com/id/1150705585/th/%E0%B8%A3%E0%B8%B9%E0%B8%9B%E0%B8%96%E0%B9%88%E0%B8%B2%E0%B8%A2/%E0%B8%A0%E0%B8%B2%E0%B8%9E%E0%B8%A3%E0%B8%B0%E0%B8%A2%E0%B8%B0%E0%B9%83%E0%B8%81%E0%B8%A5%E0%B9%89%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%9E%E0%B8%B1%E0%B8%94%E0%B8%A5%E0%B8%A1%E0%B8%95%E0%B8%B1%E0%B9%89%E0%B8%87%E0%B8%9E%E0%B8%B7%E0%B9%89%E0%B8%99%E0%B9%84%E0%B8%9F%E0%B8%9F%E0%B9%89%E0%B8%B2.jpg?s=612x612&w=0&k=20&c=vX1hV1muUVa96MZpx4jJd6Ujl54pQX6Z8eIyyrdkLvw=",
-    action: "View Collection",
-    icon: "arrow_forward",
-  },
-  {
-    id: 'Refrigerator',
-    name: "Refrigerator",
-    thai: "ตู้เย็น",
-    image:
-      "https://media.istockphoto.com/id/2162681544/th/%E0%B8%A3%E0%B8%B9%E0%B8%9B%E0%B8%96%E0%B9%88%E0%B8%B2%E0%B8%A2/%E0%B8%AB%E0%B9%89%E0%B8%AD%E0%B8%87%E0%B8%84%E0%B8%A3%E0%B8%B1%E0%B8%A7%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%97%E0%B8%B1%E0%B8%99%E0%B8%AA%E0%B8%A1%E0%B8%B1%E0%B8%A2%E0%B8%9E%E0%B8%A3%E0%B9%89%E0%B8%AD%E0%B8%A1%E0%B8%A1%E0%B8%B8%E0%B8%A1%E0%B8%A1%E0%B8%AD%E0%B8%87%E0%B8%94%E0%B9%89%E0%B8%B2%E0%B8%99%E0%B8%AB%E0%B8%99%E0%B9%89%E0%B8%B2%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%95%E0%B8%B9%E0%B9%89%E0%B9%80%E0%B8%A2%E0%B9%87%E0%B8%99%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%95%E0%B8%B9%E0%B9%89%E0%B8%AA%E0%B8%B5%E0%B8%82%E0%B8%B2%E0%B8%A7.jpg?s=612x612&w=0&k=20&c=_tw1MIr3359DcIqBmiaVymUxQFWSJYNnBzlzxfA9YrI=",
-    action: "Restock",
-    icon: "add_shopping_cart",
-  },
-  {
-    id: 'Washing Machine',
-    name: "Washing Machine",
-    thai: "เครื่องซักผ้า",
-    image:
-      "https://media.istockphoto.com/id/171578869/th/%E0%B8%A3%E0%B8%B9%E0%B8%9B%E0%B8%96%E0%B9%88%E0%B8%B2%E0%B8%A2/%E0%B9%80%E0%B8%84%E0%B8%A3%E0%B8%B7%E0%B9%88%E0%B8%AD%E0%B8%87%E0%B8%8B%E0%B8%B1%E0%B8%81%E0%B8%9C%E0%B9%89%E0%B8%B2.jpg?s=612x612&w=0&k=20&c=r1VoicB7w53Eo-5zAhY0aX-xf4biIVgUEVR_lwILdFM=",
-    action: "Restock",
-    icon: "add_shopping_cart",
-  },
-];
-
 const INITIAL_BRANDS = ['All', 'Samsung', 'LG', 'Mitsubishi', 'Sharp', 'Hitachi', 'Panasonic'];
+
+const API = 'http://127.0.0.1:8000';
 
 const Inventory = ({ initialOpenModal = false }) => {
   const { alert, confirm } = useAlert();
@@ -58,7 +20,7 @@ const Inventory = ({ initialOpenModal = false }) => {
   const [activeCategory, setActiveCategory] = useState(null);
 
   // --- Categories & Brands (dynamic) ---
-  const [categories, setCategories] = useState(INITIAL_CATEGORIES);
+  const [categories, setCategories] = useState([]);  // โหลดจาก API
   const [brands, setBrands] = useState(INITIAL_BRANDS);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -77,9 +39,10 @@ const Inventory = ({ initialOpenModal = false }) => {
   });
   const [editingId, setEditingId] = useState(null);
 
-  // --- Add Category Modal ---
+  // --- Category Modal ---
   const [isCatModalOpen, setIsCatModalOpen] = useState(false);
   const [newCat, setNewCat] = useState({ name: '', thai: '', image: '' });
+  const [editingCatId, setEditingCatId] = useState(null);
 
   // --- Add Brand Modal ---
   const [isBrandModalOpen, setIsBrandModalOpen] = useState(false);
@@ -92,10 +55,28 @@ const Inventory = ({ initialOpenModal = false }) => {
     if (initialOpenModal) setIsModalOpen(true);
   }, [initialOpenModal]);
 
-  // --- 1. Fetch Data ---
+  // --- 1. Fetch Categories from API ---
+  const fetchCategories = async () => {
+    try {
+      const res = await axios.get(`${API}/categories/`);
+      const mapped = res.data.map(c => ({
+        id:     c.id,
+        name:   c.name,
+        thai:   c.thai || c.name_thai || '',
+        image:  c.image || c.image_url || 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&auto=format&fit=crop&q=60',
+        action: 'View Collection',
+        icon:   'arrow_forward',
+      }));
+      setCategories(mapped);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
+
+  // --- 2. Fetch Products from API ---
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/products/');
+      const response = await axios.get(`${API}/products/`);
       const mappedData = response.data.map(p => ({
         ...p,
         hasVat: p.has_vat !== undefined ? p.has_vat : (p.hasVat !== undefined ? p.hasVat : false)
@@ -108,9 +89,12 @@ const Inventory = ({ initialOpenModal = false }) => {
     }
   };
 
-  useEffect(() => { fetchProducts(); }, []);
+  useEffect(() => {
+    fetchCategories();
+    fetchProducts();
+  }, []);
 
-  // --- 2. Save Product ---
+  // --- 3. Save Product (Add/Edit) ---
   const handleSaveProduct = async () => {
     const { name, sku, category, price, cost_price, stock, hasVat } = newProduct;
     if (!name || !sku || !category || price === '' || cost_price === '' || stock === '') {
@@ -128,10 +112,10 @@ const Inventory = ({ initialOpenModal = false }) => {
         hasVat: hasVat
       };
       if (editingId) {
-        await axios.put(`http://127.0.0.1:8000/products/${editingId}`, payload);
+        await axios.put(`${API}/products/${editingId}`, payload);
         await alert("อัปเดตสินค้าเรียบร้อย!", "สำเร็จ", "success");
       } else {
-        await axios.post('http://127.0.0.1:8000/products/', payload);
+        await axios.post(`${API}/products/`, payload);
         await alert("บันทึกสินค้าเรียบร้อย!", "สำเร็จ", "success");
       }
       setIsModalOpen(false);
@@ -165,7 +149,7 @@ const Inventory = ({ initialOpenModal = false }) => {
   const handleDelete = async (id) => {
     if (await confirm("ลบสินค้า?", "ยืนยัน", "warning")) {
       try {
-        await axios.delete(`http://127.0.0.1:8000/products/${id}`);
+        await axios.delete(`${API}/products/${id}`);
         fetchProducts();
       } catch (error) {
         await alert("ลบไม่สำเร็จ", "Error", "error");
@@ -173,33 +157,51 @@ const Inventory = ({ initialOpenModal = false }) => {
     }
   };
 
-  // --- 3. Add Category ---
-  const handleAddCategory = () => {
+  // --- 4. Manage Categories (API) ---
+  const handleAddCategory = async () => {
     if (!newCat.name.trim() || !newCat.thai.trim()) {
-      alert('กรุณากรอกชื่อ Category', 'ข้อมูลไม่ครบ', 'warning');
+      await alert('กรุณากรอกชื่อ Category', 'ข้อมูลไม่ครบ', 'warning');
       return;
     }
-    const id = newCat.name.trim();
-    if (categories.find(c => c.id === id)) {
-      alert('มี Category นี้อยู่แล้ว', 'ซ้ำ', 'warning');
-      return;
+    const payload = {
+      name:  newCat.name.trim(),
+      thai:  newCat.thai.trim(),
+      image: newCat.image.trim() || null,
+    };
+    try {
+      if (editingCatId) {
+        await axios.put(`${API}/categories/${editingCatId}`, payload);
+        await alert('อัปเดต Category เรียบร้อย!', 'สำเร็จ', 'success');
+        setEditingCatId(null);
+      } else {
+        await axios.post(`${API}/categories/`, payload);
+        await alert('เพิ่ม Category เรียบร้อย!', 'สำเร็จ', 'success');
+      }
+      await fetchCategories();
+      setNewCat({ name: '', thai: '', image: '' });
+      setIsCatModalOpen(false);
+    } catch (error) {
+      console.error('Category error:', error);
+      await alert(`ผิดพลาด: ${error.response?.data?.detail || error.message}`, 'Error', 'error');
     }
-    setCategories(prev => [...prev, {
-      id,
-      name: newCat.name.trim(),
-      thai: newCat.thai.trim(),
-      image: newCat.image.trim() || 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&auto=format&fit=crop&q=60',
-      action: 'View Collection',
-      icon: 'arrow_forward',
-    }]);
-    setNewCat({ name: '', thai: '', image: '' });
-    setIsCatModalOpen(false);
+  };
+
+  const handleEditCategory = (cat, e) => {
+    e.stopPropagation();
+    setEditingCatId(cat.id);
+    setNewCat({ name: cat.name, thai: cat.thai, image: cat.image });
+    setIsCatModalOpen(true);
   };
 
   const handleDeleteCategory = async (catId, e) => {
     e.stopPropagation();
     if (await confirm(`ลบ Category "${catId}"?`, "ยืนยันการลบ", "warning")) {
-      setCategories(prev => prev.filter(c => c.id !== catId));
+      try {
+        await axios.delete(`${API}/categories/${catId}`);
+        await fetchCategories();
+      } catch (error) {
+        await alert(`ลบไม่สำเร็จ: ${error.response?.data?.detail || error.message}`, 'Error', 'error');
+      }
     }
   };
 
@@ -319,14 +321,23 @@ const Inventory = ({ initialOpenModal = false }) => {
                   onClick={() => selectCategory(cat.id)}
                   className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 cursor-pointer border border-transparent hover:border-slate-100 relative"
                 >
-                  {/* Delete Category button — shows on hover */}
-                  <button
-                    onClick={(e) => handleDeleteCategory(cat.id, e)}
-                    className="absolute top-3 left-3 z-30 p-1.5 rounded-full bg-white/80 backdrop-blur text-slate-400 hover:bg-red-50 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all duration-200 shadow-sm"
-                    title="ลบ Category นี้"
-                  >
-                    <Trash2 size={13} />
-                  </button>
+                  {/* Actions (Delete/Edit) — shows on hover */}
+                  <div className="absolute top-3 left-3 z-30 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-200">
+                    <button
+                      onClick={(e) => handleEditCategory(cat, e)}
+                      className="p-1.5 rounded-full bg-white/80 backdrop-blur text-slate-400 hover:bg-blue-50 hover:text-blue-500 shadow-sm cursor-pointer"
+                      title="แก้ไข Category"
+                    >
+                      <Edit3 size={13} />
+                    </button>
+                    <button
+                      onClick={(e) => handleDeleteCategory(cat.id, e)}
+                      className="p-1.5 rounded-full bg-white/80 backdrop-blur text-slate-400 hover:bg-red-50 hover:text-red-500 shadow-sm cursor-pointer"
+                      title="ลบ Category นี้"
+                    >
+                      <Trash2 size={13} />
+                    </button>
+                  </div>
 
                   {/* Image */}
                   <div className="relative h-32 overflow-hidden bg-slate-100">
@@ -587,9 +598,9 @@ const Inventory = ({ initialOpenModal = false }) => {
                   <div className="w-9 h-9 rounded-xl bg-[#1e293b] flex items-center justify-center">
                     <Tag size={16} className="text-white" />
                   </div>
-                  <h3 className="font-bold text-xl text-slate-800">Add Category</h3>
+                <h3 className="font-bold text-xl text-slate-800">{editingCatId ? 'Edit Category' : 'Add Category'}</h3>
                 </div>
-                <button onClick={() => setIsCatModalOpen(false)}>
+                <button onClick={() => { setIsCatModalOpen(false); setEditingCatId(null); }} className="cursor-pointer">
                   <X size={24} className="text-slate-400 hover:text-slate-600" />
                 </button>
               </div>
@@ -645,16 +656,16 @@ const Inventory = ({ initialOpenModal = false }) => {
               {/* Modal Footer */}
               <div className="px-8 py-5 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">
                 <button
-                  onClick={() => setIsCatModalOpen(false)}
-                  className="px-6 py-2.5 text-slate-500 hover:bg-slate-200 rounded-xl font-semibold transition-all"
+                  onClick={() => { setIsCatModalOpen(false); setEditingCatId(null); }}
+                  className="px-6 py-2.5 text-slate-500 hover:bg-slate-200 rounded-xl font-semibold transition-all cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleAddCategory}
-                  className="px-8 py-2.5 bg-[#1e293b] hover:bg-slate-700 text-white rounded-xl shadow font-semibold transition-all active:scale-95"
+                  className="px-8 py-2.5 bg-[#1e293b] hover:bg-slate-700 text-white rounded-xl shadow font-semibold transition-all active:scale-95 cursor-pointer"
                 >
-                  Add Category
+                  {editingCatId ? 'Save Changes' : 'Add Category'}
                 </button>
               </div>
             </div>
