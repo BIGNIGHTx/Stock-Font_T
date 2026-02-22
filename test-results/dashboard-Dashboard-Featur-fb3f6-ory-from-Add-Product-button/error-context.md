@@ -1,0 +1,125 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e6]: S
+        - generic [ref=e7]:
+          - generic [ref=e8]: SomBoon Electric
+          - generic [ref=e9]: STOCK MANAGEMENT
+      - generic [ref=e10]:
+        - button "Dashboard" [ref=e11] [cursor=pointer]:
+          - img [ref=e12]
+          - generic [ref=e17]: Dashboard
+        - button "Inventory" [ref=e18] [cursor=pointer]:
+          - img [ref=e19]
+          - generic [ref=e23]: Inventory
+        - button "Sales" [ref=e24] [cursor=pointer]:
+          - img [ref=e25]
+          - generic [ref=e29]: Sales
+        - button "Reports" [ref=e30] [cursor=pointer]:
+          - img [ref=e31]
+          - generic [ref=e32]: Reports
+        - button "Settings" [ref=e33] [cursor=pointer]:
+          - img [ref=e34]
+          - generic [ref=e37]: Settings
+      - generic [ref=e38]:
+        - generic [ref=e39]:
+          - generic:
+            - img
+          - textbox "Search..." [ref=e40]
+        - generic [ref=e42]:
+          - button "Switch to Dark Mode" [ref=e43] [cursor=pointer]:
+            - img [ref=e44]
+          - button [ref=e46] [cursor=pointer]:
+            - img [ref=e47]
+          - button [ref=e51] [cursor=pointer]:
+            - img [ref=e52]
+    - main [ref=e60]:
+      - generic [ref=e62]:
+        - generic [ref=e63]:
+          - generic [ref=e64]:
+            - heading "Inventory Categories" [level=1] [ref=e65]
+            - paragraph [ref=e70]: Browse through our premium collection of household essentials.
+          - button "Add Category" [ref=e71]:
+            - img [ref=e72]
+            - text: Add Category
+        - generic [ref=e73]:
+          - generic [ref=e74] [cursor=pointer]:
+            - button "ลบ Category นี้" [ref=e75]:
+              - img [ref=e76]
+            - generic [ref=e79]:
+              - img "TV" [ref=e80]
+              - generic [ref=e82]: 5 Items
+            - generic [ref=e83]:
+              - heading "TV" [level=3] [ref=e85]
+              - paragraph [ref=e86]: โทรทัศน์
+          - generic [ref=e87] [cursor=pointer]:
+            - button "ลบ Category นี้" [ref=e88]:
+              - img [ref=e89]
+            - generic [ref=e92]:
+              - img "Fan" [ref=e93]
+              - generic [ref=e95]: 4 Items
+            - generic [ref=e96]:
+              - heading "Fan" [level=3] [ref=e98]
+              - paragraph [ref=e99]: พัดลม
+          - generic [ref=e100] [cursor=pointer]:
+            - button "ลบ Category นี้" [ref=e101]:
+              - img [ref=e102]
+            - generic [ref=e105]:
+              - img "Refrigerator" [ref=e106]
+              - generic [ref=e108]: 0 Items
+            - generic [ref=e109]:
+              - heading "Refrigerator" [level=3] [ref=e111]
+              - paragraph [ref=e112]: ตู้เย็น
+          - generic [ref=e113] [cursor=pointer]:
+            - button "ลบ Category นี้" [ref=e114]:
+              - img [ref=e115]
+            - generic [ref=e118]:
+              - img "Washing Machine" [ref=e119]
+              - generic [ref=e121]: 0 Items
+            - generic [ref=e122]:
+              - heading "Washing Machine" [level=3] [ref=e124]
+              - paragraph [ref=e125]: เครื่องซักผ้า
+        - generic [ref=e128]:
+          - generic [ref=e129]:
+            - heading "Add New Product" [level=3] [ref=e130]
+            - button [ref=e131]:
+              - img [ref=e132]
+          - generic [ref=e135]:
+            - generic [ref=e136]:
+              - generic [ref=e137]: Product Name (Include Brand)
+              - textbox "e.g. Samsung TV 55 Inch" [ref=e138]
+            - generic [ref=e139]:
+              - generic [ref=e140]:
+                - generic [ref=e141]: SKU
+                - textbox "SKU-001" [ref=e142]
+              - generic [ref=e143]:
+                - generic [ref=e144]: Category
+                - combobox [ref=e145]:
+                  - option "Tv" [selected]
+                  - option "Fan"
+                  - option "Refrigerator"
+                  - option "Washing Machine"
+            - generic [ref=e146]:
+              - generic [ref=e147]: Tax Type (VAT)
+              - generic [ref=e148]:
+                - button "No VAT (ราคาปกติ)" [ref=e149]
+                - button "VAT Included (มี VAT)" [ref=e150]
+            - generic [ref=e151]:
+              - generic [ref=e152]:
+                - generic [ref=e153]: Price
+                - spinbutton [ref=e154]
+              - generic [ref=e155]:
+                - generic [ref=e156]: Cost
+                - spinbutton [ref=e157]
+              - generic [ref=e158]:
+                - generic [ref=e159]: Stock
+                - spinbutton [ref=e160]
+          - generic [ref=e161]:
+            - button "Cancel" [ref=e162]
+            - button "Save Product" [ref=e163]
+  - generic [ref=e164]: "22"
+```

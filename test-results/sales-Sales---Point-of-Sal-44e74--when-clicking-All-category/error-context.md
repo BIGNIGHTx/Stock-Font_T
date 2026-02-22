@@ -1,0 +1,105 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e6]: S
+        - generic [ref=e7]:
+          - generic [ref=e8]: SomBoon Electric
+          - generic [ref=e9]: STOCK MANAGEMENT
+      - generic [ref=e10]:
+        - button "Dashboard" [ref=e11] [cursor=pointer]:
+          - img [ref=e12]
+          - generic [ref=e17]: Dashboard
+        - button "Inventory" [ref=e18] [cursor=pointer]:
+          - img [ref=e19]
+          - generic [ref=e23]: Inventory
+        - button "Sales" [ref=e24] [cursor=pointer]:
+          - img [ref=e25]
+          - generic [ref=e29]: Sales
+        - button "Reports" [ref=e30] [cursor=pointer]:
+          - img [ref=e31]
+          - generic [ref=e32]: Reports
+        - button "Settings" [ref=e33] [cursor=pointer]:
+          - img [ref=e34]
+          - generic [ref=e37]: Settings
+      - generic [ref=e38]:
+        - generic [ref=e39]:
+          - generic:
+            - img
+          - textbox "Search..." [ref=e40]
+        - generic [ref=e42]:
+          - button "Switch to Dark Mode" [ref=e43] [cursor=pointer]:
+            - img [ref=e44]
+          - button [ref=e46] [cursor=pointer]:
+            - img [ref=e47]
+          - button [ref=e51] [cursor=pointer]:
+            - img [ref=e52]
+    - main [ref=e60]:
+      - generic [ref=e62]:
+        - generic [ref=e63]:
+          - generic [ref=e64]:
+            - heading "Point of Sale" [level=1] [ref=e65]
+            - paragraph [ref=e67]: Real-time stock deduction system.
+          - generic [ref=e70]: DB Connected
+        - generic [ref=e71]:
+          - generic [ref=e73]:
+            - generic [ref=e74]:
+              - heading "Transaction Details" [level=3] [ref=e75]
+              - generic [ref=e76]:
+                - img [ref=e77]
+                - textbox [disabled] [ref=e79]: 2026-02-22
+            - generic [ref=e80]:
+              - button "All Products" [active] [ref=e81] [cursor=pointer]
+              - button "TV" [ref=e82] [cursor=pointer]
+              - button "Fan" [ref=e83] [cursor=pointer]
+              - button "Refrigerator" [ref=e84] [cursor=pointer]
+              - button "Washing Machine" [ref=e85] [cursor=pointer]
+            - generic [ref=e86]:
+              - generic [ref=e87]: Select Product
+              - generic [ref=e88] [cursor=pointer]:
+                - generic [ref=e89]:
+                  - img [ref=e90]
+                  - generic [ref=e93]: "-- Select Product --"
+                - img [ref=e95]
+            - generic [ref=e97]:
+              - generic [ref=e98]:
+                - generic [ref=e99]: Quantity
+                - generic [ref=e100]:
+                  - button [disabled] [ref=e101]:
+                    - img [ref=e102]
+                  - spinbutton [disabled] [ref=e103]: "1"
+                  - button [disabled] [ref=e104]:
+                    - img [ref=e105]
+              - generic [ref=e106]:
+                - generic [ref=e107]: Unit Price / Tax
+                - generic [ref=e108]:
+                  - generic [ref=e110]: ฿ 0
+                  - generic [ref=e111]: THB
+            - generic [ref=e112]:
+              - generic [ref=e113]:
+                - paragraph [ref=e114]: Total Amount
+                - paragraph [ref=e115]: No VAT (ราคายกเว้นภาษี)
+              - generic [ref=e117]: ฿ 0.00
+            - button "Confirm Sale" [disabled] [ref=e119]:
+              - generic [ref=e120]: Confirm Sale
+          - generic [ref=e122]:
+            - generic [ref=e123]:
+              - img [ref=e125]
+              - heading "Today's Sales" [level=2] [ref=e128]
+            - separator [ref=e129]
+            - generic [ref=e132]:
+              - generic [ref=e134]:
+                - generic [ref=e135]:
+                  - text: Sharp Red สไลด์
+                  - generic [ref=e136]: x1
+                - generic [ref=e137]: 09:10
+              - generic [ref=e138]:
+                - generic [ref=e139]: ฿ 7,500.00
+                - generic [ref=e140]:
+                  - img [ref=e141]
+                  - text: Sold out
+  - generic [ref=e142]: "22"
+```
