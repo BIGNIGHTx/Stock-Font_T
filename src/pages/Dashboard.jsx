@@ -333,7 +333,7 @@ const Dashboard = ({ onNavigate }) => {
                 </div>
 
                 <div className="px-8 py-6 bg-slate-50 border-t border-slate-100 flex justify-end">
-                  <button onClick={() => setIsLowStockModalOpen(false)} className="px-6 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl font-bold transition-colors">
+                  <button onClick={() => setIsLowStockModalOpen(false)} className="px-6 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl font-bold transition-colors cursor-pointer">
                     Close
                   </button>
                 </div>

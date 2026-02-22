@@ -301,6 +301,26 @@ const Inventory = ({ initialOpenModal = false }) => {
     return matchesSearch && matchesStock && matchesBrand && matchesVat;
   });
 
+  // ==================== SUMMARY CALCULATIONS ====================
+  const getSummaryData = () => {
+    // We calculate based on the filters but it might be better to show global for category?
+    // User asked for "Green Stock", "Red Stock", "VAT Only", "No VAT"
+    // Usually summary cards show the total for the active set of products.
+    const activeProducts = products.filter(p => {
+      if (activeCategory === 'All Products') return true;
+      return String(p.category).toLowerCase().trim() === String(activeCategory).toLowerCase().trim();
+    });
+
+    return {
+      greenStock: activeProducts.filter(p => p.stock >= 5).length,
+      redStock: activeProducts.filter(p => p.stock < 5).length,
+      vatCount: activeProducts.filter(p => p.hasVat).length,
+      noVatCount: activeProducts.filter(p => !p.hasVat).length,
+    };
+  };
+
+  const summaryData = getSummaryData();
+
   // ==================== RENDER ====================
 
   return (
@@ -324,7 +344,7 @@ const Inventory = ({ initialOpenModal = false }) => {
             </div>
             <button
               onClick={() => { resetForm(); setIsModalOpen(true); }}
-              className="flex items-center px-6 py-3 bg-[#1e293b] text-white rounded-xl font-semibold shadow-lg shadow-slate-300 hover:bg-slate-800 transition-all transform active:scale-95"
+              className="flex items-center px-6 py-3 bg-[#1e293b] text-white rounded-xl font-semibold shadow-lg shadow-slate-300 hover:bg-slate-800 transition-all transform active:scale-95 cursor-pointer"
             >
               <Plus size={18} className="mr-2" /> <Text as="span">Add Product</Text>
             </button>
@@ -408,7 +428,7 @@ const Inventory = ({ initialOpenModal = false }) => {
                   <div className="p-5 bg-white">
                     <div className="w-8 h-[2px] bg-primary mb-3 group-hover:w-12 transition-all duration-500"></div>
                     <h3 className="text-base font-display font-bold text-slate-900 mb-0.5">{cat.name}</h3>
-                    <p className="text-xs font-body text-slate-500 font-light">{cat.thai}</p>
+                    <p className="text-xs font-body text-slate-700 font-medium">{cat.thai}</p>
                   </div>
                 </div>
               );
@@ -459,6 +479,42 @@ const Inventory = ({ initialOpenModal = false }) => {
               </button>
             </div>
 
+            {/* Summary Cards */}
+            <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 mb-5">
+              <SoftCard
+                title="Green Stock"
+                value={summaryData.greenStock.toString()}
+                subLabel="ปกติ (พร้อมขาย)"
+                icon={CheckCircle}
+                iconColor="text-emerald-600"
+                iconBg="bg-emerald-50"
+              />
+              <SoftCard
+                title="Red Stock"
+                value={summaryData.redStock.toString()}
+                subLabel="สต็อกต่ำ (ควรเติม)"
+                icon={AlertCircle}
+                iconColor="text-rose-600"
+                iconBg="bg-rose-50"
+              />
+              <SoftCard
+                title="VAT Only"
+                value={summaryData.vatCount.toString()}
+                subLabel="สินค้ามี VAT"
+                icon={Tag}
+                iconColor="text-purple-600"
+                iconBg="bg-purple-50"
+              />
+              <SoftCard
+                title="No VAT"
+                value={summaryData.noVatCount.toString()}
+                subLabel="สินค้าไม่มี VAT"
+                icon={Tag}
+                iconColor="text-slate-600"
+                iconBg="bg-slate-50"
+              />
+            </div>
+
             {/* Search & Filters */}
             <div className="bg-white p-3 rounded-[2rem] border border-slate-100 shadow-sm mb-4 flex flex-col xl:flex-row gap-3 items-center">
               <div className="relative flex-1 w-full">
@@ -470,21 +526,21 @@ const Inventory = ({ initialOpenModal = false }) => {
               <div className="flex flex-wrap gap-3 w-full xl:w-auto justify-center">
                 <div className="flex bg-slate-50 p-1 rounded-xl border border-slate-100">
                   <button onClick={() => setStockFilter(stockFilter === 'normal' ? 'all' : 'normal')}
-                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${stockFilter === 'normal' ? 'bg-white text-emerald-600 shadow-sm border border-slate-100' : 'text-slate-400 hover:text-slate-600'}`}>
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${stockFilter === 'normal' ? 'bg-white text-emerald-600 shadow-sm border border-slate-100' : 'text-slate-600 hover:text-slate-800'}`}>
                     <CheckCircle size={14} /> Green Stock
                   </button>
                   <button onClick={() => setStockFilter(stockFilter === 'low' ? 'all' : 'low')}
-                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${stockFilter === 'low' ? 'bg-white text-rose-500 shadow-sm border border-slate-100' : 'text-slate-400 hover:text-slate-600'}`}>
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${stockFilter === 'low' ? 'bg-white text-rose-500 shadow-sm border border-slate-100' : 'text-slate-600 hover:text-slate-800'}`}>
                     <AlertCircle size={14} /> Red Stock
                   </button>
                 </div>
                 <div className="flex bg-slate-50 p-1 rounded-xl border border-slate-100">
                   <button onClick={() => setVatFilter(vatFilter === 'vat' ? 'all' : 'vat')}
-                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${vatFilter === 'vat' ? 'bg-white text-purple-600 shadow-sm border border-slate-100' : 'text-slate-400 hover:text-slate-600'}`}>
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${vatFilter === 'vat' ? 'bg-white text-purple-600 shadow-sm border border-slate-100' : 'text-slate-600 hover:text-slate-800'}`}>
                     VAT Only
                   </button>
                   <button onClick={() => setVatFilter(vatFilter === 'novat' ? 'all' : 'novat')}
-                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${vatFilter === 'novat' ? 'bg-white text-slate-600 shadow-sm border border-slate-100' : 'text-slate-400 hover:text-slate-600'}`}>
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${vatFilter === 'novat' ? 'bg-white text-slate-600 shadow-sm border border-slate-100' : 'text-slate-600 hover:text-slate-800'}`}>
                     No VAT
                   </button>
                 </div>
@@ -541,7 +597,7 @@ const Inventory = ({ initialOpenModal = false }) => {
             <div className="relative bg-white rounded-[2rem] shadow-2xl w-full max-w-lg overflow-hidden animate-slide-up border border-slate-100">
               <div className="px-8 py-6 border-b border-slate-100 flex justify-between items-center bg-white">
                 <Text as="h3" className="font-bold text-xl text-slate-800">{editingId ? 'Edit Product' : 'Add New Product'}</Text>
-                <button onClick={() => setIsModalOpen(false)}><X size={24} className="text-slate-400 hover:text-slate-600" /></button>
+                <button onClick={() => setIsModalOpen(false)} className="cursor-pointer"><X size={24} className="text-slate-400 hover:text-slate-600" /></button>
               </div>
               <div className="p-8 space-y-6">
                 <div>
@@ -571,11 +627,11 @@ const Inventory = ({ initialOpenModal = false }) => {
                   <Text as="label" className="block text-sm font-medium text-slate-700 mb-2">Tax Type (VAT)</Text>
                   <div className="flex gap-4 p-1 bg-slate-50 rounded-xl border border-slate-200">
                     <button onClick={() => setNewProduct({ ...newProduct, hasVat: false })}
-                      className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all ${!newProduct.hasVat ? 'bg-white shadow-sm text-slate-800 border border-slate-100' : 'text-slate-400 hover:text-slate-600'}`}>
+                      className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all cursor-pointer ${!newProduct.hasVat ? 'bg-white shadow-sm text-slate-800 border border-slate-100' : 'text-slate-400 hover:text-slate-600'}`}>
                       No VAT (ราคาปกติ)
                     </button>
                     <button onClick={() => setNewProduct({ ...newProduct, hasVat: true })}
-                      className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all ${newProduct.hasVat ? 'bg-purple-500 shadow-md text-white' : 'text-slate-400 hover:text-slate-600'}`}>
+                      className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all cursor-pointer ${newProduct.hasVat ? 'bg-purple-500 shadow-md text-white' : 'text-slate-400 hover:text-slate-600'}`}>
                       VAT Included (มี VAT)
                     </button>
                   </div>
@@ -599,8 +655,8 @@ const Inventory = ({ initialOpenModal = false }) => {
                 </div>
               </div>
               <div className="px-8 py-6 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">
-                <button onClick={() => setIsModalOpen(false)} className="px-6 py-3 text-slate-500 hover:bg-slate-200 rounded-xl font-bold">Cancel</button>
-                <button onClick={handleSaveProduct} className="px-8 py-3 bg-[#1e293b] hover:bg-slate-800 text-white rounded-xl shadow-lg font-bold">Save Product</button>
+                <button onClick={() => setIsModalOpen(false)} className="px-6 py-3 text-slate-500 hover:bg-slate-200 rounded-xl font-bold cursor-pointer">Cancel</button>
+                <button onClick={handleSaveProduct} className="px-8 py-3 bg-[#1e293b] hover:bg-slate-800 text-white rounded-xl shadow-lg font-bold cursor-pointer">Save Product</button>
               </div>
             </div>
           </div>
@@ -676,7 +732,7 @@ const Inventory = ({ initialOpenModal = false }) => {
             <div className="relative bg-white rounded-[2rem] shadow-2xl w-full max-w-sm overflow-hidden animate-slide-up border border-slate-100">
               <div className="px-8 py-6 border-b border-slate-100 flex justify-between items-center">
                 <h3 className="font-bold text-lg text-slate-800">Add Brand</h3>
-                <button onClick={() => setIsBrandModalOpen(false)}>
+                <button onClick={() => setIsBrandModalOpen(false)} className="cursor-pointer">
                   <X size={22} className="text-slate-400 hover:text-slate-600" />
                 </button>
               </div>
@@ -691,14 +747,36 @@ const Inventory = ({ initialOpenModal = false }) => {
                 <p className="text-xs text-slate-400 mt-2">กด Enter หรือปุ่ม Add Brand เพื่อเพิ่ม</p>
               </div>
               <div className="px-8 py-5 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">
-                <button onClick={() => setIsBrandModalOpen(false)} className="px-5 py-2.5 text-slate-500 hover:bg-slate-200 rounded-xl font-semibold transition-all">Cancel</button>
-                <button onClick={handleAddBrand} className="px-7 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow font-semibold transition-all active:scale-95">Add Brand</button>
+                <button onClick={() => setIsBrandModalOpen(false)} className="px-5 py-2.5 text-slate-500 hover:bg-slate-200 rounded-xl font-semibold transition-all cursor-pointer">Cancel</button>
+                <button onClick={handleAddBrand} className="px-7 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow font-semibold transition-all active:scale-95 cursor-pointer">Add Brand</button>
               </div>
             </div>
           </div>
         )}
 
       </div>
+    </div>
+  );
+};
+
+// Reusable Soft Card Component (Same as Reports)
+const SoftCard = ({ title, value, subLabel, icon: Icon, iconColor, iconBg, subLabelColor = "text-slate-500" }) => {
+  return (
+    <div className="relative bg-white rounded-[2rem] p-4 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-slate-100 h-28 flex flex-col justify-between transition-all duration-500 ease-out hover:-translate-y-1 hover:shadow-lg cursor-pointer">
+      <div className="absolute top-0 right-0 p-4">
+        <div className={`p-2 rounded-xl ${iconBg} ${iconColor} shadow-sm`}>
+          <Icon size={18} />
+        </div>
+      </div>
+
+      <div>
+        <Text as="h3" className="text-slate-500 text-[10px] font-bold uppercase tracking-wider mb-1">{title}</Text>
+        <Text className="text-xl font-bold text-slate-800 tracking-tight truncate pr-10">{value}</Text>
+      </div>
+
+      <Text className={`text-[10px] font-bold ${subLabelColor}`}>
+        {subLabel}
+      </Text>
     </div>
   );
 };
