@@ -281,10 +281,10 @@ const Inventory = ({ initialOpenModal = false }) => {
             </button>
           </div>
         ) : (
-          /* Categories Header — with Add Category button top-right */
-          <div className="flex items-start justify-between mb-5 animate-fade-in">
-            {/* Center title block */}
-            <div className="flex-1 text-center max-w-3xl mx-auto pt-1 relative">
+          /* Categories Header — title centered, button floats right */
+          <div className="relative flex items-center justify-center mb-5 animate-fade-in min-h-[90px]">
+            {/* Center title — truly centered in the page */}
+            <div className="text-center">
               <h1 className="text-2xl sm:text-3xl font-display font-medium text-slate-900 mb-2 tracking-tight">
                 Inventory <span className="text-[#D4AF37] italic font-serif">Categories</span>
               </h1>
@@ -297,10 +297,10 @@ const Inventory = ({ initialOpenModal = false }) => {
                 Browse through our premium collection of household essentials.
               </p>
             </div>
-            {/* Add Category button — absolute top-right */}
+            {/* Add Category button — absolute right, vertically centered */}
             <button
               onClick={() => setIsCatModalOpen(true)}
-              className="flex items-center gap-2 px-5 py-2.5 bg-[#1e293b] text-white rounded-xl font-semibold shadow-md hover:bg-slate-700 transition-all active:scale-95 text-sm whitespace-nowrap ml-4 mt-1"
+              className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-2 px-5 py-2.5 bg-[#1e293b] text-white rounded-xl font-semibold shadow-md hover:bg-slate-700 transition-all active:scale-95 text-sm whitespace-nowrap cursor-pointer"
             >
               <Plus size={16} />
               Add Category
