@@ -11,10 +11,7 @@ import { useAlert } from '../contexts/AlertContext';
 const DEFAULT_BRANDS = ['Samsung', 'LG', 'Mitsubishi', 'Sharp', 'Hitachi', 'Panasonic'];
 
 const BASE_CATEGORIES = [
-  { id: 'all_products', name: 'All Products', thai: 'สินค้าทั้งหมด', image: 'https://images.unsplash.com/photo-1553413077-190dd305871c?w=600&auto=format&fit=crop&q=60', synonyms: ['all'] },
-  { id: 'tv', name: 'Tv', thai: 'โทรทัศน์', image: 'https://images.unsplash.com/photo-1717295248230-93ea71f48f92?w=600&auto=format&fit=crop&q=60', synonyms: ['tv', 'television', 'โทรทัศน์'] },
-  { id: 'fan', name: 'Fan', thai: 'พัดลม', image: 'https://media.istockphoto.com/id/1150705585/th/รูปถ่าย/ภาพระยะใกล้ของพัดลมตั้งพื้นไฟฟ้า.jpg?s=612x612&w=0&k=20&c=vX1hV1muUVa96MZpx4jJd6Ujl54pQX6Z8eIyyrdkLvw=', synonyms: ['fan', 'พัดลม'] },
-  { id: 'refrigerator', name: 'Refrigerator', thai: 'ตู้เย็น', image: 'https://images.unsplash.com/photo-1584568694244-14fbdf83bd30?w=600&auto=format&fit=crop&q=60', synonyms: ['refrigerator', 'fridge', 'ตู้เย็น'] },
+  { id: 'all_products', name: 'All Products', thai: 'สินค้าทั้งหมด', image: 'https://images.unsplash.com/photo-1553413077-190dd305871c?w=600&auto=format&fit=crop&q=60' },
 ];
 
 const API = 'http://127.0.0.1:8000';
@@ -27,8 +24,7 @@ const Inventory = ({ initialOpenModal = false }) => {
   const [activeCategory, setActiveCategory] = useState(null);
 
   // --- Categories & Brands (dynamic) ---
-  const [categories, setCategories] = useState([]);  // โหลดจาก API
-  // brands เป็น [{id, name}] โหลดจาก DB — 'All' เพิ่มใน render
+  const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -67,7 +63,6 @@ const Inventory = ({ initialOpenModal = false }) => {
     if (initialOpenModal) setIsModalOpen(true);
   }, [initialOpenModal]);
 
-  // --- Image mapping: ถ้า DB ไม่มีรูป ให้ match ชื่อแล้วใช้รูป default ตามหมวด ---
   const DEFAULT_CATEGORY_IMAGES = {
     tv: 'https://images.unsplash.com/photo-1717295248230-93ea71f48f92?w=600&auto=format&fit=crop&q=60',
     television: 'https://images.unsplash.com/photo-1717295248230-93ea71f48f92?w=600&auto=format&fit=crop&q=60',
@@ -90,18 +85,14 @@ const Inventory = ({ initialOpenModal = false }) => {
   };
 
   const getCategoryImage = (cat) => {
-    // 1. ใช้รูปจาก DB ก่อน (ถ้ามี)
     if (cat.image || cat.image_url) return cat.image || cat.image_url;
-    // 2. Match ชื่อกับ table (case-insensitive)
     const key = (cat.name || '').toLowerCase().trim();
     const thaiKey = (cat.thai || cat.name_thai || '').trim();
     return DEFAULT_CATEGORY_IMAGES[key]
       || DEFAULT_CATEGORY_IMAGES[thaiKey]
-      // 3. Default สุดท้าย
       || 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&auto=format&fit=crop&q=60';
   };
 
-  // --- 1. Fetch Categories from API (with baseline and product-driven merging) ---
   const fetchCategories = async (productList = null) => {
     let apiCats = [];
     try {
@@ -112,39 +103,21 @@ const Inventory = ({ initialOpenModal = false }) => {
     }
 
     const prods = productList || products;
-    // 1. เริ่มจาก BASE_CATEGORIES เป็นตัวตั้งต้น (กรองออกถ้ามีชื่อที่ "Take over" ไปแล้วใน apiCats)
-    let combined = BASE_CATEGORIES.filter(bc => {
-      if (bc.id === 'all_products') return true;
-      // ถ้ามีหมวดหมู่ใน API ที่ชื่อตรงกับ synonym ของ Baseline ตัวนี้ ให้เอา Baseline ตัวนี้ออก (ซ่อน card เก่า)
-      const isTakenOver = apiCats.some(ac =>
-        (bc.synonyms || []).some(syn => String(ac.name).toLowerCase().includes(syn.toLowerCase()))
-      );
-      return !isTakenOver;
-    }).map(bc => ({ ...bc }));
 
-    // 2. รวมข้อมูลจาก API
+    // Start with "All Products"
+    let combined = [...BASE_CATEGORIES];
+
+    // Add categories from API
     apiCats.forEach(ac => {
-      const idx = combined.findIndex(c => String(c.name).toLowerCase() === String(ac.name).toLowerCase());
-      if (idx !== -1) {
-        // ถ้ามีใน Baseline อยู่แล้ว ให้เอาข้อมูลจาก API ไปเติม (เช่น ID, รูปจาก DB)
-        combined[idx] = {
-          ...combined[idx],
-          id: ac.id,
-          thai: ac.thai || combined[idx].thai,
-          image: ac.image || combined[idx].image
-        };
-      } else {
-        // ถ้าไม่มีใน Baseline ให้เพิ่มใหม่
-        combined.push({
-          id: ac.id,
-          name: ac.name,
-          thai: ac.thai || '',
-          image: ac.image || getCategoryImage(ac)
-        });
-      }
+      combined.push({
+        id: ac.id,
+        name: ac.name,
+        thai: ac.thai || '',
+        image: ac.image || getCategoryImage(ac)
+      });
     });
 
-    // 3. รวมข้อมูลหมวดหมู่ที่เจอในสินค้า (Derived)
+    // Detect categories in products that are not in DB yet (for safety)
     const productDerivedNames = [...new Set(prods.map(p => p.category).filter(Boolean))];
     productDerivedNames.forEach(pcName => {
       const exists = combined.find(c =>
@@ -153,7 +126,7 @@ const Inventory = ({ initialOpenModal = false }) => {
       );
       if (!exists) {
         combined.push({
-          id: pcName, // ใช้ชื่อเป็น ID ชั่วคราวเพื่อให้ Filter ทำงานได้
+          id: pcName, // Use name as ID if not in DB
           name: pcName,
           thai: '',
           image: getCategoryImage({ name: pcName })
@@ -161,11 +134,10 @@ const Inventory = ({ initialOpenModal = false }) => {
       }
     });
 
-    // 4. กรองหมวดหมู่ที่ไม่ต้องการออก (แบบระบุเจาะจงมากขึ้น)
     const final = combined
       .filter(c => {
         const nameLower = String(c.name || '').toLowerCase();
-        // กรองออกเฉพาะที่ User สั่งจริงๆ (Air, Clensing ที่ค้างอยู่)
+        // Keep the forbidden list if the user wants it, but usually best to let them delete them from DB
         const forbidden = ['air conditioner', 'แอร์', 'clens', 'clense'];
         return !forbidden.some(word => nameLower.includes(word));
       })
@@ -179,7 +151,6 @@ const Inventory = ({ initialOpenModal = false }) => {
     setCategories(final);
   };
 
-  // --- 2. Fetch Products from API ---
   const fetchProducts = async () => {
     try {
       const response = await axios.get(`${API}/products/`);
@@ -189,7 +160,7 @@ const Inventory = ({ initialOpenModal = false }) => {
       }));
       setProducts(mappedData);
       setIsLoading(false);
-      return mappedData; // return เพื่อให้ fetchCategories นำไปใช้เป็น fallback
+      return mappedData;
     } catch (error) {
       console.error("Error fetching products:", error);
       setIsLoading(false);
@@ -197,20 +168,18 @@ const Inventory = ({ initialOpenModal = false }) => {
     }
   };
 
-  // --- 2b. Fetch Brands from API ---
   const fetchBrands = async () => {
     try {
       const res = await axios.get(`${API}/brands/`);
       if (res.data && res.data.length > 0) {
-        setBrands(res.data); // [{id, name}]
+        setBrands(res.data);
       } else {
-        // Seed default brands ถ้า DB ว่าง
         const seeded = [];
         for (const bName of DEFAULT_BRANDS) {
           try {
             const r = await axios.post(`${API}/brands/`, { name: bName });
             seeded.push(r.data);
-          } catch (_) { /* ซ้ำ skip */ }
+          } catch (_) { }
         }
         if (seeded.length > 0) setBrands(seeded);
         else setBrands(DEFAULT_BRANDS.map((n, i) => ({ id: `local_${i}`, name: n })));
@@ -222,7 +191,6 @@ const Inventory = ({ initialOpenModal = false }) => {
   };
 
   useEffect(() => {
-    // โหลด Products ก่อน แล้วส่งข้อมูลให้ fetchCategories เป็น fallback
     const init = async () => {
       const prods = await fetchProducts();
       await fetchCategories(prods);
@@ -231,8 +199,6 @@ const Inventory = ({ initialOpenModal = false }) => {
     init();
   }, []);
 
-  // --- 3. Save Product (Add/Edit) ---
-  // --- 3. Save Product (Add/Edit) ---
   const handleSaveProduct = async () => {
     const { name, sku, category, price, cost_price, stock, hasVat } = newProduct;
 
@@ -269,7 +235,6 @@ const Inventory = ({ initialOpenModal = false }) => {
       setIsModalOpen(false);
       resetForm();
 
-      // ✅ โหลดสินค้าใหม่ แล้วส่งเข้าไป rebuild categories ด้วย
       const updatedProducts = await fetchProducts();
       await fetchCategories(updatedProducts);
 
@@ -279,8 +244,8 @@ const Inventory = ({ initialOpenModal = false }) => {
     }
   };
 
-  const selectCategory = (catRef) => {
-    setActiveCategory(catRef);
+  const selectCategory = (cat) => {
+    setActiveCategory(cat.name); // Always use the name for filtering products
     setCurrentView('products');
     setBrandFilter('All');
     setSearchTerm('');
@@ -313,7 +278,7 @@ const Inventory = ({ initialOpenModal = false }) => {
     }
   };
 
-  // --- 4. Manage Categories (API) ---
+  // ✅ FIX: handleAddCategory — เช็ค editingCatId เป็น numeric id จริงๆ ก่อน PUT
   const handleAddCategory = async () => {
     if (!newCat.name.trim() || !newCat.thai.trim()) {
       await alert('กรุณากรอกชื่อ Category', 'ข้อมูลไม่ครบ', 'warning');
@@ -325,14 +290,16 @@ const Inventory = ({ initialOpenModal = false }) => {
       image: newCat.image.trim() || null,
     };
     try {
-      if (editingCatId) {
+      const isNumericId = editingCatId !== null && !isNaN(Number(editingCatId));
+
+      if (editingCatId && isNumericId) {
         await axios.put(`${API}/categories/${editingCatId}`, payload);
         await alert('อัปเดต Category เรียบร้อย!', 'สำเร็จ', 'success');
-        setEditingCatId(null);
       } else {
         await axios.post(`${API}/categories/`, payload);
         await alert('เพิ่ม Category เรียบร้อย!', 'สำเร็จ', 'success');
       }
+      setEditingCatId(null);
       await fetchCategories();
       setNewCat({ name: '', thai: '', image: '' });
       setIsCatModalOpen(false);
@@ -342,18 +309,13 @@ const Inventory = ({ initialOpenModal = false }) => {
     }
   };
 
+  // ✅ FIX: handleEditCategory — ใช้ cat.name เป็น fallback แทน null เพื่อให้ modal รู้ว่ากำลัง Edit
   const handleEditCategory = (cat, e) => {
     e.stopPropagation();
-    // ถ้า cat มี id ที่มาจาก API (ไม่ใช่ string baseline เช่น 'tv', 'fan') ให้ PUT
-    // แต่ถ้า id เป็น string baseline และไม่ใช่ตัวเลข ให้ POST
     const isNumericId = !isNaN(Number(cat.id)) && cat.id !== null && cat.id !== undefined;
 
-    if (isNumericId) {
-      setEditingCatId(cat.id); // แก้ไขเดิม (PUT)
-    } else {
-      setEditingCatId(null); // ยังไม่มีใน DB ให้ POST
-    }
-
+    // ถ้ามี numeric id → ใช้ id นั้น (PUT), ถ้าไม่มี → ใช้ชื่อเป็น marker (POST แต่ modal ยัง "Edit")
+    setEditingCatId(isNumericId ? cat.id : cat.name);
     setNewCat({ name: cat.name, thai: cat.thai || '', image: cat.image || '' });
     setIsCatModalOpen(true);
   };
@@ -362,8 +324,13 @@ const Inventory = ({ initialOpenModal = false }) => {
     e.stopPropagation();
     const isNumericId = !isNaN(Number(catId)) && catId !== null && catId !== undefined;
 
-    if (!isNumericId) {
+    if (catId === 'all_products') {
       await alert("ไม่สามารถลบหมวดหมู่เริ่มต้นของระบบได้", "แจ้งเตือน", "warning");
+      return;
+    }
+
+    if (!isNumericId) {
+      await alert("หมวดหมู่นี้พบล่าสุดในข้อมูลสินค้า แต่ไม่มีในฐานข้อมูล กรุณาตรวจสอบข้อมูลสินค้า", "แจ้งเตือน", "warning");
       return;
     }
 
@@ -378,7 +345,6 @@ const Inventory = ({ initialOpenModal = false }) => {
     }
   };
 
-  // --- 4. Manage Brands (API-backed) ---
   const handleAddBrand = async () => {
     const trimmed = newBrandName.trim();
     if (!trimmed) return;
@@ -399,7 +365,7 @@ const Inventory = ({ initialOpenModal = false }) => {
 
   const handleDeleteBrand = async (brand, e) => {
     e.stopPropagation();
-    if (!brand.id || String(brand.id).startsWith('local_')) return; // All หรือ local ลบไม่ได้
+    if (!brand.id || String(brand.id).startsWith('local_')) return;
     if (await confirm(`ลบแบรนด์ "${brand.name}"?`, "ยืนยัน", "warning")) {
       try {
         await axios.delete(`${API}/brands/${brand.id}`);
@@ -411,9 +377,7 @@ const Inventory = ({ initialOpenModal = false }) => {
     }
   };
 
-  // --- 5. Filter Logic ---
   const filteredProducts = products.filter(p => {
-    // ถ้าเลือก 'All Products' ให้ข้ามการเช็ค category
     if (activeCategory !== 'All Products') {
       if (String(p.category).toLowerCase().trim() !== String(activeCategory).toLowerCase().trim()) return false;
     }
@@ -424,7 +388,6 @@ const Inventory = ({ initialOpenModal = false }) => {
     if (stockFilter === 'low') matchesStock = p.stock < 5;
     let matchesBrand = true;
     if (brandFilter !== 'All') {
-      // case-insensitive brand filter
       matchesBrand = p.name.toLowerCase().includes(brandFilter.toLowerCase());
     }
     let matchesVat = true;
@@ -463,9 +426,7 @@ const Inventory = ({ initialOpenModal = false }) => {
             </button>
           </div>
         ) : (
-          /* Categories Header — title centered, button floats right */
           <div className="relative flex items-center justify-center mb-5 min-h-[90px]">
-            {/* Center title — truly centered in the page */}
             <div className="text-center">
               <h1 className="text-2xl sm:text-3xl font-display font-medium text-slate-900 mb-2 tracking-tight">
                 Inventory <span className="text-[#D4AF37] italic font-serif">Categories</span>
@@ -479,9 +440,8 @@ const Inventory = ({ initialOpenModal = false }) => {
                 Browse through our premium collection of household essentials.
               </p>
             </div>
-            {/* Add Category button — absolute right, vertically centered */}
             <button
-              onClick={() => setIsCatModalOpen(true)}
+              onClick={() => { setNewCat({ name: '', thai: '', image: '' }); setEditingCatId(null); setIsCatModalOpen(true); }}
               className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-2 px-5 py-2.5 bg-[#1e293b] text-white rounded-xl font-semibold shadow-md hover:bg-slate-700 transition-all active:scale-95 text-sm whitespace-nowrap cursor-pointer"
             >
               <Plus size={16} />
@@ -500,10 +460,9 @@ const Inventory = ({ initialOpenModal = false }) => {
               return (
                 <div
                   key={cat.id}
-                  onClick={() => selectCategory(cat.name)}
+                  onClick={() => selectCategory(cat)}
                   className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 cursor-pointer border border-transparent hover:border-slate-100 relative"
                 >
-                  {/* Actions (Delete/Edit) — shows on hover, hide for All Products */}
                   {cat.id !== 'all_products' && (
                     <div className="absolute top-3 left-3 z-30 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-200">
                       <button
@@ -523,14 +482,12 @@ const Inventory = ({ initialOpenModal = false }) => {
                     </div>
                   )}
 
-                  {/* Image */}
                   <div className="relative h-32 overflow-hidden bg-slate-100">
                     <img
                       src={cat.image}
                       alt={cat.name}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
-                    {/* Badge */}
                     <div className="absolute top-4 right-4 z-20">
                       <span
                         className={`inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold tracking-wide shadow-sm ${itemCount === 0
@@ -543,7 +500,6 @@ const Inventory = ({ initialOpenModal = false }) => {
                     </div>
                   </div>
 
-                  {/* Content */}
                   <div className="p-5 bg-white">
                     <div className="w-8 h-[2px] bg-primary mb-3 group-hover:w-12 transition-all duration-500"></div>
                     <h3 className="text-base font-display font-bold text-slate-900 mb-0.5">{cat.name}</h3>
@@ -559,9 +515,7 @@ const Inventory = ({ initialOpenModal = false }) => {
         {currentView === 'products' && (
           <div className="">
 
-            {/* Brand Filters — with hover + delete + add brand button */}
             <div className="flex gap-2 mt-1 pt-3 mb-3 overflow-x-auto pb-2 scrollbar-hide items-center">
-              {/* ปุ่ม ALL แยกต่างหาก */}
               <div
                 onClick={() => setBrandFilter('All')}
                 className={`flex-shrink-0 flex items-center px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-all duration-200 border cursor-pointer select-none
@@ -572,7 +526,6 @@ const Inventory = ({ initialOpenModal = false }) => {
                 All
               </div>
 
-              {/* Brands จาก DB */}
               {brands.map(brand => (
                 <div
                   key={brand.id}
@@ -580,7 +533,6 @@ const Inventory = ({ initialOpenModal = false }) => {
                   onMouseLeave={() => setHoveredBrand(null)}
                   className={`relative flex-shrink-0 transition-all duration-200 ${hoveredBrand === brand.id ? 'mr-2' : ''}`}
                 >
-                  {/* Pill */}
                   <div
                     onClick={() => setBrandFilter(brand.name)}
                     className={`flex items-center px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-all duration-200 border cursor-pointer select-none
@@ -591,7 +543,6 @@ const Inventory = ({ initialOpenModal = false }) => {
                     {brand.name}
                   </div>
 
-                  {/* X Badge — ลอยที่มุมขวาบน สีแดง */}
                   <button
                     onClick={(e) => handleDeleteBrand(brand, e)}
                     title={`ลบแบรนด์ ${brand.name}`}
@@ -603,7 +554,6 @@ const Inventory = ({ initialOpenModal = false }) => {
                 </div>
               ))}
 
-              {/* Add Brand Button */}
               <button
                 onClick={() => { setNewBrandName(''); setIsBrandModalOpen(true); }}
                 className="flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold border border-dashed border-slate-300 text-slate-500 hover:border-blue-400 hover:text-blue-500 hover:bg-blue-50 transition-all whitespace-nowrap cursor-pointer"
@@ -613,7 +563,6 @@ const Inventory = ({ initialOpenModal = false }) => {
               </button>
             </div>
 
-            {/* Search, Stock & VAT Filters */}
             <div className="bg-white p-3 rounded-[2rem] border border-slate-100 shadow-sm mb-4 flex flex-col xl:flex-row gap-3 items-center">
               <div className="relative flex-1 w-full">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
@@ -626,7 +575,6 @@ const Inventory = ({ initialOpenModal = false }) => {
                 />
               </div>
               <div className="flex flex-wrap gap-3 w-full xl:w-auto justify-center">
-                {/* Stock Filter */}
                 <div className="flex bg-slate-50 p-1 rounded-xl border border-slate-100">
                   <button
                     onClick={() => setStockFilter(stockFilter === 'normal' ? 'all' : 'normal')}
@@ -643,7 +591,6 @@ const Inventory = ({ initialOpenModal = false }) => {
                     <AlertCircle size={14} /> Red Stock
                   </button>
                 </div>
-                {/* VAT Filter */}
                 <div className="flex bg-slate-50 p-1 rounded-xl border border-slate-100">
                   <button
                     onClick={() => setVatFilter(vatFilter === 'vat' ? 'all' : 'vat')}
@@ -663,7 +610,6 @@ const Inventory = ({ initialOpenModal = false }) => {
               </div>
             </div>
 
-            {/* Product Table */}
             <div className="bg-white rounded-[2rem] p-6 shadow-sm border border-slate-100 overflow-hidden">
               <table className="w-full text-left text-sm text-slate-600">
                 <thead className="bg-slate-50 border-b border-slate-100 text-slate-500 font-semibold uppercase text-xs">
@@ -781,25 +727,26 @@ const Inventory = ({ initialOpenModal = false }) => {
           </div>
         )}
 
-        {/* ===== MODAL: ADD CATEGORY ===== */}
+        {/* ===== MODAL: ADD / EDIT CATEGORY ===== */}
         {isCatModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center animate-fade-in">
-            <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => setIsCatModalOpen(false)}></div>
+            <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => { setIsCatModalOpen(false); setEditingCatId(null); }}></div>
             <div className="relative bg-white rounded-[2rem] shadow-2xl w-full max-w-md overflow-hidden animate-slide-up border border-slate-100">
-              {/* Modal Header */}
               <div className="px-8 py-6 border-b border-slate-100 flex justify-between items-center">
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-[#1e293b] flex items-center justify-center">
                     <Tag size={16} className="text-white" />
                   </div>
-                  <h3 className="font-bold text-xl text-slate-800">{editingCatId ? 'Edit Category' : 'Add Category'}</h3>
+                  {/* ✅ Title เปลี่ยนตาม editingCatId */}
+                  <h3 className="font-bold text-xl text-slate-800">
+                    {editingCatId ? 'Edit Category' : 'Add Category'}
+                  </h3>
                 </div>
                 <button onClick={() => { setIsCatModalOpen(false); setEditingCatId(null); }} className="cursor-pointer">
                   <X size={24} className="text-slate-400 hover:text-slate-600" />
                 </button>
               </div>
 
-              {/* Modal Body */}
               <div className="p-8 space-y-5">
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-2">
@@ -839,7 +786,6 @@ const Inventory = ({ initialOpenModal = false }) => {
                   <p className="text-xs text-slate-400 mt-1.5">หากไม่กรอก จะใช้รูป default</p>
                 </div>
 
-                {/* Preview */}
                 {newCat.image && (
                   <div className="rounded-xl overflow-hidden h-24 border border-slate-100">
                     <img src={newCat.image} alt="preview" className="w-full h-full object-cover" onError={e => e.target.style.display = 'none'} />
@@ -847,7 +793,6 @@ const Inventory = ({ initialOpenModal = false }) => {
                 )}
               </div>
 
-              {/* Modal Footer */}
               <div className="px-8 py-5 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">
                 <button
                   onClick={() => { setIsCatModalOpen(false); setEditingCatId(null); }}
@@ -859,6 +804,7 @@ const Inventory = ({ initialOpenModal = false }) => {
                   onClick={handleAddCategory}
                   className="px-8 py-2.5 bg-[#1e293b] hover:bg-slate-700 text-white rounded-xl shadow font-semibold transition-all active:scale-95 cursor-pointer"
                 >
+                  {/* ✅ ปุ่มเปลี่ยนข้อความตาม editingCatId */}
                   {editingCatId ? 'Save Changes' : 'Add Category'}
                 </button>
               </div>
