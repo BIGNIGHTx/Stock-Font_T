@@ -73,14 +73,6 @@ const Sales = () => {
     const [products, setProducts] = useState([]);
     const [recentSales, setRecentSales] = useState([]);
 
-    // eslint-disable-next-line no-unused-vars
-    const CATEGORIES = [
-        { id: 'All', label: 'All Products', icon: <Package size={20} />, color: 'bg-slate-500' },
-        { id: 'Tv', label: 'TV', icon: null, color: 'bg-blue-500' },
-        { id: 'Fan', label: 'Fan', icon: null, color: 'bg-teal-500' },
-        { id: 'Refrigerator', label: 'Refrigerator', icon: null, color: 'bg-orange-500' },
-        { id: 'Washing Machine', label: 'Washing Machine', icon: null, color: 'bg-indigo-500' },
-    ];
 
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [selectedProductId, setSelectedProductId] = useState('');
@@ -133,6 +125,14 @@ const Sales = () => {
         fetchProducts();
         fetchSales();
     }, []);
+
+    // สร้าง Category buttons ไดนามิกจากข้อมูลสินค้าจริง
+    const CAT_COLORS = ['bg-blue-500', 'bg-teal-500', 'bg-orange-500', 'bg-indigo-500', 'bg-pink-500', 'bg-amber-500', 'bg-emerald-500', 'bg-cyan-500'];
+    const uniqueCats = [...new Set(products.map(p => p.category).filter(Boolean))];
+    const CATEGORIES = [
+        { id: 'All', label: 'All Products' },
+        ...uniqueCats.map((cat, i) => ({ id: cat, label: cat, color: CAT_COLORS[i % CAT_COLORS.length] }))
+    ];
 
     const filteredProducts = selectedCategory === 'All'
         ? products

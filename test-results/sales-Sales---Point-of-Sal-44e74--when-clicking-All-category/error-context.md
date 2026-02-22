@@ -38,68 +38,68 @@
           - button [ref=e51] [cursor=pointer]:
             - img [ref=e52]
     - main [ref=e60]:
-      - generic [ref=e62]:
-        - generic [ref=e63]:
-          - generic [ref=e64]:
-            - heading "Point of Sale" [level=1] [ref=e65]
-            - paragraph [ref=e67]: Real-time stock deduction system.
-          - generic [ref=e70]: DB Connected
-        - generic [ref=e71]:
-          - generic [ref=e73]:
-            - generic [ref=e74]:
-              - heading "Transaction Details" [level=3] [ref=e75]
-              - generic [ref=e76]:
-                - img [ref=e77]
-                - textbox [disabled] [ref=e79]: 2026-02-22
-            - generic [ref=e80]:
-              - button "All Products" [active] [ref=e81] [cursor=pointer]
-              - button "TV" [ref=e82] [cursor=pointer]
-              - button "Fan" [ref=e83] [cursor=pointer]
-              - button "Refrigerator" [ref=e84] [cursor=pointer]
-              - button "Washing Machine" [ref=e85] [cursor=pointer]
-            - generic [ref=e86]:
-              - generic [ref=e87]: Select Product
-              - generic [ref=e88] [cursor=pointer]:
-                - generic [ref=e89]:
-                  - img [ref=e90]
-                  - generic [ref=e93]: "-- Select Product --"
-                - img [ref=e95]
-            - generic [ref=e97]:
-              - generic [ref=e98]:
-                - generic [ref=e99]: Quantity
-                - generic [ref=e100]:
-                  - button [disabled] [ref=e101]:
-                    - img [ref=e102]
-                  - spinbutton [disabled] [ref=e103]: "1"
-                  - button [disabled] [ref=e104]:
-                    - img [ref=e105]
-              - generic [ref=e106]:
-                - generic [ref=e107]: Unit Price / Tax
-                - generic [ref=e108]:
-                  - generic [ref=e110]: ฿ 0
-                  - generic [ref=e111]: THB
-            - generic [ref=e112]:
-              - generic [ref=e113]:
-                - paragraph [ref=e114]: Total Amount
-                - paragraph [ref=e115]: No VAT (ราคายกเว้นภาษี)
-              - generic [ref=e117]: ฿ 0.00
-            - button "Confirm Sale" [disabled] [ref=e119]:
-              - generic [ref=e120]: Confirm Sale
-          - generic [ref=e122]:
-            - generic [ref=e123]:
-              - img [ref=e125]
-              - heading "Today's Sales" [level=2] [ref=e128]
-            - separator [ref=e129]
-            - generic [ref=e132]:
-              - generic [ref=e134]:
-                - generic [ref=e135]:
+      - generic [ref=e63]:
+        - generic [ref=e64]:
+          - generic [ref=e65]:
+            - heading "Point of Sale" [level=1] [ref=e66]
+            - paragraph [ref=e68]: Real-time stock deduction system.
+          - generic [ref=e71]: DB Connected
+        - generic [ref=e72]:
+          - generic [ref=e74]:
+            - generic [ref=e75]:
+              - heading "Transaction Details" [level=3] [ref=e76]
+              - generic [ref=e77]:
+                - img [ref=e78]
+                - textbox [disabled] [ref=e80]: 2026-02-22
+            - generic [ref=e81]:
+              - button "All Products" [active] [ref=e82] [cursor=pointer]
+              - button "TV" [ref=e83] [cursor=pointer]
+              - button "Fan" [ref=e84] [cursor=pointer]
+              - button "Refrigerator" [ref=e85] [cursor=pointer]
+              - button "Washing Machine" [ref=e86] [cursor=pointer]
+            - generic [ref=e87]:
+              - generic [ref=e88]: Select Product
+              - generic [ref=e89] [cursor=pointer]:
+                - generic [ref=e90]:
+                  - img [ref=e91]
+                  - generic [ref=e94]: "-- Select Product --"
+                - img [ref=e96]
+            - generic [ref=e98]:
+              - generic [ref=e99]:
+                - generic [ref=e100]: Quantity
+                - generic [ref=e101]:
+                  - button [disabled] [ref=e102]:
+                    - img [ref=e103]
+                  - spinbutton [disabled] [ref=e104]: "1"
+                  - button [disabled] [ref=e105]:
+                    - img [ref=e106]
+              - generic [ref=e107]:
+                - generic [ref=e108]: Unit Price / Tax
+                - generic [ref=e109]:
+                  - generic [ref=e111]: ฿ 0
+                  - generic [ref=e112]: THB
+            - generic [ref=e113]:
+              - generic [ref=e114]:
+                - paragraph [ref=e115]: Total Amount
+                - paragraph [ref=e116]: No VAT (ราคายกเว้นภาษี)
+              - generic [ref=e118]: ฿ 0.00
+            - button "Confirm Sale" [disabled] [ref=e120]:
+              - generic [ref=e121]: Confirm Sale
+          - generic [ref=e123]:
+            - generic [ref=e124]:
+              - img [ref=e126]
+              - heading "Today's Sales" [level=2] [ref=e129]
+            - separator [ref=e130]
+            - generic [ref=e133]:
+              - generic [ref=e135]:
+                - generic [ref=e136]:
                   - text: Sharp Red สไลด์
-                  - generic [ref=e136]: x1
-                - generic [ref=e137]: 09:10
-              - generic [ref=e138]:
-                - generic [ref=e139]: ฿ 7,500.00
-                - generic [ref=e140]:
-                  - img [ref=e141]
+                  - generic [ref=e137]: x1
+                - generic [ref=e138]: 09:10
+              - generic [ref=e139]:
+                - generic [ref=e140]: ฿ 7,500.00
+                - generic [ref=e141]:
+                  - img [ref=e142]
                   - text: Sold out
-  - generic [ref=e142]: "22"
+  - generic [ref=e143]: "22"
 ```

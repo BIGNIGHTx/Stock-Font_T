@@ -288,7 +288,7 @@ const Dashboard = ({ onNavigate }) => {
                       <Text className="text-red-600 text-sm">Products with stock 5 units or less</Text>
                     </div>
                   </div>
-                  <button onClick={() => setIsLowStockModalOpen(false)} className="p-2 hover:bg-red-100 rounded-full text-red-400 hover:text-red-600 transition-colors">
+                  <button onClick={() => setIsLowStockModalOpen(false)} className="p-2 hover:bg-red-100 rounded-full text-red-400 hover:text-red-600 transition-colors cursor-pointer">
                     <Trash2 size={24} className="rotate-45" />
                   </button>
                 </div>

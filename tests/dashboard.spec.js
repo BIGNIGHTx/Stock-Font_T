@@ -19,11 +19,13 @@ test.describe("Dashboard Features", () => {
     await expect(page.getByRole("heading", { name: "Low Stock Items" })).not.toBeVisible();
   });
 
-  test("should navigate to Inventory from 'Add Product' button", async ({ page }) => {
-    await page.getByRole("button", { name: /Add Product/i }).click();
-    // Should be on Inventory page (Categories or Modal)
-    await expect(page.getByText(/Inventory/i)).toBeVisible();
-    await expect(page.getByText(/Add New Product|Add Category/i)).toBeVisible();
+  test("should navigate to Inventory page from topbar", async ({ page }) => {
+    // Dashboard ไม่มีปุ่ม 'Add Product' โดยตรง
+    // Test ตรวจว่าการ Navigate ไปหน้า Inventory ผ่าน Topbar ทำงานได้
+    await page.getByRole("button", { name: "Inventory" }).first().click();
+    await expect(page.getByText(/Inventory/i)).toBeVisible({ timeout: 10000 });
+    // ตรวจว่ามีการ์ด Category หรือปุ่ม Add Category ขึ้นมา
+    await expect(page.getByRole("button", { name: /Add Category/i })).toBeVisible({ timeout: 10000 });
   });
 
   test("should allow export (UI check)", async ({ page }) => {

@@ -54,10 +54,10 @@
               - button "ลบ Category นี้" [ref=e80]:
                 - img [ref=e81]
             - generic [ref=e84]:
-              - img "Edited-1771732681186" [ref=e85]
+              - img "Edited-1771732134470" [ref=e85]
               - generic [ref=e87]: 0 Items
             - generic [ref=e88]:
-              - heading "Edited-1771732681186" [level=3] [ref=e90]
+              - heading "Edited-1771732134470" [level=3] [ref=e90]
               - paragraph [ref=e91]: เครื่องดื่ม
           - generic [ref=e92] [cursor=pointer]:
             - generic [ref=e93]:
@@ -143,17 +143,5 @@
             - generic [ref=e207]:
               - heading "AutoCat-1771732122501" [level=3] [ref=e209]
               - paragraph [ref=e210]: ทดสอบอัตโนมัติ
-          - generic [ref=e211] [cursor=pointer]:
-            - generic [ref=e212]:
-              - button "แก้ไข Category" [ref=e213]:
-                - img [ref=e214]
-              - button "ลบ Category นี้" [ref=e216]:
-                - img [ref=e217]
-            - generic [ref=e220]:
-              - img "AutoCat-1771732669407" [ref=e221]
-              - generic [ref=e223]: 0 Items
-            - generic [ref=e224]:
-              - heading "AutoCat-1771732669407" [level=3] [ref=e226]
-              - paragraph [ref=e227]: ทดสอบอัตโนมัติ
-  - generic [ref=e228]: "22"
+  - generic [ref=e211]: "22"
 ```

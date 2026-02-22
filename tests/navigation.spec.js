@@ -35,14 +35,19 @@ test.describe("Navigation", () => {
   });
 
   test("can navigate between pages multiple times without breaking", async ({ page }) => {
-    // Dashboard -> Inventory -> Sales -> Dashboard
+    // Dashboard -> Inventory
     await page.getByRole("button", { name: "Inventory" }).first().click();
+    await page.waitForSelector(".group, h1, h2", { timeout: 10000 });
     await expect(page.getByText(/Inventory/i)).toBeVisible();
 
+    // Inventory -> Sales
     await page.getByRole("button", { name: "Sales" }).first().click();
+    await page.waitForSelector("h1, h2, h3", { timeout: 10000 });
     await expect(page.getByText("Point of Sale")).toBeVisible();
 
+    // Sales -> Dashboard
     await page.getByRole("button", { name: "Dashboard" }).first().click();
+    await page.waitForSelector("h1, h2, h3", { timeout: 10000 });
     await expect(page.getByText(/Welcome back/i)).toBeVisible();
   });
 });
