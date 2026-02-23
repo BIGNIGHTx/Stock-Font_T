@@ -25,10 +25,13 @@ import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell
 const Dashboard = ({ onNavigate }) => {
   const [products, setProducts] = useState([]);
   const [sales, setSales] = useState([]);
+  const [inventoryByCategory, setInventoryByCategory] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [currentDateTime, setCurrentDateTime] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [isLowStockModalOpen, setIsLowStockModalOpen] = useState(false);
+  const [isAllCategoriesModalOpen, setIsAllCategoriesModalOpen] = useState(false);
 
   const [chartStartDate, setChartStartDate] = useState(() => {
     const d = new Date();
@@ -45,9 +48,10 @@ const Dashboard = ({ onNavigate }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [productsRes, salesRes] = await Promise.all([
+        const [productsRes, salesRes, inventoryRes] = await Promise.all([
           axios.get('http://127.0.0.1:8000/products/'),
-          axios.get('http://127.0.0.1:8000/sales/')
+          axios.get('http://127.0.0.1:8000/sales/'),
+          axios.get('http://127.0.0.1:8000/dashboard/inventory_by_category')
         ]);
         const mappedProducts = productsRes.data.map(p => ({
           ...p,
@@ -55,6 +59,7 @@ const Dashboard = ({ onNavigate }) => {
         }));
         setProducts(mappedProducts);
         setSales(salesRes.data);
+        setInventoryByCategory(inventoryRes.data);
         setIsLoading(false);
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
@@ -132,30 +137,23 @@ const Dashboard = ({ onNavigate }) => {
     return { dateStr: date, day: dayName, val: Math.round(total) };
   });
 
-  const categorizeProduct = (name) => {
-    const lower = name.toLowerCase();
-    if (lower.includes('phone') || lower.includes('samsung') || lower.includes('iphone')) return 'Mobile';
-    if (lower.includes('laptop') || lower.includes('macbook') || lower.includes('computer')) return 'Computers';
-    if (lower.includes('watch') || lower.includes('band')) return 'Wearables';
-    if (lower.includes('tv') || lower.includes('television') || lower.includes('oled')) return 'TV & Display';
-    if (lower.includes('headphone') || lower.includes('speaker') || lower.includes('audio')) return 'Audio';
-    return 'Others';
-  };
-
-  const categoryStats = products.reduce((acc, p) => {
-    const cat = categorizeProduct(p.name);
-    if (!acc[cat]) acc[cat] = 0;
-    acc[cat] += p.price * p.stock;
-    return acc;
-  }, {});
-
   const colors = ['#2563EB', '#8B5CF6', '#10B981', '#F59E0B', '#EF4444', '#6B7280'];
-  const pieData = Object.entries(categoryStats).map(([name, value], idx) => ({
-    name, value, color: colors[idx % colors.length]
-  })).sort((a, b) => b.value - a.value);
+
+  const pieData = inventoryByCategory.map((cat, idx) => {
+    const value = cat.products.reduce((acc, p) => {
+      const costPrice = p.cost_price || (p.price * 0.6);
+      return acc + (costPrice * p.stock);
+    }, 0);
+    return {
+      name: cat.category_name,
+      value: value,
+      color: colors[idx % colors.length],
+      raw: cat
+    };
+  }).sort((a, b) => b.value - a.value);
 
   const topCategory = pieData[0] || { name: 'N/A', value: 0 };
-  const totalStockValue = products.reduce((acc, p) => acc + (p.price * p.stock), 0);
+  const totalStockValue = pieData.reduce((acc, item) => acc + item.value, 0);
 
   const formattedDate = new Date().toLocaleDateString('th-TH', {
     weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
@@ -165,25 +163,9 @@ const Dashboard = ({ onNavigate }) => {
     day: 'numeric', month: 'long', year: 'numeric'
   });
 
-  const navItems = [
-    { label: 'Dashboard', icon: LayoutDashboard, key: 'dashboard' },
-    { label: 'Inventory', icon: Archive, key: 'inventory' },
-    { label: 'Sales', icon: ShoppingCart, key: 'sales' },
-    { label: 'Reports', icon: BarChart2, key: 'reports' },
-    { label: 'Settings', icon: Settings, key: 'settings' },
-  ];
-
   return (
-    /* ===== Outer wrapper — same color as the inner content bg ===== */
     <div className="min-h-screen bg-[#F3F5F9] font-sans flex flex-col items-center">
-
-      {/* ===== Fixed-width shell that holds navbar + content ===== */}
       <div className="w-full max-w-[1280px] flex flex-col">
-
-
-
-        {/* ===== MAIN CONTENT AREA ===== */}
-        {/* The content sits inside a white-ish panel that fills the max-width container */}
         <div className="flex-1 bg-[#F3F5F9] p-4 md:p-6 text-slate-700">
 
           {/* ================= Header Section ================= */}
@@ -219,7 +201,6 @@ const Dashboard = ({ onNavigate }) => {
 
           {/* ================= Stats Grid ================= */}
           <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 mb-5">
-
             <SoftCard
               title="Total Products"
               value={isLoading ? '-' : totalProducts}
@@ -229,7 +210,6 @@ const Dashboard = ({ onNavigate }) => {
               iconBg="bg-[#26619C]/10"
               iconStrokeWidth={2.25}
             />
-
             <SoftCard
               title="Gross Profit"
               value={isLoading ? '-' : `฿${grossProfit.toLocaleString(undefined, { minimumFractionDigits: 2 })}`}
@@ -239,7 +219,6 @@ const Dashboard = ({ onNavigate }) => {
               iconColor="text-emerald-600"
               iconBg="bg-emerald-50"
             />
-
             <SoftCard
               title="Total Revenue"
               value={isLoading ? '-' : `฿${totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2 })}`}
@@ -249,7 +228,6 @@ const Dashboard = ({ onNavigate }) => {
               iconColor="text-green-600"
               iconBg="bg-green-50"
             />
-
             <div
               onClick={() => setIsLowStockModalOpen(true)}
               className="relative overflow-hidden bg-red-50/50 border border-red-100 rounded-[2rem] p-4 shadow-sm flex flex-col justify-between h-28 transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-xl cursor-pointer group"
@@ -272,10 +250,9 @@ const Dashboard = ({ onNavigate }) => {
                 </Text>
               </div>
             </div>
-
           </div>
 
-          {/* Low Stock Modal */}
+          {/* ================= Low Stock Modal ================= */}
           {isLowStockModalOpen && (
             <div className="fixed inset-0 z-50 flex items-center justify-center animate-fade-in">
               <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => setIsLowStockModalOpen(false)}></div>
@@ -344,7 +321,7 @@ const Dashboard = ({ onNavigate }) => {
           {/* ================= Bottom 2-column Layout ================= */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 pb-6">
 
-            {/* Left Column: Of the Day + Table */}
+            {/* Left Column */}
             <div className="lg:col-span-2">
               <div className="bg-white rounded-[2rem] p-5 shadow-[0_2px_40px_-10px_rgba(0,0,0,0.04)] border border-slate-100">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-3">
@@ -441,11 +418,20 @@ const Dashboard = ({ onNavigate }) => {
               </div>
             </div>
 
-            {/* Right Column: Inventory by Category + Sales Trends */}
+            {/* Right Column */}
             <div className="lg:col-span-1 flex flex-col gap-4">
+              <style dangerouslySetInnerHTML={{
+                __html: `
+                .recharts-pie-sector:focus { outline: none !important; }
+                .recharts-layer:focus { outline: none !important; }
+                .recharts-surface:focus { outline: none !important; }
+              `}} />
 
               {/* Inventory by Category */}
-              <div className="bg-white rounded-[2rem] p-5 border border-slate-100 shadow-sm flex flex-col hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.1)] transition-all duration-500 ease-out hover:-translate-y-2 cursor-pointer">
+              <div
+                onClick={() => setIsAllCategoriesModalOpen(true)}
+                className="bg-white rounded-[2rem] p-5 border border-slate-100 shadow-sm flex flex-col hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.1)] transition-all duration-500 ease-out hover:-translate-y-2 cursor-pointer outline-none focus:outline-none active:scale-[0.98] select-none"
+              >
                 <div className="mb-3">
                   <Text as="h3" className="text-base font-bold text-slate-800">Inventory by Category</Text>
                   <Text className="text-xs text-slate-400">Stock value distribution</Text>
@@ -459,9 +445,19 @@ const Dashboard = ({ onNavigate }) => {
                       <div className="w-36 h-36">
                         <ResponsiveContainer width="100%" height="100%">
                           <PieChart>
-                            <Pie data={pieData} innerRadius={45} outerRadius={62} paddingAngle={5} dataKey="value">
+                            <Pie
+                              data={pieData}
+                              innerRadius={45}
+                              outerRadius={62}
+                              paddingAngle={5}
+                              dataKey="value"
+                              onClick={(data, e) => {
+                                e.stopPropagation();
+                                setSelectedCategory(data.raw);
+                              }}
+                            >
                               {pieData.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={entry.color} strokeWidth={0} />
+                                <Cell key={`cell-${index}`} fill={entry.color} strokeWidth={0} className="outline-none" />
                               ))}
                             </Pie>
                           </PieChart>
@@ -476,7 +472,14 @@ const Dashboard = ({ onNavigate }) => {
                     </div>
                     <div className="mt-3 space-y-2">
                       {pieData.slice(0, 4).map((item) => (
-                        <div key={item.name} className="flex justify-between items-center text-xs">
+                        <div
+                          key={item.name}
+                          className="flex justify-between items-center text-xs hover:bg-slate-50 p-1.5 rounded-lg transition-colors cursor-pointer group/row"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedCategory(item.raw);
+                          }}
+                        >
                           <div className="flex items-center">
                             <div className="w-2.5 h-2.5 rounded-full mr-2" style={{ backgroundColor: item.color }}></div>
                             <Text as="span" className="text-slate-600">{item.name}</Text>
@@ -578,20 +581,166 @@ const Dashboard = ({ onNavigate }) => {
                   </div>
                 )}
               </div>
-
             </div>
           </div>
         </div>
-        {/* END MAIN CONTENT */}
+
+        {/* ================= Category Detail Popup ================= */}
+        {selectedCategory && (
+          <div className="fixed inset-0 z-[60] flex items-start justify-center pt-16 px-4">
+            <div
+              className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity duration-200 animate-fade-in"
+              onClick={() => setSelectedCategory(null)}
+            ></div>
+            <div className="relative bg-white rounded-[1.5rem] shadow-2xl w-full max-w-lg overflow-hidden border border-slate-100 animate-in fade-in zoom-in duration-200">
+              <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <div className="flex items-center gap-3">
+                  <div className="p-1.5 bg-blue-100 text-blue-600 rounded-lg"><Package size={20} /></div>
+                  <div>
+                    <Text as="h3" className="font-bold text-lg text-slate-900">{selectedCategory.category_name} Details</Text>
+                    <Text className="text-slate-500 text-[10px]">Product breakdown and inventory status</Text>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setSelectedCategory(null)}
+                  className="p-2 hover:bg-slate-200 rounded-full text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+                >
+                  <Plus size={24} className="rotate-45" />
+                </button>
+              </div>
+
+              <div className="p-0 max-h-[60vh] overflow-y-auto">
+                <table className="w-full text-left text-sm text-slate-600">
+                  <thead className="bg-slate-50 border-b border-slate-100 text-slate-500 font-semibold uppercase text-[10px] sticky top-0">
+                    <tr>
+                      <th className="px-5 py-3">Product Name</th>
+                      <th className="px-5 py-3 text-center">SKU</th>
+                      <th className="px-5 py-3 text-center">Stock</th>
+                      <th className="px-5 py-3 text-right">Cost Value</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {selectedCategory.products.length > 0 ? (
+                      selectedCategory.products.map(p => (
+                        <tr key={p.id} className="hover:bg-slate-50 transition-colors text-xs">
+                          <td className="px-5 py-3 font-bold text-slate-800">{p.name}</td>
+                          <td className="px-5 py-3 text-center font-mono text-slate-400 text-[10px]">{p.sku}</td>
+                          <td className="px-5 py-3 text-center">
+                            <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold border ${p.stock <= 5 ? 'bg-red-50 text-red-600 border-red-100' : 'bg-green-50 text-green-600 border-green-100'}`}>
+                              {p.stock} units
+                            </span>
+                          </td>
+                          <td className="px-5 py-3 text-right font-bold text-blue-600">
+                            ฿{((p.cost_price || (p.price * 0.6)) * p.stock).toLocaleString()}
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="4" className="px-6 py-12 text-center text-slate-400">
+                          <Text>No products found in this category.</Text>
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+
+              <div className="px-6 py-3 bg-slate-50 border-t border-slate-100 flex justify-between items-center">
+                <div className="flex flex-col">
+                  <Text className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Total Value</Text>
+                  <Text className="text-lg font-bold text-slate-800">
+                    ฿{selectedCategory.products.reduce((acc, p) => acc + ((p.cost_price || (p.price * 0.6)) * p.stock), 0).toLocaleString()}
+                  </Text>
+                </div>
+                <button
+                  onClick={() => setSelectedCategory(null)}
+                  className="px-5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs font-bold transition-colors cursor-pointer"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ================= Full Categories List Modal ================= */}
+        {isAllCategoriesModalOpen && (
+          <div className="fixed inset-0 z-[60] flex items-start justify-center pt-16 px-4">
+            {/* Backdrop */}
+            <div
+              className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity duration-200 animate-fade-in"
+              onClick={() => setIsAllCategoriesModalOpen(false)}
+            ></div>
+
+            <div className="relative bg-white rounded-[2rem] shadow-2xl w-full max-w-md max-h-[90vh] overflow-hidden border border-slate-100 animate-in fade-in zoom-in duration-200 flex flex-col">
+
+              {/* Header — ไม่ scroll */}
+              <div className="px-6 pt-6 pb-4 flex justify-between items-start flex-shrink-0">
+                <div>
+                  <Text as="h3" className="font-bold text-xl text-slate-900">Inventory Distribution</Text>
+                  <Text className="text-slate-500 text-[10px]">Full breakdown of stock value by category</Text>
+                </div>
+                <button
+                  onClick={() => setIsAllCategoriesModalOpen(false)}
+                  className="p-2 hover:bg-slate-100 rounded-full text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+                >
+                  <Plus size={24} className="rotate-45" />
+                </button>
+              </div>
+
+              {/* Scrollable list — แสดง 4 rows แล้วค่อย scroll, scrollbar อยู่ใน border-radius */}
+              <div className="px-6 pb-2 overflow-y-auto" style={{ maxHeight: '272px' }}>
+                <div className="space-y-2">
+                  {pieData.map((item) => (
+                    <div
+                      key={item.name}
+                      className="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100 hover:border-blue-200 hover:bg-blue-50/30 transition-all cursor-pointer group"
+                      onClick={() => {
+                        setIsAllCategoriesModalOpen(false);
+                        setSelectedCategory(item.raw);
+                      }}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-3 h-3 rounded-full shadow-sm flex-shrink-0" style={{ backgroundColor: item.color }}></div>
+                        <div>
+                          <Text className="font-bold text-sm text-slate-800 group-hover:text-blue-600 transition-colors">{item.name}</Text>
+                          <Text className="text-[9px] text-slate-400 font-medium uppercase tracking-wider">{item.raw.products.length} Products</Text>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <Text className="font-bold text-sm text-slate-900">฿{item.value.toLocaleString()}</Text>
+                        <Text className="text-[9px] text-slate-400">{Math.round((item.value / totalStockValue) * 100)}%</Text>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Footer — ไม่ scroll */}
+              <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex-shrink-0">
+                <div className="flex justify-between items-center mb-4">
+                  <Text className="text-slate-500 font-medium text-xs">Total Inventory Value</Text>
+                  <Text className="text-xl font-black text-slate-900">฿{totalStockValue.toLocaleString()}</Text>
+                </div>
+                <button
+                  onClick={() => setIsAllCategoriesModalOpen(false)}
+                  className="w-full py-3 bg-slate-900 text-white rounded-xl font-bold text-sm hover:bg-slate-800 transition-colors shadow-lg shadow-slate-200 cursor-pointer"
+                >
+                  Done
+                </button>
+              </div>
+
+            </div>
+          </div>
+        )}
 
       </div>
-      {/* END MAX-WIDTH SHELL */}
-
     </div>
   );
 };
 
-// Reusable Soft Card Component (unchanged)
+// Reusable Soft Card Component
 const SoftCard = ({ title, value, subLabel, icon: Icon, iconColor, iconBg, subLabelColor = "text-slate-400", iconSize = 20, iconStrokeWidth }) => {
   return (
     <div className="relative bg-white rounded-[2rem] p-4 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-slate-100 h-28 flex flex-col justify-between transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-xl cursor-pointer">
