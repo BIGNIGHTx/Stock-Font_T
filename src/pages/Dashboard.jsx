@@ -254,7 +254,7 @@ const Dashboard = ({ onNavigate }) => {
 
           {/* ================= Low Stock Modal ================= */}
           {isLowStockModalOpen && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center animate-fade-in">
+            <div className="fixed inset-0 z-50 flex items-start justify-center pt-16 px-4 animate-fade-in">
               <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => setIsLowStockModalOpen(false)}></div>
               <div className="relative bg-white rounded-[2rem] shadow-2xl w-full max-w-2xl overflow-hidden animate-slide-up border border-slate-100 m-4">
                 <div className="px-8 py-6 border-b border-slate-100 flex justify-between items-center bg-red-50">
