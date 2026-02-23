@@ -9,15 +9,8 @@ import {
   Plus,
   Trash2,
   Package,
-  LayoutDashboard,
-  Archive,
-  ShoppingCart,
-  BarChart2,
-  Settings,
-  Search,
-  Moon,
-  Bell,
-  HelpCircle,
+  CheckCircle,
+  XCircle,
 } from 'lucide-react';
 import { Text } from '../components/text';
 import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
@@ -32,6 +25,17 @@ const Dashboard = ({ onNavigate }) => {
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [isLowStockModalOpen, setIsLowStockModalOpen] = useState(false);
   const [isAllCategoriesModalOpen, setIsAllCategoriesModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [saleToDelete, setSaleToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  // Toast notification state
+  const [toast, setToast] = useState(null); // { message, type: 'success' | 'error' }
+
+  const showToast = (message, type = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3500);
+  };
 
   const [chartStartDate, setChartStartDate] = useState(() => {
     const d = new Date();
@@ -70,15 +74,22 @@ const Dashboard = ({ onNavigate }) => {
   }, []);
 
   const handleDeleteSale = async (saleId) => {
-    if (!window.confirm("Are you sure you want to delete this sale? Stock will be restored.")) return;
+    setIsDeleting(true);
     try {
       await axios.delete(`http://127.0.0.1:8000/sales/${saleId}`);
       setSales(prevSales => prevSales.filter(s => s.id !== saleId));
       const productsRes = await axios.get('http://127.0.0.1:8000/products/');
       setProducts(productsRes.data);
+      setIsDeleteModalOpen(false);
+      setSaleToDelete(null);
+      showToast('Sale deleted and stock restored successfully.', 'success');
     } catch (error) {
       console.error("Error deleting sale:", error);
-      alert("Failed to delete sale");
+      setIsDeleteModalOpen(false);
+      setSaleToDelete(null);
+      showToast('Failed to delete sale. Please try again.', 'error');
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -165,6 +176,30 @@ const Dashboard = ({ onNavigate }) => {
 
   return (
     <div className="min-h-screen bg-[#F3F5F9] font-sans flex flex-col items-center">
+
+      {/* ================= Toast Notification ================= */}
+      {toast && (
+        <div
+          className={`fixed top-5 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-2xl border text-sm font-semibold animate-in fade-in slide-in-from-top-4 duration-300
+            ${toast.type === 'success'
+              ? 'bg-white border-green-100 text-green-700 shadow-green-100/60'
+              : 'bg-white border-red-100 text-red-600 shadow-red-100/60'
+            }`}
+        >
+          {toast.type === 'success'
+            ? <CheckCircle size={20} className="text-green-500 flex-shrink-0" />
+            : <XCircle size={20} className="text-red-500 flex-shrink-0" />
+          }
+          <Text as="span">{toast.message}</Text>
+          <button
+            onClick={() => setToast(null)}
+            className="ml-2 text-slate-300 hover:text-slate-500 transition-colors cursor-pointer"
+          >
+            <Plus size={16} className="rotate-45" />
+          </button>
+        </div>
+      )}
+
       <div className="w-full max-w-[1280px] flex flex-col">
         <div className="flex-1 bg-[#F3F5F9] p-4 md:p-6 text-slate-700">
 
@@ -256,7 +291,7 @@ const Dashboard = ({ onNavigate }) => {
           {isLowStockModalOpen && (
             <div className="fixed inset-0 z-50 flex items-start justify-center pt-16 px-4 animate-fade-in">
               <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => setIsLowStockModalOpen(false)}></div>
-              <div className="relative bg-white rounded-[2rem] shadow-2xl w-full max-w-2xl overflow-hidden animate-slide-up border border-slate-100 m-4">
+              <div className="relative bg-white rounded-[2rem] shadow-2xl w-full max-w-2xl overflow-hidden border border-slate-100">
                 <div className="px-8 py-6 border-b border-slate-100 flex justify-between items-center bg-red-50">
                   <div className="flex items-center gap-3">
                     <div className="p-2 bg-red-100 text-red-600 rounded-xl"><AlertTriangle size={24} /></div>
@@ -266,7 +301,7 @@ const Dashboard = ({ onNavigate }) => {
                     </div>
                   </div>
                   <button onClick={() => setIsLowStockModalOpen(false)} className="p-2 hover:bg-red-100 rounded-full text-red-400 hover:text-red-600 transition-colors cursor-pointer">
-                    <Trash2 size={24} className="rotate-45" />
+                    <Plus size={24} className="rotate-45" />
                   </button>
                 </div>
 
@@ -397,7 +432,10 @@ const Dashboard = ({ onNavigate }) => {
                             </div>
                             <div className="col-span-2 text-center">
                               <button
-                                onClick={() => handleDeleteSale(sale.id)}
+                                onClick={() => {
+                                  setSaleToDelete(sale);
+                                  setIsDeleteModalOpen(true);
+                                }}
                                 className="p-2 text-red-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-all cursor-pointer"
                                 title="Delete Sale"
                               >
@@ -425,6 +463,7 @@ const Dashboard = ({ onNavigate }) => {
                 .recharts-pie-sector:focus { outline: none !important; }
                 .recharts-layer:focus { outline: none !important; }
                 .recharts-surface:focus { outline: none !important; }
+                .recharts-pie-sector { cursor: pointer; }
               `}} />
 
               {/* Inventory by Category */}
@@ -667,7 +706,6 @@ const Dashboard = ({ onNavigate }) => {
         {/* ================= Full Categories List Modal ================= */}
         {isAllCategoriesModalOpen && (
           <div className="fixed inset-0 z-[60] flex items-start justify-center pt-16 px-4">
-            {/* Backdrop */}
             <div
               className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity duration-200 animate-fade-in"
               onClick={() => setIsAllCategoriesModalOpen(false)}
@@ -675,7 +713,7 @@ const Dashboard = ({ onNavigate }) => {
 
             <div className="relative bg-white rounded-[2rem] shadow-2xl w-full max-w-md max-h-[90vh] overflow-hidden border border-slate-100 animate-in fade-in zoom-in duration-200 flex flex-col">
 
-              {/* Header — ไม่ scroll */}
+              {/* Header */}
               <div className="px-6 pt-6 pb-4 flex justify-between items-start flex-shrink-0">
                 <div>
                   <Text as="h3" className="font-bold text-xl text-slate-900">Inventory Distribution</Text>
@@ -689,7 +727,7 @@ const Dashboard = ({ onNavigate }) => {
                 </button>
               </div>
 
-              {/* Scrollable list — แสดง 4 rows แล้วค่อย scroll, scrollbar อยู่ใน border-radius */}
+              {/* Scrollable list — shows 4 rows then scrolls */}
               <div className="px-6 pb-2 overflow-y-auto" style={{ maxHeight: '272px' }}>
                 <div className="space-y-2">
                   {pieData.map((item) => (
@@ -717,7 +755,7 @@ const Dashboard = ({ onNavigate }) => {
                 </div>
               </div>
 
-              {/* Footer — ไม่ scroll */}
+              {/* Footer */}
               <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex-shrink-0">
                 <div className="flex justify-between items-center mb-4">
                   <Text className="text-slate-500 font-medium text-xs">Total Inventory Value</Text>
@@ -731,6 +769,55 @@ const Dashboard = ({ onNavigate }) => {
                 </button>
               </div>
 
+            </div>
+          </div>
+        )}
+
+        {/* ================= Delete Confirmation Modal ================= */}
+        {isDeleteModalOpen && (
+          <div className="fixed inset-0 z-[70] flex items-start justify-center pt-[20vh] px-4">
+            <div
+              className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity duration-200 animate-fade-in"
+              onClick={() => !isDeleting && setIsDeleteModalOpen(false)}
+            ></div>
+
+            <div className="relative bg-white rounded-[2rem] shadow-2xl w-full max-w-sm overflow-hidden border border-slate-100 animate-in fade-in zoom-in duration-200 flex flex-col">
+              <div className="px-8 pt-8 pb-6 flex flex-col items-center text-center">
+                <div className="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mb-4">
+                  <Trash2 size={32} />
+                </div>
+                <Text as="h3" className="font-bold text-xl text-slate-900 mb-2">Are you sure?</Text>
+                <Text className="text-slate-500 text-sm px-2">
+                  Do you really want to delete this sale record? This action will restore the stock for the item.
+                </Text>
+              </div>
+
+              <div className="px-8 pb-8 flex gap-3">
+                <button
+                  onClick={() => setIsDeleteModalOpen(false)}
+                  disabled={isDeleting}
+                  className="flex-1 py-3 bg-slate-100 text-slate-600 rounded-xl font-bold text-sm hover:bg-slate-200 transition-colors cursor-pointer disabled:opacity-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => handleDeleteSale(saleToDelete.id)}
+                  disabled={isDeleting}
+                  className="flex-1 py-3 bg-red-500 text-white rounded-xl font-bold text-sm hover:bg-red-600 transition-all shadow-lg shadow-red-100 cursor-pointer active:scale-95 disabled:opacity-70 flex items-center justify-center gap-2"
+                >
+                  {isDeleting ? (
+                    <>
+                      <svg className="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                      </svg>
+                      <Text as="span">Deleting...</Text>
+                    </>
+                  ) : (
+                    <Text as="span">Delete Sale</Text>
+                  )}
+                </button>
+              </div>
             </div>
           </div>
         )}
