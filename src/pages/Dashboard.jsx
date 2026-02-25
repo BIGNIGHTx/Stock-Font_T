@@ -204,7 +204,7 @@ const Dashboard = () => {
       )}
 
       <div className="w-full max-w-[1280px] flex flex-col">
-        <div className="flex-1 bg-[#F3F5F9] p-4 md:p-6 text-slate-700">
+        <div className="flex-1 bg-[#F3F5F9] dark:bg-dark-bg p-4 md:p-6 text-slate-700 transition-colors duration-300">
 
           {/* ================= Header Section ================= */}
           <header className="relative mb-8 mt-2 perspective-1000 stagger-item delay-1">
@@ -310,16 +310,16 @@ const Dashboard = () => {
             />
             <div
               onClick={() => setIsLowStockModalOpen(true)}
-              className="relative overflow-hidden bg-red-50/50 border border-red-100 rounded-[2rem] p-4 shadow-sm flex flex-col justify-between h-28 transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-xl cursor-pointer group"
+              className="relative overflow-hidden bg-red-50/50 dark:bg-red-950/20 border border-red-100 dark:border-red-900/30 rounded-[2rem] p-4 shadow-sm flex flex-col justify-between h-28 transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-xl cursor-pointer group"
             >
               <div className="absolute top-0 right-0 p-4">
-                <div className="bg-white/80 p-2 rounded-xl shadow-sm text-red-500 group-hover:scale-110 transition-transform">
+                <div className="bg-white/80 dark:bg-red-900/40 p-2 rounded-xl shadow-sm text-red-500 group-hover:scale-110 transition-transform">
                   <AlertTriangle size={20} />
                 </div>
               </div>
               <div>
-                <Text as="h3" className="text-red-800 text-xs font-semibold mb-1">Low Stock Alert</Text>
-                <Text className="text-2xl font-bold text-slate-800">{isLoading ? '-' : `${lowStockProducts} Items`}</Text>
+                <Text as="h3" className="text-red-800 dark:text-red-400 text-xs font-semibold mb-1">Low Stock Alert</Text>
+                <Text className="text-2xl font-bold text-slate-800 dark:text-dark-text">{isLoading ? '-' : `${lowStockProducts} Items`}</Text>
               </div>
               <div className="flex items-center gap-2">
                 <span className={`text-xs font-bold px-2 py-0.5 rounded-md ${lowStockProducts > 0 ? 'text-red-600 bg-red-100' : 'text-green-600 bg-green-100'}`}>
@@ -335,14 +335,14 @@ const Dashboard = () => {
           {/* ================= Low Stock Modal ================= */}
           {isLowStockModalOpen && (
             <div className="fixed inset-0 z-50 flex items-start justify-center pt-16 px-4 animate-fade-in">
-              <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => setIsLowStockModalOpen(false)}></div>
-              <div className="relative bg-white rounded-[2rem] shadow-2xl w-full max-w-2xl overflow-hidden border border-slate-100">
-                <div className="px-8 py-6 border-b border-slate-100 flex justify-between items-center bg-red-50">
+              <div className="absolute inset-0 bg-slate-900/40 dark:bg-black/60 backdrop-blur-sm" onClick={() => setIsLowStockModalOpen(false)}></div>
+              <div className="relative bg-white dark:bg-dark-surface rounded-[2rem] shadow-2xl w-full max-w-2xl overflow-hidden border border-slate-100 dark:border-dark-border">
+                <div className="px-8 py-6 border-b border-slate-100 dark:border-dark-border flex justify-between items-center bg-red-50 dark:bg-red-950/30">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-red-100 text-red-600 rounded-xl"><AlertTriangle size={24} /></div>
+                    <div className="p-2 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-xl"><AlertTriangle size={24} /></div>
                     <div>
-                      <Text as="h3" className="font-bold text-xl text-red-900">Low Stock Items</Text>
-                      <Text className="text-red-600 text-sm">Products with stock 5 units or less</Text>
+                      <Text as="h3" className="font-bold text-xl text-red-900 dark:text-red-300">Low Stock Items</Text>
+                      <Text className="text-red-600 dark:text-red-400 text-sm">Products with stock 5 units or less</Text>
                     </div>
                   </div>
                   <button onClick={() => setIsLowStockModalOpen(false)} className="p-2 hover:bg-red-100 rounded-full text-red-400 hover:text-red-600 transition-colors cursor-pointer">
@@ -352,8 +352,8 @@ const Dashboard = () => {
 
                 <div className="p-0 max-h-[60vh] overflow-y-auto">
                   {products.filter(p => p.stock <= 5).length > 0 ? (
-                    <table className="w-full text-left text-sm text-slate-600">
-                      <thead className="bg-slate-50 border-b border-slate-100 text-slate-500 font-semibold uppercase text-xs sticky top-0">
+                    <table className="w-full text-left text-sm text-slate-600 dark:text-dark-muted">
+                      <thead className="bg-slate-50 dark:bg-dark-bg border-b border-slate-100 dark:border-dark-border text-slate-500 dark:text-dark-muted font-semibold uppercase text-xs sticky top-0">
                         <tr>
                           <th className="px-6 py-4">Product Name</th>
                           <th className="px-6 py-4 text-center">SKU</th>
@@ -361,18 +361,18 @@ const Dashboard = () => {
                           <th className="px-6 py-4 text-center">Stock</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-100">
+                      <tbody className="divide-y divide-slate-100 dark:divide-dark-border">
                         {products.filter(p => p.stock <= 5).map(p => (
-                          <tr key={p.id} className="hover:bg-red-50/30 transition-colors">
-                            <td className="px-6 py-4 font-bold text-slate-800">{p.name}</td>
-                            <td className="px-6 py-4 text-center font-mono text-slate-500">{p.sku}</td>
+                          <tr key={p.id} className="hover:bg-red-50/30 dark:hover:bg-red-900/10 transition-colors">
+                            <td className="px-6 py-4 font-bold text-slate-800 dark:text-dark-text">{p.name}</td>
+                            <td className="px-6 py-4 text-center font-mono text-slate-500 dark:text-dark-muted">{p.sku}</td>
                             <td className="px-6 py-4 text-center">
                               {p.stock === 0
-                                ? <span className="px-2 py-1 bg-red-100 text-red-600 rounded-md text-xs font-bold border border-red-200">Out of Stock</span>
-                                : <span className="px-2 py-1 bg-orange-100 text-orange-600 rounded-md text-xs font-bold border border-orange-200">Low Stock</span>}
+                                ? <span className="px-2 py-1 bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400 rounded-md text-xs font-bold border border-red-200 dark:border-red-900/50">Out of Stock</span>
+                                : <span className="px-2 py-1 bg-orange-100 dark:bg-orange-900/40 text-orange-600 dark:text-orange-400 rounded-md text-xs font-bold border border-orange-200 dark:border-orange-900/50">Low Stock</span>}
                             </td>
                             <td className="px-6 py-4 text-center">
-                              <span className="text-red-600 font-bold text-lg">{p.stock}</span>
+                              <span className="text-red-600 dark:text-red-400 font-bold text-lg">{p.stock}</span>
                             </td>
                           </tr>
                         ))}
@@ -403,41 +403,41 @@ const Dashboard = () => {
 
             {/* Left Column */}
             <div className="lg:col-span-2">
-              <div className="bg-white rounded-[2rem] p-5 shadow-[0_2px_40px_-10px_rgba(0,0,0,0.04)] border border-slate-100 stagger-item delay-3">
+              <div className="bg-white dark:bg-dark-surface rounded-[2rem] p-5 shadow-[0_2px_40px_-10px_rgba(0,0,0,0.04)] border border-slate-100 dark:border-dark-border stagger-item delay-3">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-3">
                   <div>
-                    <Text as="h2" className="text-base font-bold text-slate-800 flex items-center gap-2">
-                      Of the Day <span className="px-3 py-1 bg-slate-100 rounded-full text-xs text-slate-500 font-normal">
+                    <Text as="h2" className="text-base font-bold text-slate-800 dark:text-dark-text flex items-center gap-2">
+                      Of the Day <span className="px-3 py-1 bg-slate-100 dark:bg-dark-bg rounded-full text-xs text-slate-500 dark:text-dark-muted font-normal">
                         <Text as="span">{selectedDateFormatted}</Text>
                       </span>
                     </Text>
-                    <Text className="text-slate-400 text-xs mt-0.5">Detailed breakdown of sales for the selected date</Text>
+                    <Text className="text-slate-400 dark:text-dark-muted text-xs mt-0.5">Detailed breakdown of sales for the selected date</Text>
                   </div>
 
-                  <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl">
-                    <Text as="span" className="text-xs text-slate-500 font-medium">Select Date:</Text>
+                  <div className="flex items-center gap-2 bg-slate-50 dark:bg-dark-bg border border-slate-200 dark:border-dark-border px-3 py-1.5 rounded-xl">
+                    <Text as="span" className="text-xs text-slate-500 dark:text-dark-muted font-medium">Select Date:</Text>
                     <input
                       type="date"
                       value={selectedDate}
                       onChange={(e) => setSelectedDate(e.target.value)}
-                      className="bg-transparent text-slate-700 font-semibold focus:outline-none text-xs cursor-pointer [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                      className="bg-transparent text-slate-700 dark:text-dark-text font-semibold focus:outline-none text-xs cursor-pointer [&::-webkit-calendar-picker-indicator]:cursor-pointer dark:invert dark:opacity-70"
                     />
                   </div>
                 </div>
 
                 <div className="flex flex-col md:flex-row gap-3 mb-4">
-                  <div className="flex-1 bg-[#F0F4FF] rounded-xl p-3 border border-blue-50">
-                    <Text as="h4" className="text-blue-800 text-[10px] font-bold uppercase tracking-wider mb-1">Daily Revenue</Text>
-                    <Text className="text-xl font-bold text-slate-800">฿{dailyRevenue.toLocaleString()}</Text>
+                  <div className="flex-1 bg-[#F0F4FF] dark:bg-blue-900/20 rounded-xl p-3 border border-blue-50 dark:border-blue-900/30">
+                    <Text as="h4" className="text-blue-800 dark:text-blue-400 text-[10px] font-bold uppercase tracking-wider mb-1">Daily Revenue</Text>
+                    <Text className="text-xl font-bold text-slate-800 dark:text-dark-text">฿{dailyRevenue.toLocaleString()}</Text>
                   </div>
-                  <div className="flex-1 bg-[#FFF8F0] rounded-xl p-3 border border-orange-50">
-                    <Text as="h4" className="text-orange-800 text-[10px] font-bold uppercase tracking-wider mb-1">Items Sold</Text>
-                    <Text className="text-xl font-bold text-slate-800">{dailyItemsSold}</Text>
+                  <div className="flex-1 bg-[#FFF8F0] dark:bg-orange-900/20 rounded-xl p-3 border border-orange-50 dark:border-orange-900/30">
+                    <Text as="h4" className="text-orange-800 dark:text-orange-400 text-[10px] font-bold uppercase tracking-wider mb-1">Items Sold</Text>
+                    <Text className="text-xl font-bold text-slate-800 dark:text-dark-text">{dailyItemsSold}</Text>
                   </div>
                 </div>
 
                 <div className="w-full overflow-x-auto">
-                  <div className="grid grid-cols-12 gap-4 px-4 py-2 bg-slate-50 rounded-xl text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 min-w-[500px]">
+                  <div className="grid grid-cols-12 gap-4 px-4 py-2 bg-slate-50 dark:bg-dark-bg rounded-xl text-xs font-bold text-slate-500 dark:text-dark-muted uppercase tracking-wider mb-2 min-w-[500px]">
                     <div className="col-span-2"><Text as="span">Time</Text></div>
                     <div className="col-span-4"><Text as="span">Product</Text></div>
                     <div className="col-span-1 text-center"><Text as="span">Tax</Text></div>
@@ -451,11 +451,11 @@ const Dashboard = () => {
                       {dailySales.map((sale, idx) => {
                         const product = products.find(p => p.id === sale.product_id);
                         return (
-                          <div key={idx} className="grid grid-cols-12 gap-4 px-4 py-3 hover:bg-slate-50 rounded-xl transition-colors items-center border-b border-slate-50 last:border-0 text-sm">
-                            <div className="col-span-2 font-mono text-slate-400">
+                          <div key={idx} className="grid grid-cols-12 gap-4 px-4 py-3 hover:bg-slate-50 dark:hover:bg-dark-bg/50 rounded-xl transition-colors items-center border-b border-slate-50 dark:border-dark-border last:border-0 text-sm">
+                            <div className="col-span-2 font-mono text-slate-400 dark:text-dark-muted">
                               <Text as="span">{new Date(sale.created_at).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })}</Text>
                             </div>
-                            <div className="col-span-4 font-medium text-slate-700 flex flex-col justify-center">
+                            <div className="col-span-4 font-medium text-slate-700 dark:text-dark-text flex flex-col justify-center">
                               <Text as="span">
                                 {product ? (
                                   <><span className="text-slate-400 text-xs mr-1 font-bold">[{product.sku}]</span>{product.name}</>
@@ -464,15 +464,15 @@ const Dashboard = () => {
                             </div>
                             <div className="col-span-1 text-center flex items-center justify-center">
                               {product && product.hasVat
-                                ? <span className="px-1.5 py-0.5 bg-purple-100 text-purple-600 rounded text-[10px] font-bold border border-purple-200">VAT</span>
-                                : <span className="px-1.5 py-0.5 bg-slate-100 text-slate-500 rounded text-[10px] border border-slate-200">No VAT</span>}
+                                ? <span className="px-1.5 py-0.5 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded text-[10px] font-bold border border-purple-200 dark:border-purple-800/50">VAT</span>
+                                : <span className="px-1.5 py-0.5 bg-slate-100 dark:bg-dark-bg text-slate-500 dark:text-dark-muted rounded text-[10px] border border-slate-200 dark:border-dark-border">No VAT</span>}
                             </div>
                             <div className="col-span-1 text-center">
-                              <span className="inline-block bg-slate-100 text-slate-600 px-2 py-1 rounded text-xs font-bold">
+                              <span className="inline-block bg-slate-100 dark:bg-dark-bg text-slate-600 dark:text-dark-text px-2 py-1 rounded text-xs font-bold">
                                 <Text as="span">x{sale.quantity}</Text>
                               </span>
                             </div>
-                            <div className="col-span-2 text-right font-bold text-emerald-600">
+                            <div className="col-span-2 text-right font-bold text-emerald-600 dark:text-emerald-400">
                               <Text as="span">฿{sale.total_price.toLocaleString()}</Text>
                             </div>
                             <div className="col-span-2 text-center">
@@ -481,7 +481,7 @@ const Dashboard = () => {
                                   setSaleToDelete(sale);
                                   setIsDeleteModalOpen(true);
                                 }}
-                                className="p-2 text-red-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-all cursor-pointer"
+                                className="p-2 text-red-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-full transition-all cursor-pointer"
                                 title="Delete Sale"
                               >
                                 <Trash2 size={16} />
@@ -514,11 +514,11 @@ const Dashboard = () => {
               {/* Inventory by Category */}
               <div
                 onClick={() => setIsAllCategoriesModalOpen(true)}
-                className="bg-white rounded-[2rem] p-5 border border-slate-100 shadow-sm flex flex-col hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.1)] transition-all duration-500 ease-out hover:-translate-y-2 cursor-pointer outline-none focus:outline-none active:scale-[0.98] select-none stagger-item delay-4"
+                className="bg-white dark:bg-dark-surface rounded-[2rem] p-5 border border-slate-100 dark:border-dark-border shadow-sm flex flex-col hover:shadow-xl dark:hover:shadow-none transition-all duration-500 ease-out hover:-translate-y-2 cursor-pointer outline-none focus:outline-none active:scale-[0.98] select-none stagger-item delay-4"
               >
                 <div className="mb-3">
-                  <Text as="h3" className="text-base font-bold text-slate-800">Inventory by Category</Text>
-                  <Text className="text-xs text-slate-400">Stock value distribution</Text>
+                  <Text as="h3" className="text-base font-bold text-slate-800 dark:text-dark-text">Inventory by Category</Text>
+                  <Text className="text-xs text-slate-400 dark:text-dark-muted">Stock value distribution</Text>
                 </div>
 
                 {isLoading ? (
@@ -547,10 +547,10 @@ const Dashboard = () => {
                           </PieChart>
                         </ResponsiveContainer>
                         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                          <Text as="span" className="text-2xl font-bold text-slate-800">
+                          <Text as="span" className="text-2xl font-bold text-slate-800 dark:text-dark-text">
                             {totalStockValue > 0 ? Math.round((topCategory.value / totalStockValue) * 100) : 0}%
                           </Text>
-                          <Text as="span" className="text-xs text-slate-400">{topCategory.name}</Text>
+                          <Text as="span" className="text-xs text-slate-400 dark:text-dark-muted">{topCategory.name}</Text>
                         </div>
                       </div>
                     </div>
@@ -558,7 +558,7 @@ const Dashboard = () => {
                       {pieData.slice(0, 4).map((item) => (
                         <div
                           key={item.name}
-                          className="flex justify-between items-center text-xs hover:bg-slate-50 p-1.5 rounded-lg transition-colors cursor-pointer group/row"
+                          className="flex justify-between items-center text-xs hover:bg-slate-50 dark:hover:bg-dark-bg p-1.5 rounded-lg transition-colors cursor-pointer group/row"
                           onClick={(e) => {
                             e.stopPropagation();
                             setSelectedCategory(item.raw);
@@ -566,9 +566,9 @@ const Dashboard = () => {
                         >
                           <div className="flex items-center">
                             <div className="w-2.5 h-2.5 rounded-full mr-2" style={{ backgroundColor: item.color }}></div>
-                            <Text as="span" className="text-slate-600">{item.name}</Text>
+                            <Text as="span" className="text-slate-600 dark:text-dark-muted">{item.name}</Text>
                           </div>
-                          <Text as="span" className="font-bold text-slate-800">฿{item.value.toLocaleString()}</Text>
+                          <Text as="span" className="font-bold text-slate-800 dark:text-dark-text">฿{item.value.toLocaleString()}</Text>
                         </div>
                       ))}
                     </div>
@@ -579,11 +579,11 @@ const Dashboard = () => {
               </div>
 
               {/* Sales Trends Chart */}
-              <div className="bg-white rounded-[2rem] p-5 border border-slate-100 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.1)] transition-all duration-500 ease-out hover:-translate-y-2 cursor-pointer flex-1 stagger-item delay-5">
+              <div className="bg-white dark:bg-dark-surface rounded-[2rem] p-5 border border-slate-100 dark:border-dark-border shadow-sm hover:shadow-xl dark:hover:shadow-none transition-all duration-500 ease-out hover:-translate-y-2 cursor-pointer flex-1 stagger-item delay-5">
                 <div className="flex justify-between items-start mb-3">
                   <div>
-                    <Text as="h3" className="text-base font-bold text-slate-800">Sales Trends</Text>
-                    <Text className="text-xs text-slate-400">
+                    <Text as="h3" className="text-base font-bold text-slate-800 dark:text-dark-text">Sales Trends</Text>
+                    <Text className="text-xs text-slate-400 dark:text-dark-muted">
                       {new Date(chartDays[0]).toLocaleDateString('th-TH', { day: 'numeric', month: 'short' })} - {new Date(chartDays[chartDays.length - 1]).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' })}
                     </Text>
                   </div>
@@ -804,10 +804,10 @@ const Dashboard = () => {
                 </div>
 
                 {/* Footer */}
-                <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex-shrink-0">
+                <div className="px-6 py-4 bg-slate-50 dark:bg-dark-bg border-t border-slate-100 dark:border-dark-border flex-shrink-0">
                   <div className="flex justify-between items-center mb-4">
-                    <Text className="text-slate-500 font-medium text-xs">Total Inventory Value</Text>
-                    <Text className="text-xl font-black text-slate-900">฿{totalStockValue.toLocaleString()}</Text>
+                    <Text className="text-slate-500 dark:text-dark-muted font-medium text-xs">Total Inventory Value</Text>
+                    <Text className="text-xl font-black text-slate-900 dark:text-dark-text">฿{totalStockValue.toLocaleString()}</Text>
                   </div>
                   <button
                     onClick={() => setIsAllCategoriesModalOpen(false)}
@@ -831,13 +831,13 @@ const Dashboard = () => {
                 onClick={() => !isDeleting && setIsDeleteModalOpen(false)}
               ></div>
 
-              <div className="relative bg-white rounded-[2rem] shadow-2xl w-full max-w-sm overflow-hidden border border-slate-100 animate-in fade-in zoom-in duration-200 flex flex-col">
+              <div className="relative bg-white dark:bg-dark-surface rounded-[2rem] shadow-2xl w-full max-w-sm overflow-hidden border border-slate-100 dark:border-dark-border animate-in fade-in zoom-in duration-200 flex flex-col">
                 <div className="px-8 pt-8 pb-6 flex flex-col items-center text-center">
-                  <div className="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mb-4">
+                  <div className="w-16 h-16 bg-red-50 dark:bg-red-950/30 text-red-500 dark:text-red-400 rounded-full flex items-center justify-center mb-4">
                     <Trash2 size={32} />
                   </div>
-                  <Text as="h3" className="font-bold text-xl text-slate-900 mb-2">Are you sure?</Text>
-                  <Text className="text-slate-500 text-sm px-2">
+                  <Text as="h3" className="font-bold text-xl text-slate-900 dark:text-dark-text mb-2">Are you sure?</Text>
+                  <Text className="text-slate-500 dark:text-dark-muted text-sm px-2">
                     Do you really want to delete this sale record? This action will restore the stock for the item.
                   </Text>
                 </div>
@@ -881,17 +881,17 @@ const Dashboard = () => {
 // Reusable Soft Card Component
 const SoftCard = ({ title, value, subLabel, icon: Icon, iconColor, iconBg, subLabelColor = "text-slate-400", iconSize = 20, iconStrokeWidth }) => {
   return (
-    <div className="relative bg-white rounded-[2rem] p-4 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-slate-100 h-28 flex flex-col justify-between transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-xl cursor-pointer">
+    <div className="relative bg-white dark:bg-dark-surface rounded-[2rem] p-4 shadow-sm border border-slate-100 dark:border-dark-border h-28 flex flex-col justify-between transition-all duration-500 ease-out hover:-translate-y-2 hover:shadow-xl dark:hover:shadow-none cursor-pointer">
       <div className="absolute top-0 right-0 p-4">
-        <div className={`p-2 rounded-xl ${iconBg} ${iconColor} shadow-sm`}>
+        <div className={`p-2 rounded-xl ${iconBg} ${iconColor} shadow-sm dark:shadow-none dark:bg-slate-800`}>
           <Icon size={iconSize} strokeWidth={iconStrokeWidth} />
         </div>
       </div>
       <div>
-        <Text as="h3" className="text-slate-500 text-xs font-medium mb-1">{title}</Text>
-        <Text className="text-xl font-bold text-slate-800 tracking-tight">{value}</Text>
+        <Text as="h3" className="text-slate-500 dark:text-dark-muted text-xs font-medium mb-1">{title}</Text>
+        <Text className="text-xl font-bold text-slate-800 dark:text-dark-text tracking-tight">{value}</Text>
       </div>
-      <Text className={`text-xs font-semibold ${subLabelColor}`}>{subLabel}</Text>
+      <Text className={`text-xs font-semibold ${subLabelColor} dark:opacity-80`}>{subLabel}</Text>
     </div>
   );
 };

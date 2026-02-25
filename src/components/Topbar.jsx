@@ -43,7 +43,7 @@ const Topbar = ({ darkMode, setDarkMode }) => {
         {/* --- ฝั่งซ้าย: โลโก้และชื่อแบรนด์ --- */}
         <div className="flex items-center gap-3">
           {/* ไอคอน S */}
-          <div className="flex items-center justify-center w-[42px] h-[42px] bg-[#141b2c] dark:bg-gray-800 rounded-xl text-white font-serif italic text-2xl shadow-sm">
+          <div className="flex items-center justify-center w-[42px] h-[42px] bg-[#141b2c] dark:bg-blue-600 rounded-xl text-white font-serif italic text-2xl shadow-sm transition-colors">
             S
           </div>
 
@@ -133,7 +133,7 @@ const Topbar = ({ darkMode, setDarkMode }) => {
           {/* Hamburger Menu Button (Mobile) */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-xl text-gray-600 hover:bg-slate-100 transition-colors cursor-pointer"
+            className="md:hidden p-2 rounded-xl text-gray-600 dark:text-dark-muted hover:bg-slate-100 dark:hover:bg-dark-bg transition-colors cursor-pointer"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>

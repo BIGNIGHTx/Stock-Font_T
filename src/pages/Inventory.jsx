@@ -330,8 +330,8 @@ const Inventory = () => {
   // ==================== RENDER ====================
 
   return (
-    <div className="min-h-screen bg-[#F3F5F9] font-sans flex flex-col items-center">
-      <div className="w-full max-w-[1280px] p-4 md:p-6 text-slate-700 pb-10">
+    <div className="min-h-screen bg-[#F3F5F9] dark:bg-dark-bg font-sans flex flex-col items-center transition-colors duration-300">
+      <div className="w-full max-w-[1280px] p-4 md:p-6 text-slate-700 dark:text-dark-text pb-10">
 
         {/* ===== HEADER ===== */}
         {currentView === 'products' ? (
@@ -339,18 +339,18 @@ const Inventory = () => {
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setCurrentView('categories')}
-                className="p-3 bg-white rounded-xl shadow-sm border border-slate-200 hover:bg-slate-50 transition-all text-slate-600 cursor-pointer"
+                className="p-3 bg-white dark:bg-dark-surface rounded-xl shadow-sm border border-slate-200 dark:border-dark-border hover:bg-slate-50 dark:hover:bg-dark-bg transition-all text-slate-600 dark:text-dark-muted cursor-pointer"
               >
                 <ArrowLeft size={20} />
               </button>
               <div>
-                <Text as="h2" className="text-2xl font-bold text-slate-900">{`${activeCategory} Stock`}</Text>
-                <Text className="text-slate-500 text-sm mt-0.5">Manage your inventory</Text>
+                <Text as="h2" className="text-2xl font-bold text-slate-900 dark:text-dark-text">{`${activeCategory} Stock`}</Text>
+                <Text className="text-slate-500 dark:text-dark-muted text-sm mt-0.5">Manage your inventory</Text>
               </div>
             </div>
             <button
               onClick={() => { resetForm(); setIsModalOpen(true); }}
-              className="flex items-center px-6 py-3 bg-[#1e293b] text-white rounded-xl font-semibold shadow-lg shadow-slate-300 hover:bg-slate-800 transition-all transform active:scale-95 cursor-pointer"
+              className="flex items-center px-6 py-3 bg-[#1e293b] dark:bg-blue-600 text-white rounded-xl font-semibold shadow-lg shadow-slate-300 dark:shadow-none hover:bg-slate-800 dark:hover:bg-blue-500 transition-all transform active:scale-[0.98] cursor-pointer"
             >
               <Plus size={18} className="mr-2" /> <Text as="span">Add Product</Text>
             </button>
@@ -358,15 +358,15 @@ const Inventory = () => {
         ) : (
           <div className="relative flex items-center justify-center mb-5 min-h-[90px] stagger-item delay-1">
             <div className="text-center">
-              <h1 className="text-2xl sm:text-3xl font-display font-medium text-slate-900 mb-2 tracking-tight">
+              <h1 className="text-2xl sm:text-3xl font-display font-medium text-slate-900 dark:text-dark-text mb-2 tracking-tight">
                 Inventory <span className="text-[#D4AF37] italic font-serif">Categories</span>
               </h1>
               <div className="flex items-center justify-center gap-4 mb-2">
-                <div className="h-[1px] w-8 bg-slate-300"></div>
+                <div className="h-[1px] w-8 bg-slate-300 dark:bg-dark-border"></div>
                 <div className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]"></div>
-                <div className="h-[1px] w-8 bg-slate-300"></div>
+                <div className="h-[1px] w-8 bg-slate-300 dark:bg-dark-border"></div>
               </div>
-              <p className="text-slate-500 text-sm leading-relaxed font-body max-w-xl mx-auto">
+              <p className="text-slate-500 dark:text-dark-muted text-sm leading-relaxed font-body max-w-xl mx-auto">
                 Browse through our premium collection of household essentials.
               </p>
             </div>
@@ -399,7 +399,7 @@ const Inventory = () => {
                     setStockFilter('all');
                     setVatFilter('all');
                   }}
-                  className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 cursor-pointer border border-transparent hover:border-slate-100 relative"
+                  className="group bg-white dark:bg-dark-surface rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 cursor-pointer border border-transparent dark:border-dark-border hover:border-slate-100 dark:hover:border-slate-700 relative"
                 >
                   {/* Edit/Delete — ซ่อนสำหรับ All Products */}
                   {cat.id !== 'all_products' && (
@@ -431,10 +431,10 @@ const Inventory = () => {
                     </div>
                   </div>
 
-                  <div className="p-5 bg-white">
+                  <div className="p-5 bg-white dark:bg-dark-surface">
                     <div className="w-8 h-[2px] bg-primary mb-3 group-hover:w-12 transition-all duration-500"></div>
-                    <h3 className="text-base font-display font-bold text-slate-900 mb-0.5">{cat.name}</h3>
-                    <p className="text-xs font-body text-slate-700 font-medium">{cat.thai}</p>
+                    <h3 className="text-base font-display font-bold text-slate-900 dark:text-dark-text mb-0.5">{cat.name}</h3>
+                    <p className="text-xs font-body text-slate-700 dark:text-dark-muted font-medium">{cat.thai}</p>
                   </div>
                 </div>
               );
@@ -492,41 +492,41 @@ const Inventory = () => {
                 value={summaryData.greenStock.toString()}
                 subLabel="ปกติ (พร้อมขาย)"
                 icon={CheckCircle}
-                iconColor="text-emerald-600"
-                iconBg="bg-emerald-50"
+                iconColor="text-emerald-600 dark:text-emerald-400"
+                iconBg="bg-emerald-50 dark:bg-emerald-900/30"
               />
               <SoftCard
                 title="Red Stock"
                 value={summaryData.redStock.toString()}
                 subLabel="สต็อกต่ำ (ควรเติม)"
                 icon={AlertCircle}
-                iconColor="text-rose-600"
-                iconBg="bg-rose-50"
+                iconColor="text-rose-600 dark:text-rose-400"
+                iconBg="bg-rose-50 dark:bg-rose-900/30"
               />
               <SoftCard
                 title="VAT Only"
                 value={summaryData.vatCount.toString()}
                 subLabel="สินค้ามี VAT"
                 icon={Tag}
-                iconColor="text-purple-600"
-                iconBg="bg-purple-50"
+                iconColor="text-purple-600 dark:text-purple-400"
+                iconBg="bg-purple-50 dark:bg-purple-900/30"
               />
               <SoftCard
                 title="No VAT"
                 value={summaryData.noVatCount.toString()}
                 subLabel="สินค้าไม่มี VAT"
                 icon={Tag}
-                iconColor="text-slate-600"
-                iconBg="bg-slate-50"
+                iconColor="text-slate-600 dark:text-dark-muted"
+                iconBg="bg-slate-50 dark:bg-dark-surface"
               />
             </div>
 
             {/* Search & Filters */}
-            <div className="bg-white p-3 rounded-[2rem] border border-slate-100 shadow-sm mb-4 flex flex-col xl:flex-row gap-3 items-center">
+            <div className="bg-white dark:bg-dark-surface p-3 rounded-[2rem] border border-slate-100 dark:border-dark-border shadow-sm mb-4 flex flex-col xl:flex-row gap-3 items-center">
               <div className="relative flex-1 w-full">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-dark-muted" size={18} />
                 <input type="text" placeholder={`Search in ${activeCategory}...`}
-                  className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-transparent focus:bg-white focus:border-blue-200 rounded-xl outline-none transition-colors"
+                  className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-dark-bg border border-transparent focus:bg-white dark:focus:bg-dark-surface focus:border-blue-200 dark:focus:border-blue-500 rounded-xl outline-none transition-colors text-slate-700 dark:text-dark-text"
                   value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
               </div>
               <div className="flex flex-wrap gap-3 w-full xl:w-auto justify-center">
@@ -554,9 +554,9 @@ const Inventory = () => {
             </div>
 
             {/* Product Table */}
-            <div className="bg-white rounded-[2rem] p-6 shadow-sm border border-slate-100 overflow-hidden">
-              <table className="w-full text-left text-sm text-slate-600">
-                <thead className="bg-slate-50 border-b border-slate-100 text-slate-500 font-semibold uppercase text-xs">
+            <div className="bg-white dark:bg-dark-surface rounded-[2rem] p-6 shadow-sm border border-slate-100 dark:border-dark-border transition-colors duration-300 overflow-hidden">
+              <table className="w-full text-left text-sm text-slate-600 dark:text-dark-muted">
+                <thead className="bg-slate-50 dark:bg-dark-bg border-b border-slate-100 dark:border-dark-border text-slate-500 dark:text-dark-muted font-semibold uppercase text-xs">
                   <tr>
                     <th className="px-4 py-3">Name</th>
                     <th className="px-4 py-3">SKU</th>
@@ -565,17 +565,17 @@ const Inventory = () => {
                     <th className="px-4 py-3 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-slate-100 dark:divide-dark-border transition-colors">
                   {filteredProducts.length > 0 ? filteredProducts.map(p => (
-                    <tr key={p.id} className="hover:bg-slate-50 transition-colors group">
-                      <td className="px-4 py-3 font-bold text-slate-800 group-hover:text-blue-600">{p.name}</td>
-                      <td className="px-4 py-3 font-mono text-slate-500">{p.sku}</td>
+                    <tr key={p.id} className="hover:bg-slate-50 dark:hover:bg-dark-bg transition-colors group">
+                      <td className="px-4 py-3 font-bold text-slate-800 dark:text-dark-text group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{p.name}</td>
+                      <td className="px-4 py-3 font-mono text-slate-500 dark:text-dark-muted">{p.sku}</td>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
-                          <span className="font-bold text-slate-700">฿{p.price.toLocaleString()}</span>
+                          <span className="font-bold text-slate-700 dark:text-dark-text">฿{p.price.toLocaleString()}</span>
                           {p.hasVat
-                            ? <span className="px-2 py-0.5 rounded-md bg-purple-100 text-purple-600 text-[10px] font-bold">VAT</span>
-                            : <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-400 text-[10px]">No VAT</span>
+                            ? <span className="px-2 py-0.5 rounded-md bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-400 text-[10px] font-bold border border-purple-200 dark:border-purple-800/50">VAT</span>
+                            : <span className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-dark-bg text-slate-400 dark:text-dark-muted text-[10px] border border-slate-200 dark:border-dark-border">No VAT</span>
                           }
                         </div>
                       </td>
@@ -583,8 +583,8 @@ const Inventory = () => {
                         <Badge variant={p.stock >= 5 ? 'emerald' : 'rose'} className="w-8 text-center inline-block">{p.stock}</Badge>
                       </td>
                       <td className="px-4 py-3 text-right flex justify-end gap-2">
-                        <button onClick={() => handleEdit(p)} className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-full cursor-pointer"><Edit3 size={18} /></button>
-                        <button onClick={() => handleDelete(p.id)} className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-full cursor-pointer"><Trash2 size={18} /></button>
+                        <button onClick={() => handleEdit(p)} className="p-2 text-slate-400 dark:text-dark-muted hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-full cursor-pointer transition-colors"><Edit3 size={18} /></button>
+                        <button onClick={() => handleDelete(p.id)} className="p-2 text-slate-400 dark:text-dark-muted hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-full cursor-pointer transition-colors"><Trash2 size={18} /></button>
                       </td>
                     </tr>
                   )) : (
@@ -599,29 +599,29 @@ const Inventory = () => {
         {/* ===== MODAL: ADD / EDIT PRODUCT ===== */}
         {isModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center animate-fade-in">
-            <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => setIsModalOpen(false)}></div>
-            <div className="relative bg-white rounded-[2rem] shadow-2xl w-full max-w-lg overflow-hidden animate-slide-up border border-slate-100">
-              <div className="px-8 py-6 border-b border-slate-100 flex justify-between items-center bg-white">
-                <Text as="h3" className="font-bold text-xl text-slate-800">{editingId ? 'Edit Product' : 'Add New Product'}</Text>
-                <button onClick={() => setIsModalOpen(false)} className="cursor-pointer"><X size={24} className="text-slate-400 hover:text-slate-600" /></button>
+            <div className="absolute inset-0 bg-slate-900/40 dark:bg-black/60 backdrop-blur-sm" onClick={() => setIsModalOpen(false)}></div>
+            <div className="relative bg-white dark:bg-dark-surface rounded-[2rem] shadow-2xl w-full max-w-lg overflow-hidden animate-slide-up border border-slate-100 dark:border-dark-border">
+              <div className="px-8 py-6 border-b border-slate-100 dark:border-dark-border flex justify-between items-center bg-white dark:bg-dark-surface">
+                <Text as="h3" className="font-bold text-xl text-slate-800 dark:text-dark-text">{editingId ? 'Edit Product' : 'Add New Product'}</Text>
+                <button onClick={() => setIsModalOpen(false)} className="cursor-pointer"><X size={24} className="text-slate-400 hover:text-slate-600 dark:hover:text-dark-text transition-colors" /></button>
               </div>
               <div className="p-8 space-y-6">
                 <div>
-                  <Text as="label" className="block text-sm font-medium text-slate-700 mb-2">Product Name (Include Brand)</Text>
+                  <Text as="label" className="block text-sm font-medium text-slate-700 dark:text-dark-muted mb-2">Product Name (Include Brand)</Text>
                   <input type="text" placeholder="e.g. Samsung TV 55 Inch"
-                    className="w-full p-3 border rounded-xl bg-slate-50 outline-none focus:bg-white focus:ring-2 ring-blue-100"
+                    className="w-full p-3 border border-slate-200 dark:border-dark-border rounded-xl bg-slate-50 dark:bg-dark-bg text-slate-700 dark:text-dark-text outline-none focus:bg-white dark:focus:bg-dark-bg focus:ring-2 ring-blue-100 dark:ring-blue-900/30 transition-all"
                     value={newProduct.name} onChange={e => setNewProduct({ ...newProduct, name: e.target.value })} />
                 </div>
                 <div className="grid grid-cols-2 gap-6">
                   <div>
-                    <Text as="label" className="block text-sm font-medium text-slate-700 mb-2">SKU</Text>
+                    <Text as="label" className="block text-sm font-medium text-slate-700 dark:text-dark-muted mb-2">SKU</Text>
                     <input type="text" placeholder="SKU-001"
-                      className="w-full p-3 border rounded-xl bg-slate-50 outline-none focus:bg-white focus:ring-2 ring-blue-100"
+                      className="w-full p-3 border border-slate-200 dark:border-dark-border rounded-xl bg-slate-50 dark:bg-dark-bg text-slate-700 dark:text-dark-text outline-none focus:bg-white dark:focus:bg-dark-bg focus:ring-2 ring-blue-100 dark:ring-blue-900/30 transition-all"
                       value={newProduct.sku} onChange={e => setNewProduct({ ...newProduct, sku: e.target.value })} />
                   </div>
                   <div>
-                    <Text as="label" className="block text-sm font-medium text-slate-700 mb-2">Category</Text>
-                    <select className="w-full p-3 border rounded-xl bg-slate-50 outline-none focus:bg-white focus:ring-2 ring-blue-100"
+                    <Text as="label" className="block text-sm font-medium text-slate-700 dark:text-dark-muted mb-2">Category</Text>
+                    <select className="w-full p-3 border border-slate-200 dark:border-dark-border rounded-xl bg-slate-50 dark:bg-dark-bg text-slate-700 dark:text-dark-text outline-none focus:bg-white dark:focus:bg-dark-bg focus:ring-2 ring-blue-100 dark:ring-blue-900/30 transition-all cursor-pointer"
                       value={newProduct.category} onChange={e => setNewProduct({ ...newProduct, category: e.target.value })}>
                       {categories.filter(c => c.id !== 'all_products').map(c =>
                         <option key={c.id} value={c.name}>{c.name}</option>
@@ -630,39 +630,39 @@ const Inventory = () => {
                   </div>
                 </div>
                 <div>
-                  <Text as="label" className="block text-sm font-medium text-slate-700 mb-2">Tax Type (VAT)</Text>
-                  <div className="flex gap-4 p-1 bg-slate-50 rounded-xl border border-slate-200">
+                  <Text as="label" className="block text-sm font-medium text-slate-700 dark:text-dark-muted mb-2">Tax Type (VAT)</Text>
+                  <div className="flex gap-4 p-1 bg-slate-50 dark:bg-dark-bg rounded-xl border border-slate-200 dark:border-dark-border">
                     <button onClick={() => setNewProduct({ ...newProduct, hasVat: false })}
-                      className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all cursor-pointer ${!newProduct.hasVat ? 'bg-white shadow-sm text-slate-800 border border-slate-100' : 'text-slate-400 hover:text-slate-600'}`}>
+                      className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all cursor-pointer ${!newProduct.hasVat ? 'bg-white dark:bg-dark-surface shadow-sm text-slate-800 dark:text-dark-text border border-slate-100 dark:border-dark-border' : 'text-slate-400 dark:text-dark-muted hover:text-slate-600 dark:hover:text-dark-text'}`}>
                       No VAT (ราคาปกติ)
                     </button>
                     <button onClick={() => setNewProduct({ ...newProduct, hasVat: true })}
-                      className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all cursor-pointer ${newProduct.hasVat ? 'bg-purple-500 shadow-md text-white' : 'text-slate-400 hover:text-slate-600'}`}>
+                      className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-all cursor-pointer ${newProduct.hasVat ? 'bg-purple-500 shadow-md text-white' : 'text-slate-400 dark:text-dark-muted hover:text-purple-600 dark:hover:text-purple-400'}`}>
                       VAT Included (มี VAT)
                     </button>
                   </div>
                 </div>
                 <div className="grid grid-cols-3 gap-4">
                   <div>
-                    <Text as="label" className="block text-sm font-medium text-slate-700 mb-2">Price</Text>
-                    <input type="number" className="w-full p-3 border rounded-xl bg-slate-50 outline-none focus:bg-white focus:ring-2 ring-blue-100"
+                    <Text as="label" className="block text-sm font-medium text-slate-700 dark:text-dark-muted mb-2">Price</Text>
+                    <input type="number" className="w-full p-3 border border-slate-200 dark:border-dark-border rounded-xl bg-slate-50 dark:bg-dark-bg text-slate-700 dark:text-dark-text outline-none focus:bg-white dark:focus:bg-dark-bg focus:ring-2 ring-blue-100 dark:ring-blue-900/30 transition-all"
                       value={newProduct.price} onChange={e => setNewProduct({ ...newProduct, price: e.target.value })} />
                   </div>
                   <div>
-                    <Text as="label" className="block text-sm font-medium text-slate-700 mb-2">Cost</Text>
-                    <input type="number" className="w-full p-3 border rounded-xl bg-slate-50 outline-none focus:bg-white focus:ring-2 ring-blue-100"
+                    <Text as="label" className="block text-sm font-medium text-slate-700 dark:text-dark-muted mb-2">Cost</Text>
+                    <input type="number" className="w-full p-3 border border-slate-200 dark:border-dark-border rounded-xl bg-slate-50 dark:bg-dark-bg text-slate-700 dark:text-dark-text outline-none focus:bg-white dark:focus:bg-dark-bg focus:ring-2 ring-blue-100 dark:ring-blue-900/30 transition-all"
                       value={newProduct.cost_price} onChange={e => setNewProduct({ ...newProduct, cost_price: e.target.value })} />
                   </div>
                   <div>
-                    <Text as="label" className="block text-sm font-medium text-slate-700 mb-2">Stock</Text>
-                    <input type="number" className="w-full p-3 border rounded-xl bg-slate-50 outline-none focus:bg-white focus:ring-2 ring-blue-100"
+                    <Text as="label" className="block text-sm font-medium text-slate-700 dark:text-dark-muted mb-2">Stock</Text>
+                    <input type="number" className="w-full p-3 border border-slate-200 dark:border-dark-border rounded-xl bg-slate-50 dark:bg-dark-bg text-slate-700 dark:text-dark-text outline-none focus:bg-white dark:focus:bg-dark-bg focus:ring-2 ring-blue-100 dark:ring-blue-900/30 transition-all"
                       value={newProduct.stock} onChange={e => setNewProduct({ ...newProduct, stock: e.target.value })} />
                   </div>
                 </div>
               </div>
-              <div className="px-8 py-6 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">
-                <button onClick={() => setIsModalOpen(false)} className="px-6 py-3 text-slate-500 hover:bg-slate-200 rounded-xl font-bold cursor-pointer">Cancel</button>
-                <button onClick={handleSaveProduct} className="px-8 py-3 bg-[#1e293b] hover:bg-slate-800 text-white rounded-xl shadow-lg font-bold cursor-pointer">Save Product</button>
+              <div className="px-8 py-6 bg-slate-50 dark:bg-dark-bg border-t border-slate-100 dark:border-dark-border flex justify-end gap-3 transition-colors">
+                <button onClick={() => setIsModalOpen(false)} className="px-6 py-3 text-slate-500 dark:text-dark-muted hover:bg-slate-200 dark:hover:bg-dark-surface rounded-xl font-bold cursor-pointer transition-colors">Cancel</button>
+                <button onClick={handleSaveProduct} className="px-8 py-3 bg-[#1e293b] dark:bg-blue-600 hover:bg-slate-800 dark:hover:bg-blue-500 text-white rounded-xl shadow-lg font-bold cursor-pointer transition-all active:scale-[0.98]">Save Product</button>
               </div>
             </div>
           </div>
@@ -671,44 +671,44 @@ const Inventory = () => {
         {/* ===== MODAL: ADD / EDIT CATEGORY ===== */}
         {isCatModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center animate-fade-in">
-            <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => { setIsCatModalOpen(false); setEditingCatId(null); }}></div>
-            <div className="relative bg-white rounded-[2rem] shadow-2xl w-full max-w-md overflow-hidden animate-slide-up border border-slate-100">
-              <div className="px-8 py-6 border-b border-slate-100 flex justify-between items-center">
+            <div className="absolute inset-0 bg-slate-900/40 dark:bg-black/60 backdrop-blur-sm" onClick={() => { setIsCatModalOpen(false); setEditingCatId(null); }}></div>
+            <div className="relative bg-white dark:bg-dark-surface rounded-[2rem] shadow-2xl w-full max-w-md overflow-hidden animate-slide-up border border-slate-100 dark:border-dark-border">
+              <div className="px-8 py-6 border-b border-slate-100 dark:border-dark-border flex justify-between items-center bg-white dark:bg-dark-surface">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-[#1e293b] flex items-center justify-center">
+                  <div className="w-9 h-9 rounded-xl bg-[#1e293b] dark:bg-blue-600 flex items-center justify-center">
                     <Tag size={16} className="text-white" />
                   </div>
-                  <h3 className="font-bold text-xl text-slate-800">
+                  <h3 className="font-bold text-xl text-slate-800 dark:text-dark-text">
                     {editingCatId ? 'Edit Category' : 'Add Category'}
                   </h3>
                 </div>
                 <button onClick={() => { setIsCatModalOpen(false); setEditingCatId(null); }} className="cursor-pointer">
-                  <X size={24} className="text-slate-400 hover:text-slate-600" />
+                  <X size={24} className="text-slate-400 hover:text-slate-600 dark:hover:text-dark-text transition-colors" />
                 </button>
               </div>
               <div className="p-8 space-y-5">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-dark-muted mb-2">
                     Category Name <span className="text-slate-400">(English)</span>
                   </label>
                   <input type="text" placeholder="e.g. Air Conditioner"
-                    className="w-full p-3 border rounded-xl bg-slate-50 outline-none focus:bg-white focus:ring-2 ring-blue-100 transition-all"
+                    className="w-full p-3 border border-slate-200 dark:border-dark-border rounded-xl bg-slate-50 dark:bg-dark-bg text-slate-700 dark:text-dark-text outline-none focus:bg-white dark:focus:bg-dark-bg focus:ring-2 ring-blue-100 dark:ring-blue-900/30 transition-all"
                     value={newCat.name} onChange={e => setNewCat({ ...newCat, name: e.target.value })} />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">ชื่อภาษาไทย</label>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-dark-muted mb-2">ชื่อภาษาไทย</label>
                   <input type="text" placeholder="เช่น เครื่องปรับอากาศ"
-                    className="w-full p-3 border rounded-xl bg-slate-50 outline-none focus:bg-white focus:ring-2 ring-blue-100 transition-all"
+                    className="w-full p-3 border border-slate-200 dark:border-dark-border rounded-xl bg-slate-50 dark:bg-dark-bg text-slate-700 dark:text-dark-text outline-none focus:bg-white dark:focus:bg-dark-bg focus:ring-2 ring-blue-100 dark:ring-blue-900/30 transition-all"
                     value={newCat.thai} onChange={e => setNewCat({ ...newCat, thai: e.target.value })} />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-dark-muted mb-2">
                     Image URL <span className="text-slate-400">(optional)</span>
                   </label>
                   <input type="text" placeholder="https://..."
-                    className="w-full p-3 border rounded-xl bg-slate-50 outline-none focus:bg-white focus:ring-2 ring-blue-100 transition-all"
+                    className="w-full p-3 border border-slate-200 dark:border-dark-border rounded-xl bg-slate-50 dark:bg-dark-bg text-slate-700 dark:text-dark-text outline-none focus:bg-white dark:focus:bg-dark-bg focus:ring-2 ring-blue-100 dark:ring-blue-900/30 transition-all"
                     value={newCat.image} onChange={e => setNewCat({ ...newCat, image: e.target.value })} />
-                  <p className="text-xs text-slate-400 mt-1.5">หากไม่กรอก จะใช้รูป default</p>
+                  <p className="text-xs text-slate-400 dark:text-dark-muted mt-1.5">หากไม่กรอก จะใช้รูป default</p>
                 </div>
                 {newCat.image && (
                   <div className="rounded-xl overflow-hidden h-24 border border-slate-100">
@@ -717,13 +717,13 @@ const Inventory = () => {
                   </div>
                 )}
               </div>
-              <div className="px-8 py-5 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">
+              <div className="px-8 py-5 bg-slate-50 dark:bg-dark-bg border-t border-slate-100 dark:border-dark-border flex justify-end gap-3 transition-colors">
                 <button onClick={() => { setIsCatModalOpen(false); setEditingCatId(null); }}
-                  className="px-6 py-2.5 text-slate-500 hover:bg-slate-200 rounded-xl font-semibold transition-all cursor-pointer">
+                  className="px-6 py-2.5 text-slate-500 dark:text-dark-muted hover:bg-slate-200 dark:hover:bg-dark-surface rounded-xl font-semibold transition-all cursor-pointer">
                   Cancel
                 </button>
                 <button onClick={handleSaveCategory}
-                  className="px-8 py-2.5 bg-[#1e293b] hover:bg-slate-700 text-white rounded-xl shadow font-semibold transition-all active:scale-95 cursor-pointer">
+                  className="px-8 py-2.5 bg-[#1e293b] dark:bg-blue-600 hover:bg-slate-700 dark:hover:bg-blue-500 text-white rounded-xl shadow font-semibold transition-all active:scale-95 cursor-pointer">
                   {editingCatId ? 'Save Changes' : 'Add Category'}
                 </button>
               </div>
@@ -734,26 +734,26 @@ const Inventory = () => {
         {/* ===== MODAL: ADD BRAND ===== */}
         {isBrandModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center animate-fade-in">
-            <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={() => setIsBrandModalOpen(false)}></div>
-            <div className="relative bg-white rounded-[2rem] shadow-2xl w-full max-w-sm overflow-hidden animate-slide-up border border-slate-100">
-              <div className="px-8 py-6 border-b border-slate-100 flex justify-between items-center">
-                <h3 className="font-bold text-lg text-slate-800">Add Brand</h3>
+            <div className="absolute inset-0 bg-slate-900/40 dark:bg-black/60 backdrop-blur-sm" onClick={() => setIsBrandModalOpen(false)}></div>
+            <div className="relative bg-white dark:bg-dark-surface rounded-[2rem] shadow-2xl w-full max-w-sm overflow-hidden animate-slide-up border border-slate-100 dark:border-dark-border">
+              <div className="px-8 py-6 border-b border-slate-100 dark:border-dark-border flex justify-between items-center bg-white dark:bg-dark-surface">
+                <h3 className="font-bold text-lg text-slate-800 dark:text-dark-text">Add Brand</h3>
                 <button onClick={() => setIsBrandModalOpen(false)} className="cursor-pointer">
-                  <X size={22} className="text-slate-400 hover:text-slate-600" />
+                  <X size={22} className="text-slate-400 hover:text-slate-600 dark:hover:text-dark-text transition-colors" />
                 </button>
               </div>
               <div className="p-8">
-                <label className="block text-sm font-medium text-slate-700 mb-2">Brand Name</label>
+                <label className="block text-sm font-medium text-slate-700 dark:text-dark-muted mb-2">Brand Name</label>
                 <input type="text" placeholder="e.g. Sony"
-                  className="w-full p-3 border rounded-xl bg-slate-50 outline-none focus:bg-white focus:ring-2 ring-blue-100 transition-all"
+                  className="w-full p-3 border border-slate-200 dark:border-dark-border rounded-xl bg-slate-50 dark:bg-dark-bg text-slate-700 dark:text-dark-text outline-none focus:bg-white dark:focus:bg-dark-bg focus:ring-2 ring-blue-100 dark:ring-blue-900/30 transition-all"
                   value={newBrandName}
                   onChange={e => setNewBrandName(e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && handleAddBrand()}
                   autoFocus />
-                <p className="text-xs text-slate-400 mt-2">กด Enter หรือปุ่ม Add Brand เพื่อเพิ่ม</p>
+                <p className="text-xs text-slate-400 dark:text-dark-muted mt-2">กด Enter หรือปุ่ม Add Brand เพื่อเพิ่ม</p>
               </div>
-              <div className="px-8 py-5 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">
-                <button onClick={() => setIsBrandModalOpen(false)} className="px-5 py-2.5 text-slate-500 hover:bg-slate-200 rounded-xl font-semibold transition-all cursor-pointer">Cancel</button>
+              <div className="px-8 py-5 bg-slate-50 dark:bg-dark-bg border-t border-slate-100 dark:border-dark-border flex justify-end gap-3 transition-colors">
+                <button onClick={() => setIsBrandModalOpen(false)} className="px-5 py-2.5 text-slate-500 dark:text-dark-muted hover:bg-slate-200 dark:hover:bg-dark-surface rounded-xl font-semibold transition-all cursor-pointer">Cancel</button>
                 <button onClick={handleAddBrand} className="px-7 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow font-semibold transition-all active:scale-95 cursor-pointer">Add Brand</button>
               </div>
             </div>
@@ -768,19 +768,19 @@ const Inventory = () => {
 // Reusable Soft Card Component (Same as Reports)
 const SoftCard = ({ title, value, subLabel, icon: Icon, iconColor, iconBg, subLabelColor = "text-slate-500" }) => {
   return (
-    <div className="relative bg-white rounded-[2rem] p-4 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] h-28 flex flex-col justify-between transition-all duration-500 ease-out hover:-translate-y-1 hover:shadow-lg cursor-pointer">
+    <div className="relative bg-white dark:bg-dark-surface rounded-[2rem] p-4 shadow-sm border border-slate-100 dark:border-dark-border h-28 flex flex-col justify-between transition-all duration-500 ease-out hover:-translate-y-1 hover:shadow-lg dark:hover:shadow-none cursor-pointer">
       <div className="absolute top-0 right-0 p-4">
-        <div className={`p-2 rounded-xl ${iconBg} ${iconColor} shadow-sm`}>
+        <div className={`p-2 rounded-xl ${iconBg} ${iconColor} shadow-sm dark:shadow-none`}>
           <Icon size={18} />
         </div>
       </div>
 
       <div>
-        <Text as="h3" className="text-slate-500 text-[10px] font-bold uppercase tracking-wider mb-1">{title}</Text>
-        <Text className="text-xl font-bold text-slate-800 tracking-tight truncate pr-10">{value}</Text>
+        <Text as="h3" className="text-slate-500 dark:text-dark-muted text-[10px] font-bold uppercase tracking-wider mb-1">{title}</Text>
+        <Text className="text-xl font-bold text-slate-800 dark:text-dark-text tracking-tight truncate pr-10">{value}</Text>
       </div>
 
-      <Text className={`text-[10px] font-bold ${subLabelColor}`}>
+      <Text className={`text-[10px] font-bold ${subLabelColor} dark:opacity-80`}>
         {subLabel}
       </Text>
     </div>
