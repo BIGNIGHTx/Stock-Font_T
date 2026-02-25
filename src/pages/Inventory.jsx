@@ -330,7 +330,7 @@ const Inventory = () => {
   // ==================== RENDER ====================
 
   return (
-    <div className="min-h-screen bg-[#F3F5F9] dark:bg-dark-bg font-sans flex flex-col items-center transition-colors duration-300">
+    <div className="min-h-screen bg-slate-50 dark:bg-dark-bg font-sans flex flex-col items-center transition-colors duration-300">
       <div className="w-full max-w-[1280px] p-4 md:p-6 text-slate-700 dark:text-dark-text pb-10">
 
         {/* ===== HEADER ===== */}
@@ -350,7 +350,7 @@ const Inventory = () => {
             </div>
             <button
               onClick={() => { resetForm(); setIsModalOpen(true); }}
-              className="flex items-center px-6 py-3 bg-[#1e293b] dark:bg-blue-600 text-white rounded-xl font-semibold shadow-lg shadow-slate-300 dark:shadow-none hover:bg-slate-800 dark:hover:bg-blue-500 transition-all transform active:scale-[0.98] cursor-pointer"
+              className="flex items-center px-6 py-3 bg-[#1e293b] dark:bg-dark-surface dark:border dark:border-dark-border text-white rounded-xl font-semibold shadow-lg shadow-slate-300 dark:shadow-none hover:bg-slate-800 dark:hover:bg-dark-bg transition-all transform active:scale-[0.98] cursor-pointer"
             >
               <Plus size={18} className="mr-2" /> <Text as="span">Add Product</Text>
             </button>
@@ -464,7 +464,7 @@ const Inventory = () => {
                   <div
                     onClick={() => setBrandFilter(brand.name)}
                     className={`flex items-center px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-all duration-200 border cursor-pointer select-none
-                      ${brandFilter === brand.name ? 'bg-blue-600 text-white border-blue-600 shadow-md' : 'bg-white text-slate-600 border-slate-200 hover:border-blue-400 hover:bg-blue-50'}`}
+                      ${brandFilter === brand.name ? 'bg-blue-600 text-white border-blue-600 dark:bg-dark-bg dark:border-dark-border shadow-md' : 'bg-white text-slate-600 border-slate-200 dark:bg-dark-surface dark:text-dark-muted dark:border-dark-border hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-dark-bg'}`}
                   >
                     {brand.name}
                   </div>
@@ -717,9 +717,9 @@ const Inventory = () => {
                   </div>
                 )}
               </div>
-              <div className="px-8 py-5 bg-slate-50 dark:bg-dark-bg border-t border-slate-100 dark:border-dark-border flex justify-end gap-3 transition-colors">
+              <div className="px-8 py-5 bg-slate-50 dark:bg-dark-surface border-t border-slate-100 dark:border-dark-border flex justify-end gap-3 transition-colors">
                 <button onClick={() => { setIsCatModalOpen(false); setEditingCatId(null); }}
-                  className="px-6 py-2.5 text-slate-500 dark:text-dark-muted hover:bg-slate-200 dark:hover:bg-dark-surface rounded-xl font-semibold transition-all cursor-pointer">
+                  className="px-6 py-2.5 text-slate-500 dark:text-dark-muted hover:bg-slate-200 dark:hover:bg-dark-bg rounded-xl font-semibold transition-all cursor-pointer">
                   Cancel
                 </button>
                 <button onClick={handleSaveCategory}

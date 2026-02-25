@@ -4,11 +4,11 @@
 @variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-dark-bg: #0b0f1a;
-  --color-dark-surface: #141b2c;
-  --color-dark-border: #1e293b;
-  --color-dark-text: #f8fafc;
-  --color-dark-muted: #94a3b8;
+  --color-dark-bg: #0d0d0d;
+  --color-dark-surface: #181818;
+  --color-dark-border: #262626;
+  --color-dark-text: #ececec;
+  --color-dark-muted: #9ca3af;
 }
 
 /* Standard CSS for reliability & Ultra Maximum Performance */
@@ -57,9 +57,15 @@
 }
 
 @layer base {
+
+  html,
+  body {
+    @apply transition-colors duration-300;
+  }
+
   body {
     font-family: 'Inter', sans-serif;
-    @apply text-slate-900 dark:text-slate-100 font-normal;
+    @apply bg-gray-50 text-slate-900 dark:bg-dark-bg dark:text-slate-100 font-normal min-h-screen;
   }
 }
 
@@ -84,4 +90,41 @@
 
 .dark ::-webkit-scrollbar-thumb {
   background: #475569;
+}
+
+/* --- Brand Animations --- */
+@keyframes shine {
+  0% {
+    background-position: -200% center;
+  }
+
+  100% {
+    background-position: 200% center;
+  }
+}
+
+@keyframes glow-pulse {
+
+  0%,
+  100% {
+    filter: drop-shadow(0 0 2px rgba(100, 108, 255, 0.3));
+  }
+
+  50% {
+    filter: drop-shadow(0 0 8px rgba(100, 108, 255, 0.8));
+  }
+}
+
+.animate-electric {
+  background: linear-gradient(90deg,
+      #646cff 0%,
+      #9b5cf6 25%,
+      #d4af37 50%,
+      #9b5cf6 75%,
+      #646cff 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 4s linear infinite, glow-pulse 3s ease-in-out infinite;
+  display: inline-block;
 }

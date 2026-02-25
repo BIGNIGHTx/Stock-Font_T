@@ -179,7 +179,7 @@ const Sales = () => {
 
     return (
         /* ===== Outer wrapper — centered, same bg ===== */
-        <div className="min-h-screen bg-[#F3F5F9] dark:bg-dark-bg font-sans flex justify-center transition-colors duration-300">
+        <div className="min-h-screen bg-slate-50 dark:bg-dark-bg font-sans flex justify-center transition-colors duration-300">
             <div className="w-full max-w-[1280px] px-6 py-4 md:px-10 md:py-5 text-slate-700 dark:text-dark-text">
 
                 {/* Header */}
@@ -223,8 +223,8 @@ const Sales = () => {
                                         onClick={() => { setSelectedCategory(cat.id); setSelectedProductId(''); setProductSearchTerm(''); }}
                                         className={`px-4 py-2 rounded-xl text-sm font-semibold whitespace-nowrap transition-all border cursor-pointer
                                         ${selectedCategory === cat.id
-                                                ? 'bg-slate-800 dark:bg-blue-600 text-white border-slate-800 dark:border-blue-600 shadow-md'
-                                                : 'bg-slate-50 dark:bg-dark-bg text-slate-500 dark:text-dark-muted border-slate-100 dark:border-dark-border hover:bg-slate-100 dark:hover:bg-dark-surface'}`}
+                                                ? 'bg-slate-800 dark:bg-dark-bg text-white border-slate-800 dark:border-dark-border shadow-md'
+                                                : 'bg-slate-50 dark:bg-dark-surface text-slate-500 dark:text-dark-muted border-slate-100 dark:border-dark-border hover:bg-slate-100 dark:hover:bg-dark-bg'}`}
                                     >
                                         {cat.label}
                                     </button>

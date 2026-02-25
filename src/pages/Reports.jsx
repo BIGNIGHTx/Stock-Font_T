@@ -156,7 +156,7 @@ const Reports = () => {
 
 
   return (
-    <div className="min-h-screen bg-[#F3F5F9] dark:bg-dark-bg font-sans flex flex-col items-center transition-colors duration-300">
+    <div className="min-h-screen bg-slate-50 dark:bg-dark-bg font-sans flex flex-col items-center transition-colors duration-300">
       <div className="w-full max-w-[1280px] p-4 md:p-6 text-slate-700 dark:text-dark-text">
         {/* Header */}
         <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4 mb-5 stagger-item delay-1">
@@ -188,7 +188,7 @@ const Reports = () => {
             <div className="flex bg-white dark:bg-dark-surface p-1 rounded-xl shadow-sm border border-slate-200 dark:border-dark-border transition-colors">
               <button
                 onClick={() => setFilterVat('all')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 cursor-pointer ${filterVat === 'all' ? 'bg-slate-800 dark:bg-blue-600 text-white shadow-sm' : 'text-slate-500 dark:text-dark-muted hover:bg-slate-50 dark:hover:bg-dark-bg'}`}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 cursor-pointer ${filterVat === 'all' ? 'bg-slate-800 dark:bg-dark-bg text-white shadow-sm' : 'text-slate-500 dark:text-dark-muted hover:bg-slate-50 dark:hover:bg-dark-surface'}`}
               >
                 All
               </button>

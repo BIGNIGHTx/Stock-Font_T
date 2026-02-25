@@ -43,17 +43,19 @@ const Topbar = ({ darkMode, setDarkMode }) => {
         {/* --- ฝั่งซ้าย: โลโก้และชื่อแบรนด์ --- */}
         <div className="flex items-center gap-3">
           {/* ไอคอน S */}
-          <div className="flex items-center justify-center w-[42px] h-[42px] bg-[#141b2c] dark:bg-blue-600 rounded-xl text-white font-serif italic text-2xl shadow-sm transition-colors">
+          <div className="flex items-center justify-center w-[42px] h-[42px] bg-[#0a0a0a] dark:bg-dark-bg rounded-xl text-white font-serif italic text-2xl shadow-sm transition-colors border border-transparent dark:border-dark-border">
             S
           </div>
 
           {/* ข้อความแบรนด์ */}
           <div className="flex flex-col">
-            <div className="text-[20px] font-bold leading-tight">
-              <span className="text-gray-900 dark:text-dark-text">SomBoon </span>
-              <span className="text-[#646cff] dark:text-blue-400">Electric</span>
+            <div className="flex items-baseline gap-1 leading-tight">
+              <span className="text-[20px] font-bold text-gray-900 dark:text-dark-text">SomBoon </span>
+              <span className="text-[24px] font-black italic font-display animate-electric tracking-tighter">
+                Electric
+              </span>
             </div>
-            <div className="text-[10px] font-semibold text-gray-400 dark:text-gray-500 tracking-[0.22em] mt-[2px]">
+            <div className="text-[10px] font-semibold text-gray-400 dark:text-gray-500 tracking-[0.22em] mt-0.5">
               STOCK MANAGEMENT
             </div>
           </div>
@@ -69,8 +71,8 @@ const Topbar = ({ darkMode, setDarkMode }) => {
                 key={item.id}
                 onClick={() => handleNav(item.path)}
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-[15px] transition-colors cursor-pointer ${isActive
-                  ? 'bg-[#f0f4f8] dark:bg-slate-800 text-gray-800 dark:text-gray-100 font-semibold'
-                  : 'text-[#64748b] dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-slate-800'
+                  ? 'bg-[#f0f4f8] dark:bg-dark-bg text-gray-800 dark:text-gray-100 font-semibold shadow-inner'
+                  : 'text-[#64748b] dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-dark-bg'
                   }`}
               >
                 <Icon strokeWidth={2} className="w-[18px] h-[18px]" />
@@ -111,7 +113,7 @@ const Topbar = ({ darkMode, setDarkMode }) => {
             <button className="relative hover:text-gray-700 dark:hover:text-gray-200 transition-colors cursor-pointer">
               <Bell className="w-5 h-5" />
               {/* จุดแจ้งเตือนสีแดง */}
-              <span className="absolute top-[2px] right-[2px] w-2 h-2 bg-[#ef4444] rounded-full border border-white dark:border-dark-surface"></span>
+              <span className="absolute top-[2px] right-[2px] w-2 h-2 bg-[#ef4444] rounded-full border border-white dark:border-dark-bg"></span>
             </button>
 
             <button className="hover:text-gray-700 dark:hover:text-gray-200 transition-colors cursor-pointer hidden sm:block">

@@ -178,7 +178,7 @@ const Dashboard = () => {
   });
 
   return (
-    <div className="min-h-screen bg-[#F3F5F9] font-sans flex flex-col items-center">
+    <div className="min-h-screen bg-slate-50 dark:bg-dark-bg font-sans flex flex-col items-center transition-colors duration-300">
 
       {/* ================= Toast Notification ================= */}
       {toast && (
@@ -204,14 +204,14 @@ const Dashboard = () => {
       )}
 
       <div className="w-full max-w-[1280px] flex flex-col">
-        <div className="flex-1 bg-[#F3F5F9] dark:bg-dark-bg p-4 md:p-6 text-slate-700 transition-colors duration-300">
+        <div className="flex-1 p-4 md:p-6 text-slate-700 dark:text-dark-text transition-colors duration-300">
 
           {/* ================= Header Section ================= */}
           <header className="relative mb-8 mt-2 perspective-1000 stagger-item delay-1">
             {/* 3D Floor Shadow */}
             <div className="absolute inset-x-10 -bottom-3 h-6 bg-slate-900/10 blur-xl rounded-full"></div>
 
-            <div className="relative flex flex-col md:flex-row justify-between items-start md:items-center p-5 bg-[#0f172a] border border-slate-800 rounded-[2rem] shadow-[0_20px_40px_-12px_rgba(0,0,0,0.6)] transform transition-transform duration-700 hover:rotate-x-1">
+            <div className="relative flex flex-col md:flex-row justify-between items-start md:items-center p-5 bg-[#0a0a0a] dark:bg-dark-surface border border-slate-800 dark:border-dark-border rounded-[2rem] shadow-[0_20px_40px_-12px_rgba(0,0,0,0.6)] transform transition-transform duration-700 hover:rotate-x-1">
               <div className="flex items-center gap-4">
                 {/* 3D Glowing Icon */}
                 <div className="relative shrink-0">
@@ -426,11 +426,11 @@ const Dashboard = () => {
                 </div>
 
                 <div className="flex flex-col md:flex-row gap-3 mb-4">
-                  <div className="flex-1 bg-[#F0F4FF] dark:bg-blue-900/20 rounded-xl p-3 border border-blue-50 dark:border-blue-900/30">
+                  <div className="flex-1 bg-[#F0F4FF] dark:bg-dark-bg rounded-xl p-3 border border-blue-50 dark:border-dark-border">
                     <Text as="h4" className="text-blue-800 dark:text-blue-400 text-[10px] font-bold uppercase tracking-wider mb-1">Daily Revenue</Text>
                     <Text className="text-xl font-bold text-slate-800 dark:text-dark-text">฿{dailyRevenue.toLocaleString()}</Text>
                   </div>
-                  <div className="flex-1 bg-[#FFF8F0] dark:bg-orange-900/20 rounded-xl p-3 border border-orange-50 dark:border-orange-900/30">
+                  <div className="flex-1 bg-[#FFF8F0] dark:bg-dark-bg rounded-xl p-3 border border-orange-50 dark:border-dark-border">
                     <Text as="h4" className="text-orange-800 dark:text-orange-400 text-[10px] font-bold uppercase tracking-wider mb-1">Items Sold</Text>
                     <Text className="text-xl font-bold text-slate-800 dark:text-dark-text">{dailyItemsSold}</Text>
                   </div>

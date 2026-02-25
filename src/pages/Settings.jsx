@@ -4,7 +4,7 @@ import { Text } from '../components/text';
 
 const Settings = ({ darkMode, setDarkMode }) => {
     return (
-        <div className="min-h-screen bg-[#F3F5F9] dark:bg-dark-bg transition-colors duration-300">
+        <div className="min-h-screen bg-slate-50 dark:bg-dark-bg transition-colors duration-300">
             <div className="p-8 max-w-4xl mx-auto space-y-8">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 stagger-item delay-1">
                     <div>
@@ -36,7 +36,7 @@ const Settings = ({ darkMode, setDarkMode }) => {
                                 onChange={() => setDarkMode(!darkMode)}
                                 className="sr-only peer"
                             />
-                            <div className="w-14 h-7 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300/30 dark:peer-focus:ring-blue-800/30 rounded-full peer dark:bg-dark-bg peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-dark-border peer-checked:bg-blue-600"></div>
+                            <div className="w-14 h-7 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300/30 dark:peer-focus:ring-blue-800/30 rounded-full peer dark:bg-dark-surface peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-dark-border peer-checked:bg-blue-600"></div>
                         </label>
                     </div>
                 </div>
