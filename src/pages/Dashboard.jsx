@@ -266,7 +266,7 @@ const Dashboard = () => {
                   <Text className="text-xl font-black text-white font-mono tracking-tighter drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
                     {currentDateTime.toLocaleTimeString('th-TH', { hour12: false })}
                   </Text>
-                  <Text className="text-xs font-bold text-blue-300/90 uppercase tracking-wide">{formattedDate}</Text>
+                  <Text className="text-xs font-bold text-slate-400 uppercase tracking-wide">{formattedDate}</Text>
                 </div>
 
                 <div className="flex gap-3">
