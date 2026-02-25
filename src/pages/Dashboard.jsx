@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import dashImg from '../assets/dashr.png';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import {
@@ -215,8 +216,12 @@ const Dashboard = () => {
                 {/* 3D Glowing Icon */}
                 <div className="relative shrink-0">
                   <div className="absolute inset-0 bg-blue-500 blur-xl opacity-30 animate-pulse"></div>
-                  <div className="relative w-12 h-12 bg-gradient-to-br from-[#3b82f6] to-[#1d4ed8] rounded-xl flex items-center justify-center shadow-[0_8px_16px_rgba(59,130,246,0.3),inset_0_2px_4px_rgba(255,255,255,0.4)] transform -rotate-3 hover:rotate-0 transition-transform duration-500">
-                    <TrendingUp className="text-white w-7 h-7 drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]" />
+                  <div className="relative w-12 h-12 flex items-center justify-center transform -rotate-3 hover:rotate-0 transition-transform duration-500">
+                    <img
+                      src={dashImg}
+                      alt="Dashboard"
+                      className="w-full h-full object-contain"
+                    />
                   </div>
                 </div>
 
@@ -226,12 +231,10 @@ const Dashboard = () => {
                       __html: `
                       @keyframes colorCycle {
                         0% { color: #ef4444; }   /* Red */
-                        14% { color: #fbbf24; }  /* Yellow */
-                        28% { color: #f97316; }  /* Orange */
-                        42% { color: #ea580c; }  /* Deep Orange/แสด */
-                        56% { color: #a855f7; }  /* Purple */
-                        70% { color: #2563eb; }  /* Blue */
-                        84% { color: #06b6d4; }  /* Light Blue/Cyan */
+                        20% { color: #fbbf24; }  /* Yellow */
+                        40% { color: #a855f7; }  /* Purple */
+                        60% { color: #2563eb; }  /* Blue */
+                        80% { color: #06b6d4; }  /* Light Blue/Cyan */
                         100% { color: #ef4444; } /* Back to Red */
                       }
                       .animate-dashboard-text {

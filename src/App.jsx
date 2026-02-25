@@ -29,15 +29,28 @@ function App() {
     }
   }, [darkMode]);
 
-  // Scroll to top on route change
+  // Force scroll to top on every mount (for browser refresh)
   useEffect(() => {
-    window.scrollTo(0, 0);
-    // Also scroll the main container if it's the one with overflow
-    const mainElement = document.querySelector('main');
-    if (mainElement) {
-      mainElement.scrollTop = 0;
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
     }
-  }, [location.pathname]);
+  }, []);
+
+  // Scroll to top on route change (including key change for re-clicks)
+  useEffect(() => {
+    const resetScroll = () => {
+      window.scrollTo(0, 0);
+      const mainElement = document.querySelector('main');
+      if (mainElement) {
+        mainElement.scrollTop = 0;
+      }
+    };
+
+    resetScroll();
+    // Use a small delay for smoother interaction with animations
+    const timer = setTimeout(resetScroll, 50);
+    return () => clearTimeout(timer);
+  }, [location.key]);
 
   return (
     <div className="flex flex-col bg-gray-50 dark:bg-dark-bg min-h-screen font-sans transition-colors duration-300">
