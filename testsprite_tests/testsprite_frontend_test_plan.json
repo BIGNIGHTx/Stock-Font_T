@@ -1,0 +1,782 @@
+[
+  {
+    "id": "TC001",
+    "title": "Dashboard shows core KPI sections on initial load",
+    "description": "Verifies the Dashboard renders visible KPI areas for sales and inventory at a glance.",
+    "category": "Dashboard",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the Dashboard page using the application's default entry URL."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Total Sales\" is visible."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Sales Today\" is visible."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Inventory Value\" is visible."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Low Stock\" is visible."
+      }
+    ]
+  },
+  {
+    "id": "TC002",
+    "title": "Dashboard shows Recent Activity section",
+    "description": "Verifies the Dashboard includes a visible Recent Activity area for transactions and alerts.",
+    "category": "Dashboard",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the Dashboard page using the application's default entry URL."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Recent Activity\" is visible."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Recent Activity list\" is visible."
+      }
+    ]
+  },
+  {
+    "id": "TC003",
+    "title": "Dashboard displays numeric values for KPIs (not blank)",
+    "description": "Verifies KPI tiles/cards display visible values rather than empty placeholders.",
+    "category": "Dashboard",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the Dashboard page using the application's default entry URL."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Total Sales value\" is visible."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Sales Today value\" is visible."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Inventory Value value\" is visible."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Low Stock value\" is visible."
+      }
+    ]
+  },
+  {
+    "id": "TC004",
+    "title": "Dashboard allows navigation to Inventory from a dashboard entry point",
+    "description": "Verifies a user can navigate from the Dashboard to the Inventory page using a visible UI control.",
+    "category": "Dashboard",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the Dashboard page using the application's default entry URL."
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Inventory\" in the main navigation/menu."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify page title contains \"Inventory\"."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"inventory\"."
+      }
+    ]
+  },
+  {
+    "id": "TC005",
+    "title": "Dashboard allows navigation to Sales from a dashboard entry point",
+    "description": "Verifies a user can navigate from the Dashboard to the Sales page using a visible UI control.",
+    "category": "Dashboard",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the Dashboard page using the application's default entry URL."
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Sales\" in the main navigation/menu."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify page title contains \"Sales\"."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"sales\"."
+      }
+    ]
+  },
+  {
+    "id": "TC006",
+    "title": "Dashboard allows navigation to Reports from a dashboard entry point",
+    "description": "Verifies a user can navigate from the Dashboard to the Reports page using a visible UI control.",
+    "category": "Dashboard",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the Dashboard page using the application's default entry URL."
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Reports\" in the main navigation/menu."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify page title contains \"Reports\"."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify URL contains \"reports\"."
+      }
+    ]
+  },
+  {
+    "id": "TC007",
+    "title": "Inventory page loads and shows inventory list UI",
+    "description": "Verifies the Inventory page can be opened and the inventory list area is visible.",
+    "category": "Inventory Management",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the Inventory page using the app’s main navigation menu item labeled \"Inventory\" (starting from the app’s initial landing page)."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify page title contains \"Inventory\"."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Inventory\" is visible."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Inventory list\" is visible."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Add product\" button is visible."
+      }
+    ]
+  },
+  {
+    "id": "TC008",
+    "title": "Add a new inventory product successfully",
+    "description": "Verifies a user can add a new product and see it appear in the inventory list.",
+    "category": "Inventory Management",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the Inventory page using the app’s main navigation menu item labeled \"Inventory\" (starting from the app’s initial landing page)."
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Add product\"."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Add product\" is visible."
+      },
+      {
+        "type": "action",
+        "description": "Type \"SKU-TS-1001\" into the \"SKU\" field."
+      },
+      {
+        "type": "action",
+        "description": "Type \"TestSprite Copper Wire\" into the \"Name\" field."
+      },
+      {
+        "type": "action",
+        "description": "Type \"25\" into the \"Quantity\" field."
+      },
+      {
+        "type": "action",
+        "description": "Type \"199.50\" into the \"Price\" field."
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Save\"."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"TestSprite Copper Wire\" is visible."
+      }
+    ]
+  },
+  {
+    "id": "TC009",
+    "title": "Validation error when adding product with missing Name",
+    "description": "Verifies the UI shows a visible validation message when the Name field is missing.",
+    "category": "Inventory Management",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the Inventory page using the app’s main navigation menu item labeled \"Inventory\" (starting from the app’s initial landing page)."
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Add product\"."
+      },
+      {
+        "type": "action",
+        "description": "Type \"SKU-TS-1002\" into the \"SKU\" field."
+      },
+      {
+        "type": "action",
+        "description": "Type \"10\" into the \"Quantity\" field."
+      },
+      {
+        "type": "action",
+        "description": "Type \"49.00\" into the \"Price\" field."
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Save\"."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"name is required\" is visible."
+      }
+    ]
+  },
+  {
+    "id": "TC010",
+    "title": "Edit an existing inventory product details",
+    "description": "Verifies a user can edit an item and see the updated value in the list.",
+    "category": "Inventory Management",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the Inventory page using the app’s main navigation menu item labeled \"Inventory\" (starting from the app’s initial landing page)."
+      },
+      {
+        "type": "action",
+        "description": "Click on the first visible \"Edit\" action for an item in the inventory list."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Edit product\" is visible."
+      },
+      {
+        "type": "action",
+        "description": "Type \"Updated Product Name\" into the \"Name\" field."
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Save\"."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Updated Product Name\" is visible."
+      }
+    ]
+  },
+  {
+    "id": "TC011",
+    "title": "Cancel editing an inventory product does not change list",
+    "description": "Verifies cancelling out of the edit flow does not apply changes.",
+    "category": "Inventory Management",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the Inventory page using the app’s main navigation menu item labeled \"Inventory\" (starting from the app’s initial landing page)."
+      },
+      {
+        "type": "action",
+        "description": "Click on the first visible inventory item name in the list to note it (do not edit yet)."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Inventory list\" is visible."
+      },
+      {
+        "type": "action",
+        "description": "Click on the first visible \"Edit\" action for an item in the inventory list."
+      },
+      {
+        "type": "action",
+        "description": "Type \"Name That Should Not Persist\" into the \"Name\" field."
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Cancel\"."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Name That Should Not Persist\" is not visible."
+      }
+    ]
+  },
+  {
+    "id": "TC012",
+    "title": "Delete an inventory product successfully",
+    "description": "Verifies a user can delete an item and it is removed from the visible inventory list.",
+    "category": "Inventory Management",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the Inventory page using the app’s main navigation menu item labeled \"Inventory\" (starting from the app’s initial landing page)."
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Add product\"."
+      },
+      {
+        "type": "action",
+        "description": "Type \"SKU-TS-DEL-01\" into the \"SKU\" field."
+      },
+      {
+        "type": "action",
+        "description": "Type \"Delete Me Item\" into the \"Name\" field."
+      },
+      {
+        "type": "action",
+        "description": "Type \"1\" into the \"Quantity\" field."
+      },
+      {
+        "type": "action",
+        "description": "Type \"1.00\" into the \"Price\" field."
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Save\"."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Delete Me Item\" is visible."
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Delete\" action for the item named \"Delete Me Item\"."
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Confirm\"."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Delete Me Item\" is not visible."
+      }
+    ]
+  },
+  {
+    "id": "TC013",
+    "title": "Open an inventory item details view from the list",
+    "description": "Verifies an item can be opened to a details view and key fields are visible.",
+    "category": "Inventory Management",
+    "priority": "Low",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the Inventory page using the app’s main navigation menu item labeled \"Inventory\" (starting from the app’s initial landing page)."
+      },
+      {
+        "type": "action",
+        "description": "Click on the first visible inventory item row (or its \"View\" action if present)."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Product details\" is visible."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"SKU\" is visible."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Name\" is visible."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Quantity\" is visible."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Price\" is visible."
+      }
+    ]
+  },
+  {
+    "id": "TC014",
+    "title": "Open Reports page and view Sales report section",
+    "description": "Verifies the Reports area is accessible and the Sales report UI is visible to the user.",
+    "category": "Reports (Sales & Inventory)",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the Reports page using the main navigation menu link labeled \"Reports\"."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify page title contains \"Reports\"."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Sales\" is visible."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Sales report date range\" is visible."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Generate Sales Report\" is visible."
+      }
+    ]
+  },
+  {
+    "id": "TC015",
+    "title": "Generate Sales report for a valid date range",
+    "description": "Verifies a Sales report can be generated for a valid start and end date and results are displayed.",
+    "category": "Reports (Sales & Inventory)",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the Reports page using the main navigation menu link labeled \"Reports\"."
+      },
+      {
+        "type": "action",
+        "description": "Type \"2026-02-01\" into the \"Sales start date\" field."
+      },
+      {
+        "type": "action",
+        "description": "Type \"2026-02-21\" into the \"Sales end date\" field."
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Generate Sales Report\"."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Sales report results\" is visible."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Total Sales\" is visible."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Total Orders\" is visible."
+      }
+    ]
+  },
+  {
+    "id": "TC016",
+    "title": "Sales report validation: start date is after end date",
+    "description": "Verifies the UI blocks generating a Sales report when the date range is invalid (start after end) and shows a visible validation message.",
+    "category": "Reports (Sales & Inventory)",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the Reports page using the main navigation menu link labeled \"Reports\"."
+      },
+      {
+        "type": "action",
+        "description": "Type \"2026-02-21\" into the \"Sales start date\" field."
+      },
+      {
+        "type": "action",
+        "description": "Type \"2026-02-01\" into the \"Sales end date\" field."
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Generate Sales Report\"."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"invalid date range\" is visible."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Sales report results\" is not visible."
+      }
+    ]
+  },
+  {
+    "id": "TC017",
+    "title": "Sales report validation: impossible calendar date input",
+    "description": "Verifies the UI handles an impossible date (e.g., Feb 30) by showing a visible error and not generating results.",
+    "category": "Reports (Sales & Inventory)",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the Reports page using the main navigation menu link labeled \"Reports\"."
+      },
+      {
+        "type": "action",
+        "description": "Type \"2026-02-30\" into the \"Sales start date\" field."
+      },
+      {
+        "type": "action",
+        "description": "Type \"2026-02-21\" into the \"Sales end date\" field."
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Generate Sales Report\"."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"invalid date\" is visible."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Sales report results\" is not visible."
+      }
+    ]
+  },
+  {
+    "id": "TC018",
+    "title": "Open Reports page and view Inventory report section",
+    "description": "Verifies the Inventory report UI is visible and includes an As-Of date control.",
+    "category": "Reports (Sales & Inventory)",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the Reports page using the main navigation menu link labeled \"Reports\"."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Inventory\" is visible."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Inventory as-of date\" is visible."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Generate Inventory Report\" is visible."
+      }
+    ]
+  },
+  {
+    "id": "TC019",
+    "title": "Generate Inventory report for a valid as-of date",
+    "description": "Verifies an Inventory report can be generated for a valid as-of date and summary results are displayed.",
+    "category": "Reports (Sales & Inventory)",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the Reports page using the main navigation menu link labeled \"Reports\"."
+      },
+      {
+        "type": "action",
+        "description": "Type \"2026-02-21\" into the \"Inventory as-of date\" field."
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Generate Inventory Report\"."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Inventory report results\" is visible."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Items in Stock\" is visible."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Low Stock\" is visible."
+      }
+    ]
+  },
+  {
+    "id": "TC020",
+    "title": "Inventory report error handling: generation failure message is shown",
+    "description": "Verifies the UI surfaces an Inventory report generation failure as a visible error message to the user.",
+    "category": "Reports (Sales & Inventory)",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the Reports page using the main navigation menu link labeled \"Reports\"."
+      },
+      {
+        "type": "action",
+        "description": "Type \"2026-02-21\" into the \"Inventory as-of date\" field."
+      },
+      {
+        "type": "action",
+        "description": "Click on \"Generate Inventory Report\"."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"report generation failed\" is visible."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Inventory report results\" is not visible."
+      }
+    ]
+  },
+  {
+    "id": "TC021",
+    "title": "View Settings page and verify default preference options are visible",
+    "description": "Verifies the Settings page loads and shows user preference controls for theme, locale/currency, and notifications.",
+    "category": "Settings",
+    "priority": "High",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the Settings page using the app’s main navigation (for example, click on \"Settings\" in the sidebar or menu)."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify page title contains \"Settings\"."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Theme\" is visible."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Dark\" is visible."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Light\" is visible."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Notifications\" is visible."
+      }
+    ]
+  },
+  {
+    "id": "TC022",
+    "title": "Toggle notifications setting and verify the toggle state updates",
+    "description": "Verifies the notifications preference can be toggled and the UI shows the updated state.",
+    "category": "Settings",
+    "priority": "Medium",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the Settings page using the app’s main navigation (for example, click on \"Settings\" in the sidebar or menu)."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Notifications\" is visible."
+      },
+      {
+        "type": "action",
+        "description": "Click on the notifications toggle control."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Notifications\" is visible."
+      },
+      {
+        "type": "action",
+        "description": "Click on the notifications toggle control again."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify element \"Notifications\" is visible."
+      }
+    ]
+  },
+  {
+    "id": "TC023",
+    "title": "Change locale/currency preference (if present) and verify selection is reflected",
+    "description": "Verifies a locale or currency setting can be changed and the selected option is shown on the Settings page.",
+    "category": "Settings",
+    "priority": "Low",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the Settings page using the app’s main navigation (for example, click on \"Settings\" in the sidebar or menu)."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Currency\" is visible."
+      },
+      {
+        "type": "action",
+        "description": "Select \"THB\" from the currency dropdown."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"THB\" is visible in the currency selection area."
+      },
+      {
+        "type": "action",
+        "description": "Select a different currency option from the currency dropdown."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the newly selected currency option text is visible in the currency selection area."
+      }
+    ]
+  },
+  {
+    "id": "TC024",
+    "title": "Invalid theme value is not accepted via UI controls (no unexpected option appears)",
+    "description": "Verifies the UI does not expose or display an invalid theme option and remains limited to supported themes.",
+    "category": "Settings",
+    "priority": "Low",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to the Settings page using the app’s main navigation (for example, click on \"Settings\" in the sidebar or menu)."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Theme\" is visible."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Light\" is visible."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Dark\" is visible."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"ultraviolet\" is not visible."
+      },
+      {
+        "type": "action",
+        "description": "Click on the \"Dark\" theme option."
+      },
+      {
+        "type": "assertion",
+        "description": "Verify text \"Dark\" is visible in the theme selection area."
+      }
+    ]
+  }
+]

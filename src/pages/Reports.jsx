@@ -40,7 +40,7 @@ const Reports = () => {
   const fetchSales = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get('http://127.0.0.1:8000/sales/');
+      const response = await axios.get('https://stock-back-t.onrender.com/sales/');
       // Sort by latest first
       const sorted = response.data.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
       setSalesData(sorted);
@@ -53,7 +53,7 @@ const Reports = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/products/');
+      const response = await axios.get('https://stock-back-t.onrender.com/products/');
       // Map products to ensure hasVat is consistent
       const mappedProducts = response.data.map(p => ({
         ...p,
@@ -71,7 +71,7 @@ const Reports = () => {
     if (!isConfirmed) return;
 
     try {
-      await axios.delete(`http://127.0.0.1:8000/sales/${saleId}`);
+      await axios.delete(`https://stock-back-t.onrender.com/sales/${saleId}`);
       // Remove from local state
       setSalesData(prev => prev.filter(s => s.id !== saleId));
       await alert("ลบรายการขายเรียบร้อยแล้ว", "สำเร็จ", "success");

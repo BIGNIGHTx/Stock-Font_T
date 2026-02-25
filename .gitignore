@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# VSCode MCP Config (มี API Key — ห้ามขึ้น Git)
+.vscode/mcp.json
+.vercel

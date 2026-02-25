@@ -56,9 +56,9 @@ const Dashboard = () => {
     const fetchData = async () => {
       try {
         const [productsRes, salesRes, inventoryRes] = await Promise.all([
-          axios.get('http://127.0.0.1:8000/products/'),
-          axios.get('http://127.0.0.1:8000/sales/'),
-          axios.get('http://127.0.0.1:8000/dashboard/inventory_by_category')
+          axios.get('https://stock-back-t.onrender.com/products/'),
+          axios.get('https://stock-back-t.onrender.com/sales/'),
+          axios.get('https://stock-back-t.onrender.com/dashboard/inventory_by_category')
         ]);
         const mappedProducts = productsRes.data.map(p => ({
           ...p,
@@ -79,9 +79,9 @@ const Dashboard = () => {
   const handleDeleteSale = async (saleId) => {
     setIsDeleting(true);
     try {
-      await axios.delete(`http://127.0.0.1:8000/sales/${saleId}`);
+      await axios.delete(`https://stock-back-t.onrender.com/sales/${saleId}`);
       setSales(prevSales => prevSales.filter(s => s.id !== saleId));
-      const productsRes = await axios.get('http://127.0.0.1:8000/products/');
+      const productsRes = await axios.get('https://stock-back-t.onrender.com/products/');
       setProducts(productsRes.data);
       setIsDeleteModalOpen(false);
       setSaleToDelete(null);

@@ -96,7 +96,7 @@ const Sales = () => {
 
     const fetchProducts = async () => {
         try {
-            const response = await axios.get('http://127.0.0.1:8000/products/');
+            const response = await axios.get('https://stock-back-t.onrender.com/products/');
             const mappedData = response.data.map(p => ({
                 ...p,
                 hasVat: p.has_vat !== undefined ? p.has_vat : (p.hasVat !== undefined ? p.hasVat : false)
@@ -109,7 +109,7 @@ const Sales = () => {
 
     const fetchSales = async () => {
         try {
-            const response = await axios.get('http://127.0.0.1:8000/sales/');
+            const response = await axios.get('https://stock-back-t.onrender.com/sales/');
             const sortedSales = response.data.sort((a, b) => {
                 const dateA = a.created_at || a.sale_date;
                 const dateB = b.created_at || b.sale_date;
@@ -156,7 +156,7 @@ const Sales = () => {
                 quantity: parseInt(quantity),
                 total_price: parseFloat(totalAmount)
             };
-            await axios.post('http://127.0.0.1:8000/sales/', saleData);
+            await axios.post('https://stock-back-t.onrender.com/sales/', saleData);
             setIsSuccess(true);
             setQuantity(1);
             setSelectedProductId('');

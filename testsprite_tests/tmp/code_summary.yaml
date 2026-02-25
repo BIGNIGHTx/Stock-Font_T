@@ -1,0 +1,43 @@
+version: "2"
+type: frontend
+tech_stack:
+  - language: JavaScript
+  - framework: React
+  - build_tool: Vite
+  - styling: TailwindCSS
+features:
+  - name: Dashboard Page
+    description: Displays key metrics and navigation to other pages
+    files:
+      - src/pages/Dashboard.jsx
+      - src/components/Topbar.jsx
+      - src/components/Sidebar.jsx
+    endpoints: []
+    depends_on: []
+  - name: Inventory Management
+    description: View and manage inventory items
+    files:
+      - src/pages/Inventory.jsx
+      - src/components/badge.jsx
+    endpoints: []
+    depends_on: []
+  - name: Sales Reporting
+    description: View sales reports and analytics
+    files:
+      - src/pages/Sales.jsx
+      - src/pages/Reports.jsx
+    endpoints: []
+    depends_on: []
+  - name: Settings
+    description: Configure application settings
+    files:
+      - src/pages/Settings.jsx
+    endpoints: []
+    depends_on: []
+known_limitations:
+  - issue: No authentication implemented
+    location: src/pages/Settings.jsx
+    impact: Settings accessible without login
+  - issue: No API integration for inventory
+    location: src/pages/Inventory.jsx
+    impact: Inventory data is static

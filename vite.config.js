@@ -15,6 +15,9 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+    preview: {
+      allowedHosts: ['undichotomously-oared-yamileth.ngrok-free.dev'] // ← เพิ่มบรรทัดนี้
+    },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

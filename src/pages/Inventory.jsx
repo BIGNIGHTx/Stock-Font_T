@@ -10,7 +10,7 @@ import { Text } from '../components/text';
 import { useAlert } from '../contexts/AlertContext';
 
 const DEFAULT_BRANDS = ['Samsung', 'LG', 'Mitsubishi', 'Sharp', 'Hitachi', 'Panasonic'];
-const API = 'http://127.0.0.1:8000';
+const API = 'https://stock-back-t.onrender.com';
 
 // "All Products" card เดียวที่ hardcode — ทุก category อื่นมาจาก DB ทั้งหมด
 const ALL_PRODUCTS_CARD = {
