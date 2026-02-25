@@ -259,24 +259,17 @@ const Dashboard = () => {
               </div>
 
               <div className="flex items-center gap-6 mt-4 md:mt-0">
-                <div className="flex flex-col items-end border-r border-slate-700 pr-6 hidden lg:block">
+                <div className="flex flex-col items-end hidden lg:block">
                   <Text className="text-xl font-black text-white font-mono tracking-tighter drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
                     {currentDateTime.toLocaleTimeString('th-TH', { hour12: false })}
                   </Text>
-                  <Text className="text-[9px] font-black text-blue-400 uppercase tracking-[0.2em]">{formattedDate}</Text>
+                  <Text className="text-xs font-bold text-blue-300/90 uppercase tracking-wide">{formattedDate}</Text>
                 </div>
 
                 <div className="flex gap-3">
-                  <button className="flex items-center gap-2 px-5 py-2.5 bg-slate-800/80 border border-slate-700 rounded-xl font-black text-white shadow-[0_8px_16px_rgba(0,0,0,0.3)] hover:bg-slate-700 transition-all active:scale-95 cursor-pointer text-xs group">
-                    <Download size={16} className="text-blue-400 group-hover:scale-125 transition-transform" />
+                  <button className="flex items-center gap-2 px-6 py-2.5 bg-emerald-600 border border-emerald-500 rounded-xl font-black text-white shadow-[0_8px_20px_rgba(16,185,129,0.3),inset_0_2px_4px_rgba(255,255,255,0.3)] hover:bg-emerald-500 hover:-translate-y-0.5 transition-all active:scale-95 cursor-pointer text-xs group">
+                    <Download size={16} className="text-white group-hover:scale-125 transition-transform" />
                     <span>EXPORT PDF</span>
-                  </button>
-                  <button
-                    onClick={() => navigate('/inventory?openAddModal=true')}
-                    className="relative flex items-center gap-2 px-6 py-2.5 bg-[#2563eb] text-white rounded-xl font-black shadow-[0_12px_24px_-8px_rgba(37,99,235,0.6),inset_0_2px_4px_rgba(255,255,255,0.4)] hover:bg-[#1d4ed8] hover:-translate-y-1 transition-all active:scale-95 cursor-pointer text-xs group"
-                  >
-                    <Plus size={16} strokeWidth={3} className="group-hover:rotate-90 transition-transform" />
-                    <span>ADD PRODUCT</span>
                   </button>
                 </div>
               </div>
