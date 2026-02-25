@@ -81,7 +81,7 @@ const Sales = () => {
     const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
     const [isSuccess, setIsSuccess] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    // eslint-disable-next-line no-undef
+    const [productSearchTerm, setProductSearchTerm] = useState('');
     const dropdownRef = React.useRef(null);
 
     useEffect(() => {
@@ -134,9 +134,14 @@ const Sales = () => {
         ...uniqueCats.map((cat, i) => ({ id: cat, label: cat, color: CAT_COLORS[i % CAT_COLORS.length] }))
     ];
 
-    const filteredProducts = selectedCategory === 'All'
+    const filteredProductsByCat = selectedCategory === 'All'
         ? products
         : products.filter(p => p.category === selectedCategory);
+
+    const filteredProducts = filteredProductsByCat.filter(p =>
+        p.name.toLowerCase().includes(productSearchTerm.toLowerCase()) ||
+        p.sku.toLowerCase().includes(productSearchTerm.toLowerCase())
+    );
 
     const selectedProduct = products.find(p => p.id === parseInt(selectedProductId));
     const totalAmount = selectedProduct ? (selectedProduct.price * quantity).toFixed(2) : '0.00';
@@ -193,7 +198,7 @@ const Sales = () => {
                     </span>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 stagger-item delay-2">
                     {/* Left Column: Input Form */}
                     <div className="lg:col-span-2 space-y-4">
                         <div className="bg-white p-5 rounded-[2rem] border border-slate-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)]">
@@ -215,7 +220,7 @@ const Sales = () => {
                                 {CATEGORIES.map(cat => (
                                     <button
                                         key={cat.id}
-                                        onClick={() => { setSelectedCategory(cat.id); setSelectedProductId(''); }}
+                                        onClick={() => { setSelectedCategory(cat.id); setSelectedProductId(''); setProductSearchTerm(''); }}
                                         className={`px-4 py-2 rounded-xl text-sm font-semibold whitespace-nowrap transition-all border cursor-pointer
                                         ${selectedCategory === cat.id
                                                 ? 'bg-slate-800 text-white border-slate-800 shadow-lg shadow-slate-200'
@@ -231,7 +236,7 @@ const Sales = () => {
                                 <Text as="label" className="block text-sm font-medium text-slate-700 mb-2">Select Product {selectedCategory !== 'All' && `(${selectedCategory})`}</Text>
 
                                 <div
-                                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                    onClick={() => { setIsDropdownOpen(!isDropdownOpen); if (!isDropdownOpen) setProductSearchTerm(''); }}
                                     className={`w-full pl-12 pr-4 py-4 bg-slate-50 border ${isDropdownOpen ? 'border-blue-500 ring-2 ring-blue-100' : 'border-slate-200'} rounded-2xl text-slate-800 text-lg outline-none cursor-pointer transition-all hover:bg-white flex items-center justify-between`}
                                 >
                                     <div className="flex items-center gap-2 overflow-hidden">
@@ -261,9 +266,11 @@ const Sales = () => {
                                             <input
                                                 type="text"
                                                 placeholder="Type to search..."
+                                                autoFocus
                                                 className="w-full px-4 py-2 bg-slate-50 rounded-xl text-sm outline-none border border-transparent focus:border-blue-200 focus:bg-white transition-all"
                                                 onClick={(e) => e.stopPropagation()}
-                                                onChange={(e) => { }}
+                                                value={productSearchTerm}
+                                                onChange={(e) => setProductSearchTerm(e.target.value)}
                                             />
                                         </div>
 
@@ -275,6 +282,7 @@ const Sales = () => {
                                                         setSelectedProductId(p.id.toString());
                                                         setQuantity(1);
                                                         setIsDropdownOpen(false);
+                                                        setProductSearchTerm('');
                                                     }
                                                 }}
                                                 className={`px-4 py-3 flex justify-between items-center cursor-pointer transition-colors border-b border-slate-50 last:border-0
@@ -303,7 +311,7 @@ const Sales = () => {
                                         ))}
 
                                         {filteredProducts.length === 0 && (
-                                            <div className="p-8 text-center text-slate-400 text-sm">No products found in this category</div>
+                                            <div className="p-8 text-center text-slate-400 text-sm">No products found</div>
                                         )}
                                     </div>
                                 )}

@@ -335,7 +335,7 @@ const Inventory = () => {
 
         {/* ===== HEADER ===== */}
         {currentView === 'products' ? (
-          <div className="flex justify-between items-center mb-6">
+          <div className="flex justify-between items-center mb-6 stagger-item delay-1">
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setCurrentView('categories')}
@@ -356,7 +356,7 @@ const Inventory = () => {
             </button>
           </div>
         ) : (
-          <div className="relative flex items-center justify-center mb-5 min-h-[90px]">
+          <div className="relative flex items-center justify-center mb-5 min-h-[90px] stagger-item delay-1">
             <div className="text-center">
               <h1 className="text-2xl sm:text-3xl font-display font-medium text-slate-900 mb-2 tracking-tight">
                 Inventory <span className="text-[#D4AF37] italic font-serif">Categories</span>
@@ -381,7 +381,7 @@ const Inventory = () => {
 
         {/* ===== VIEW 1: CATEGORY CARDS ===== */}
         {currentView === 'categories' && (
-          <div className="grid grid-cols-2 md:grid-cols-2 xl:grid-cols-4 gap-4 max-w-[1600px] w-full mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-2 xl:grid-cols-4 gap-4 max-w-[1600px] w-full mx-auto stagger-item delay-2">
             {categories.map((cat) => {
               const itemCount = cat.name === 'All Products'
                 ? products.length
@@ -444,7 +444,7 @@ const Inventory = () => {
 
         {/* ===== VIEW 2: PRODUCT LIST ===== */}
         {currentView === 'products' && (
-          <div>
+          <div className="stagger-item delay-2">
             {/* Brand Filter */}
             <div className="flex gap-2 mt-1 pt-3 mb-3 overflow-x-auto pb-2 scrollbar-hide items-center">
               <div
@@ -530,23 +530,23 @@ const Inventory = () => {
                   value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
               </div>
               <div className="flex flex-wrap gap-3 w-full xl:w-auto justify-center">
-                <div className="flex bg-slate-50 p-1 rounded-xl border border-slate-100">
+                <div className="flex bg-slate-50 p-1 rounded-xl">
                   <button onClick={() => setStockFilter(stockFilter === 'normal' ? 'all' : 'normal')}
-                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${stockFilter === 'normal' ? 'bg-white text-emerald-600 shadow-sm border border-slate-100' : 'text-slate-600 hover:text-slate-800'}`}>
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${stockFilter === 'normal' ? 'bg-white text-emerald-600 shadow-sm' : 'text-slate-600 hover:text-slate-800'}`}>
                     <CheckCircle size={14} /> Green Stock
                   </button>
                   <button onClick={() => setStockFilter(stockFilter === 'low' ? 'all' : 'low')}
-                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${stockFilter === 'low' ? 'bg-white text-rose-500 shadow-sm border border-slate-100' : 'text-slate-600 hover:text-slate-800'}`}>
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${stockFilter === 'low' ? 'bg-white text-rose-500 shadow-sm' : 'text-slate-600 hover:text-slate-800'}`}>
                     <AlertCircle size={14} /> Red Stock
                   </button>
                 </div>
-                <div className="flex bg-slate-50 p-1 rounded-xl border border-slate-100">
+                <div className="flex bg-slate-50 p-1 rounded-xl">
                   <button onClick={() => setVatFilter(vatFilter === 'vat' ? 'all' : 'vat')}
-                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${vatFilter === 'vat' ? 'bg-white text-purple-600 shadow-sm border border-slate-100' : 'text-slate-600 hover:text-slate-800'}`}>
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${vatFilter === 'vat' ? 'bg-white text-purple-600 shadow-sm' : 'text-slate-600 hover:text-slate-800'}`}>
                     VAT Only
                   </button>
                   <button onClick={() => setVatFilter(vatFilter === 'novat' ? 'all' : 'novat')}
-                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${vatFilter === 'novat' ? 'bg-white text-slate-600 shadow-sm border border-slate-100' : 'text-slate-600 hover:text-slate-800'}`}>
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${vatFilter === 'novat' ? 'bg-white text-slate-600 shadow-sm' : 'text-slate-600 hover:text-slate-800'}`}>
                     No VAT
                   </button>
                 </div>
@@ -574,8 +574,8 @@ const Inventory = () => {
                         <div className="flex items-center gap-2">
                           <span className="font-bold text-slate-700">฿{p.price.toLocaleString()}</span>
                           {p.hasVat
-                            ? <span className="px-2 py-0.5 rounded-md bg-purple-100 text-purple-600 text-[10px] font-bold border border-purple-200">VAT</span>
-                            : <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-400 text-[10px] border border-slate-200">No VAT</span>
+                            ? <span className="px-2 py-0.5 rounded-md bg-purple-100 text-purple-600 text-[10px] font-bold">VAT</span>
+                            : <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-400 text-[10px]">No VAT</span>
                           }
                         </div>
                       </td>
@@ -768,7 +768,7 @@ const Inventory = () => {
 // Reusable Soft Card Component (Same as Reports)
 const SoftCard = ({ title, value, subLabel, icon: Icon, iconColor, iconBg, subLabelColor = "text-slate-500" }) => {
   return (
-    <div className="relative bg-white rounded-[2rem] p-4 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-slate-100 h-28 flex flex-col justify-between transition-all duration-500 ease-out hover:-translate-y-1 hover:shadow-lg cursor-pointer">
+    <div className="relative bg-white rounded-[2rem] p-4 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] h-28 flex flex-col justify-between transition-all duration-500 ease-out hover:-translate-y-1 hover:shadow-lg cursor-pointer">
       <div className="absolute top-0 right-0 p-4">
         <div className={`p-2 rounded-xl ${iconBg} ${iconColor} shadow-sm`}>
           <Icon size={18} />

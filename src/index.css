@@ -5,22 +5,48 @@
 }
 
 /* Standard CSS for reliability & Ultra Maximum Performance */
-.page-transition-container {
-  animation: page-transition-animation 0.15s ease-out forwards;
-  will-change: opacity, transform;
-  backface-visibility: hidden;
-  transform: translateZ(0); 
+/* Page Transition System - Ultra Smooth & Gradual */
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-@keyframes page-transition-animation {
-  0% {
-    opacity: 0;
-    transform: scale(0.995);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
+.page-transition-container {
+  /* Global entry for the whole page */
+  animation: slideUpFade 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Staggered Entrance Utility Classes */
+.stagger-item {
+  opacity: 0;
+  animation: slideUpFade 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.delay-1 {
+  animation-delay: 0.1s;
+}
+
+.delay-2 {
+  animation-delay: 0.2s;
+}
+
+.delay-3 {
+  animation-delay: 0.3s;
+}
+
+.delay-4 {
+  animation-delay: 0.4s;
+}
+
+.delay-5 {
+  animation-delay: 0.5s;
 }
 
 @layer base {

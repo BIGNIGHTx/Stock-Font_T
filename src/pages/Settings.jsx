@@ -5,14 +5,14 @@ import { Text } from '../components/text';
 const Settings = ({ darkMode, setDarkMode }) => {
     return (
         <div className="p-8 max-w-4xl mx-auto space-y-8">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 stagger-item delay-1">
                 <div>
                     <Text as="h2" className="text-3xl font-bold text-gray-800 dark:text-dark-text">Settings</Text>
                     <Text className="text-gray-500 dark:text-dark-muted mt-1">Manage your application preferences.</Text>
                 </div>
             </div>
 
-            <div className="bg-white dark:bg-dark-surface rounded-2xl border border-gray-200 dark:border-dark-border shadow-sm p-6">
+            <div className="bg-white dark:bg-dark-surface rounded-2xl border border-gray-200 dark:border-dark-border shadow-sm p-6 stagger-item delay-2">
                 <Text as="h3" className="text-xl font-bold text-gray-800 dark:text-dark-text mb-6">Appearance</Text>
 
                 <div className="flex items-center justify-between">

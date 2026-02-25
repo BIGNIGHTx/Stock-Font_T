@@ -206,38 +206,85 @@ const Dashboard = () => {
         <div className="flex-1 bg-[#F3F5F9] p-4 md:p-6 text-slate-700">
 
           {/* ================= Header Section ================= */}
-          <header className="flex flex-row justify-between items-center gap-4 mb-5">
-            <div>
-              <Text as="h1" className="text-2xl font-bold text-slate-900 mb-0.5">Welcome back, Admin!</Text>
-              <Text className="text-slate-500 text-sm">Here's what's happening with your store today.</Text>
-            </div>
+          <header className="relative mb-8 mt-2 perspective-1000 stagger-item delay-1">
+            {/* 3D Floor Shadow */}
+            <div className="absolute inset-x-10 -bottom-3 h-6 bg-slate-900/10 blur-xl rounded-full"></div>
 
-            <div className="flex flex-row items-center gap-4">
-              <div className="text-right hidden md:block">
-                <Text className="text-2xl font-mono font-bold text-slate-800 tracking-tight">
-                  {currentDateTime.toLocaleTimeString('th-TH', { hour12: false })}
-                </Text>
-                <Text className="text-xs font-medium text-slate-400">{formattedDate}</Text>
+            <div className="relative flex flex-col md:flex-row justify-between items-start md:items-center p-5 bg-[#0f172a] border border-slate-800 rounded-[2rem] shadow-[0_20px_40px_-12px_rgba(0,0,0,0.6)] transform transition-transform duration-700 hover:rotate-x-1">
+              <div className="flex items-center gap-4">
+                {/* 3D Glowing Icon */}
+                <div className="relative shrink-0">
+                  <div className="absolute inset-0 bg-blue-500 blur-xl opacity-30 animate-pulse"></div>
+                  <div className="relative w-12 h-12 bg-gradient-to-br from-[#3b82f6] to-[#1d4ed8] rounded-xl flex items-center justify-center shadow-[0_8px_16px_rgba(59,130,246,0.3),inset_0_2px_4px_rgba(255,255,255,0.4)] transform -rotate-3 hover:rotate-0 transition-transform duration-500">
+                    <TrendingUp className="text-white w-7 h-7 drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]" />
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex items-center gap-2 mb-0.5">
+                    <style dangerouslySetInnerHTML={{
+                      __html: `
+                      @keyframes colorCycle {
+                        0% { color: #ef4444; }   /* Red */
+                        14% { color: #fbbf24; }  /* Yellow */
+                        28% { color: #f97316; }  /* Orange */
+                        42% { color: #ea580c; }  /* Deep Orange/แสด */
+                        56% { color: #a855f7; }  /* Purple */
+                        70% { color: #2563eb; }  /* Blue */
+                        84% { color: #06b6d4; }  /* Light Blue/Cyan */
+                        100% { color: #ef4444; } /* Back to Red */
+                      }
+                      .animate-dashboard-text {
+                        animation: colorCycle 6s infinite linear;
+                      }
+                    `}} />
+                    <Text as="h1" className="text-3xl font-black tracking-tighter italic drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] animate-dashboard-text">
+                      DASHBOARD
+                    </Text>
+                    <div className="px-2 py-0.5 bg-[#2563eb] text-white rounded-full text-[8px] font-black uppercase tracking-widest shadow-[0_4px_8px_rgba(37,99,235,0.4)] animate-bounce leading-none flex items-center justify-center h-5">
+                      Active
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="flex gap-1">
+                      <div className="w-1 h-1 rounded-full bg-blue-400 animate-pulse"></div>
+                      <div className="w-1 h-1 rounded-full bg-blue-500 animate-pulse [animation-delay:200ms]"></div>
+                      <div className="w-1 h-1 rounded-full bg-blue-600 animate-pulse [animation-delay:400ms]"></div>
+                    </div>
+                    <Text className="text-blue-200 text-[10px] font-bold tracking-widest uppercase">
+                      Premium Management Terminal
+                    </Text>
+                  </div>
+                </div>
               </div>
 
-              <div className="flex gap-2">
-                <button className="flex items-center justify-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-xl font-semibold text-slate-600 shadow-sm hover:bg-slate-50 transition-all cursor-pointer text-sm">
-                  <Download size={16} />
-                  <Text as="span">Export</Text>
-                </button>
-                <button
-                  onClick={() => navigate('/inventory?openAddModal=true')}
-                  className="flex items-center justify-center gap-2 px-4 py-2 bg-[#1e293b] text-white rounded-xl font-semibold shadow-lg shadow-slate-300 hover:bg-slate-800 transition-all transform active:scale-95 cursor-pointer text-sm"
-                >
-                  <Plus size={16} />
-                  <Text as="span">Add Product</Text>
-                </button>
+              <div className="flex items-center gap-6 mt-4 md:mt-0">
+                <div className="flex flex-col items-end border-r border-slate-700 pr-6 hidden lg:block">
+                  <Text className="text-xl font-black text-white font-mono tracking-tighter drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
+                    {currentDateTime.toLocaleTimeString('th-TH', { hour12: false })}
+                  </Text>
+                  <Text className="text-[9px] font-black text-blue-400 uppercase tracking-[0.2em]">{formattedDate}</Text>
+                </div>
+
+                <div className="flex gap-3">
+                  <button className="flex items-center gap-2 px-5 py-2.5 bg-slate-800/80 border border-slate-700 rounded-xl font-black text-white shadow-[0_8px_16px_rgba(0,0,0,0.3)] hover:bg-slate-700 transition-all active:scale-95 cursor-pointer text-xs group">
+                    <Download size={16} className="text-blue-400 group-hover:scale-125 transition-transform" />
+                    <span>EXPORT PDF</span>
+                  </button>
+                  <button
+                    onClick={() => navigate('/inventory?openAddModal=true')}
+                    className="relative flex items-center gap-2 px-6 py-2.5 bg-[#2563eb] text-white rounded-xl font-black shadow-[0_12px_24px_-8px_rgba(37,99,235,0.6),inset_0_2px_4px_rgba(255,255,255,0.4)] hover:bg-[#1d4ed8] hover:-translate-y-1 transition-all active:scale-95 cursor-pointer text-xs group"
+                  >
+                    <Plus size={16} strokeWidth={3} className="group-hover:rotate-90 transition-transform" />
+                    <span>ADD PRODUCT</span>
+                  </button>
+                </div>
               </div>
             </div>
           </header>
 
           {/* ================= Stats Grid ================= */}
-          <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 mb-5">
+          <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 mb-5 stagger-item delay-2">
             <SoftCard
               title="Total Products"
               value={isLoading ? '-' : totalProducts}
@@ -360,7 +407,7 @@ const Dashboard = () => {
 
             {/* Left Column */}
             <div className="lg:col-span-2">
-              <div className="bg-white rounded-[2rem] p-5 shadow-[0_2px_40px_-10px_rgba(0,0,0,0.04)] border border-slate-100">
+              <div className="bg-white rounded-[2rem] p-5 shadow-[0_2px_40px_-10px_rgba(0,0,0,0.04)] border border-slate-100 stagger-item delay-3">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-3">
                   <div>
                     <Text as="h2" className="text-base font-bold text-slate-800 flex items-center gap-2">
@@ -471,7 +518,7 @@ const Dashboard = () => {
               {/* Inventory by Category */}
               <div
                 onClick={() => setIsAllCategoriesModalOpen(true)}
-                className="bg-white rounded-[2rem] p-5 border border-slate-100 shadow-sm flex flex-col hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.1)] transition-all duration-500 ease-out hover:-translate-y-2 cursor-pointer outline-none focus:outline-none active:scale-[0.98] select-none"
+                className="bg-white rounded-[2rem] p-5 border border-slate-100 shadow-sm flex flex-col hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.1)] transition-all duration-500 ease-out hover:-translate-y-2 cursor-pointer outline-none focus:outline-none active:scale-[0.98] select-none stagger-item delay-4"
               >
                 <div className="mb-3">
                   <Text as="h3" className="text-base font-bold text-slate-800">Inventory by Category</Text>
@@ -536,7 +583,7 @@ const Dashboard = () => {
               </div>
 
               {/* Sales Trends Chart */}
-              <div className="bg-white rounded-[2rem] p-5 border border-slate-100 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.1)] transition-all duration-500 ease-out hover:-translate-y-2 cursor-pointer flex-1">
+              <div className="bg-white rounded-[2rem] p-5 border border-slate-100 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.1)] transition-all duration-500 ease-out hover:-translate-y-2 cursor-pointer flex-1 stagger-item delay-5">
                 <div className="flex justify-between items-start mb-3">
                   <div>
                     <Text as="h3" className="text-base font-bold text-slate-800">Sales Trends</Text>
@@ -627,205 +674,211 @@ const Dashboard = () => {
         </div>
 
         {/* ================= Category Detail Popup ================= */}
-        {selectedCategory && (
-          <div className="fixed inset-0 z-[60] flex items-start justify-center pt-16 px-4">
-            <div
-              className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity duration-200 animate-fade-in"
-              onClick={() => setSelectedCategory(null)}
-            ></div>
-            <div className="relative bg-white rounded-[1.5rem] shadow-2xl w-full max-w-lg overflow-hidden border border-slate-100 animate-in fade-in zoom-in duration-200">
-              <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-                <div className="flex items-center gap-3">
-                  <div className="p-1.5 bg-blue-100 text-blue-600 rounded-lg"><Package size={20} /></div>
-                  <div>
-                    <Text as="h3" className="font-bold text-lg text-slate-900">{selectedCategory.category_name} Details</Text>
-                    <Text className="text-slate-500 text-[10px]">Product breakdown and inventory status</Text>
+        {
+          selectedCategory && (
+            <div className="fixed inset-0 z-[60] flex items-start justify-center pt-16 px-4">
+              <div
+                className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity duration-200 animate-fade-in"
+                onClick={() => setSelectedCategory(null)}
+              ></div>
+              <div className="relative bg-white rounded-[1.5rem] shadow-2xl w-full max-w-lg overflow-hidden border border-slate-100 animate-in fade-in zoom-in duration-200">
+                <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                  <div className="flex items-center gap-3">
+                    <div className="p-1.5 bg-blue-100 text-blue-600 rounded-lg"><Package size={20} /></div>
+                    <div>
+                      <Text as="h3" className="font-bold text-lg text-slate-900">{selectedCategory.category_name} Details</Text>
+                      <Text className="text-slate-500 text-[10px]">Product breakdown and inventory status</Text>
+                    </div>
                   </div>
+                  <button
+                    onClick={() => setSelectedCategory(null)}
+                    className="p-2 hover:bg-slate-200 rounded-full text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+                  >
+                    <Plus size={24} className="rotate-45" />
+                  </button>
                 </div>
-                <button
-                  onClick={() => setSelectedCategory(null)}
-                  className="p-2 hover:bg-slate-200 rounded-full text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
-                >
-                  <Plus size={24} className="rotate-45" />
-                </button>
-              </div>
 
-              <div className="p-0 max-h-[60vh] overflow-y-auto">
-                <table className="w-full text-left text-sm text-slate-600">
-                  <thead className="bg-slate-50 border-b border-slate-100 text-slate-500 font-semibold uppercase text-[10px] sticky top-0">
-                    <tr>
-                      <th className="px-5 py-3">Product Name</th>
-                      <th className="px-5 py-3 text-center">SKU</th>
-                      <th className="px-5 py-3 text-center">Stock</th>
-                      <th className="px-5 py-3 text-right">Cost Value</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {selectedCategory.products.length > 0 ? (
-                      selectedCategory.products.map(p => (
-                        <tr key={p.id} className="hover:bg-slate-50 transition-colors text-xs">
-                          <td className="px-5 py-3 font-bold text-slate-800">{p.name}</td>
-                          <td className="px-5 py-3 text-center font-mono text-slate-400 text-[10px]">{p.sku}</td>
-                          <td className="px-5 py-3 text-center">
-                            <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold border ${p.stock <= 5 ? 'bg-red-50 text-red-600 border-red-100' : 'bg-green-50 text-green-600 border-green-100'}`}>
-                              {p.stock} units
-                            </span>
-                          </td>
-                          <td className="px-5 py-3 text-right font-bold text-blue-600">
-                            ฿{((p.cost_price || (p.price * 0.6)) * p.stock).toLocaleString()}
+                <div className="p-0 max-h-[60vh] overflow-y-auto">
+                  <table className="w-full text-left text-sm text-slate-600">
+                    <thead className="bg-slate-50 border-b border-slate-100 text-slate-500 font-semibold uppercase text-[10px] sticky top-0">
+                      <tr>
+                        <th className="px-5 py-3">Product Name</th>
+                        <th className="px-5 py-3 text-center">SKU</th>
+                        <th className="px-5 py-3 text-center">Stock</th>
+                        <th className="px-5 py-3 text-right">Cost Value</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {selectedCategory.products.length > 0 ? (
+                        selectedCategory.products.map(p => (
+                          <tr key={p.id} className="hover:bg-slate-50 transition-colors text-xs">
+                            <td className="px-5 py-3 font-bold text-slate-800">{p.name}</td>
+                            <td className="px-5 py-3 text-center font-mono text-slate-400 text-[10px]">{p.sku}</td>
+                            <td className="px-5 py-3 text-center">
+                              <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold border ${p.stock <= 5 ? 'bg-red-50 text-red-600 border-red-100' : 'bg-green-50 text-green-600 border-green-100'}`}>
+                                {p.stock} units
+                              </span>
+                            </td>
+                            <td className="px-5 py-3 text-right font-bold text-blue-600">
+                              ฿{((p.cost_price || (p.price * 0.6)) * p.stock).toLocaleString()}
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan="4" className="px-6 py-12 text-center text-slate-400">
+                            <Text>No products found in this category.</Text>
                           </td>
                         </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td colSpan="4" className="px-6 py-12 text-center text-slate-400">
-                          <Text>No products found in this category.</Text>
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-
-              <div className="px-6 py-3 bg-slate-50 border-t border-slate-100 flex justify-between items-center">
-                <div className="flex flex-col">
-                  <Text className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Total Value</Text>
-                  <Text className="text-lg font-bold text-slate-800">
-                    ฿{selectedCategory.products.reduce((acc, p) => acc + ((p.cost_price || (p.price * 0.6)) * p.stock), 0).toLocaleString()}
-                  </Text>
+                      )}
+                    </tbody>
+                  </table>
                 </div>
-                <button
-                  onClick={() => setSelectedCategory(null)}
-                  className="px-5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs font-bold transition-colors cursor-pointer"
-                >
-                  Close
-                </button>
+
+                <div className="px-6 py-3 bg-slate-50 border-t border-slate-100 flex justify-between items-center">
+                  <div className="flex flex-col">
+                    <Text className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Total Value</Text>
+                    <Text className="text-lg font-bold text-slate-800">
+                      ฿{selectedCategory.products.reduce((acc, p) => acc + ((p.cost_price || (p.price * 0.6)) * p.stock), 0).toLocaleString()}
+                    </Text>
+                  </div>
+                  <button
+                    onClick={() => setSelectedCategory(null)}
+                    className="px-5 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs font-bold transition-colors cursor-pointer"
+                  >
+                    Close
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )
+        }
 
         {/* ================= Full Categories List Modal ================= */}
-        {isAllCategoriesModalOpen && (
-          <div className="fixed inset-0 z-[60] flex items-start justify-center pt-16 px-4">
-            <div
-              className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity duration-200 animate-fade-in"
-              onClick={() => setIsAllCategoriesModalOpen(false)}
-            ></div>
+        {
+          isAllCategoriesModalOpen && (
+            <div className="fixed inset-0 z-[60] flex items-start justify-center pt-16 px-4">
+              <div
+                className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity duration-200 animate-fade-in"
+                onClick={() => setIsAllCategoriesModalOpen(false)}
+              ></div>
 
-            <div className="relative bg-white rounded-[2rem] shadow-2xl w-full max-w-md max-h-[90vh] overflow-hidden border border-slate-100 animate-in fade-in zoom-in duration-200 flex flex-col">
+              <div className="relative bg-white rounded-[2rem] shadow-2xl w-full max-w-md max-h-[90vh] overflow-hidden border border-slate-100 animate-in fade-in zoom-in duration-200 flex flex-col">
 
-              {/* Header */}
-              <div className="px-6 pt-6 pb-4 flex justify-between items-start flex-shrink-0">
-                <div>
-                  <Text as="h3" className="font-bold text-xl text-slate-900">Inventory Distribution</Text>
-                  <Text className="text-slate-500 text-[10px]">Full breakdown of stock value by category</Text>
+                {/* Header */}
+                <div className="px-6 pt-6 pb-4 flex justify-between items-start flex-shrink-0">
+                  <div>
+                    <Text as="h3" className="font-bold text-xl text-slate-900">Inventory Distribution</Text>
+                    <Text className="text-slate-500 text-[10px]">Full breakdown of stock value by category</Text>
+                  </div>
+                  <button
+                    onClick={() => setIsAllCategoriesModalOpen(false)}
+                    className="p-2 hover:bg-slate-100 rounded-full text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+                  >
+                    <Plus size={24} className="rotate-45" />
+                  </button>
                 </div>
-                <button
-                  onClick={() => setIsAllCategoriesModalOpen(false)}
-                  className="p-2 hover:bg-slate-100 rounded-full text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
-                >
-                  <Plus size={24} className="rotate-45" />
-                </button>
-              </div>
 
-              {/* Scrollable list — shows 4 rows then scrolls */}
-              <div className="px-6 pb-2 overflow-y-auto" style={{ maxHeight: '272px' }}>
-                <div className="space-y-2">
-                  {pieData.map((item) => (
-                    <div
-                      key={item.name}
-                      className="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100 hover:border-blue-200 hover:bg-blue-50/30 transition-all cursor-pointer group"
-                      onClick={() => {
-                        setIsAllCategoriesModalOpen(false);
-                        setSelectedCategory(item.raw);
-                      }}
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="w-3 h-3 rounded-full shadow-sm flex-shrink-0" style={{ backgroundColor: item.color }}></div>
-                        <div>
-                          <Text className="font-bold text-sm text-slate-800 group-hover:text-blue-600 transition-colors">{item.name}</Text>
-                          <Text className="text-[9px] text-slate-400 font-medium uppercase tracking-wider">{item.raw.products.length} Products</Text>
+                {/* Scrollable list — shows 4 rows then scrolls */}
+                <div className="px-6 pb-2 overflow-y-auto" style={{ maxHeight: '272px' }}>
+                  <div className="space-y-2">
+                    {pieData.map((item) => (
+                      <div
+                        key={item.name}
+                        className="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100 hover:border-blue-200 hover:bg-blue-50/30 transition-all cursor-pointer group"
+                        onClick={() => {
+                          setIsAllCategoriesModalOpen(false);
+                          setSelectedCategory(item.raw);
+                        }}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="w-3 h-3 rounded-full shadow-sm flex-shrink-0" style={{ backgroundColor: item.color }}></div>
+                          <div>
+                            <Text className="font-bold text-sm text-slate-800 group-hover:text-blue-600 transition-colors">{item.name}</Text>
+                            <Text className="text-[9px] text-slate-400 font-medium uppercase tracking-wider">{item.raw.products.length} Products</Text>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <Text className="font-bold text-sm text-slate-900">฿{item.value.toLocaleString()}</Text>
+                          <Text className="text-[9px] text-slate-400">{Math.round((item.value / totalStockValue) * 100)}%</Text>
                         </div>
                       </div>
-                      <div className="text-right">
-                        <Text className="font-bold text-sm text-slate-900">฿{item.value.toLocaleString()}</Text>
-                        <Text className="text-[9px] text-slate-400">{Math.round((item.value / totalStockValue) * 100)}%</Text>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
 
-              {/* Footer */}
-              <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex-shrink-0">
-                <div className="flex justify-between items-center mb-4">
-                  <Text className="text-slate-500 font-medium text-xs">Total Inventory Value</Text>
-                  <Text className="text-xl font-black text-slate-900">฿{totalStockValue.toLocaleString()}</Text>
+                {/* Footer */}
+                <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex-shrink-0">
+                  <div className="flex justify-between items-center mb-4">
+                    <Text className="text-slate-500 font-medium text-xs">Total Inventory Value</Text>
+                    <Text className="text-xl font-black text-slate-900">฿{totalStockValue.toLocaleString()}</Text>
+                  </div>
+                  <button
+                    onClick={() => setIsAllCategoriesModalOpen(false)}
+                    className="w-full py-3 bg-slate-900 text-white rounded-xl font-bold text-sm hover:bg-slate-800 transition-colors shadow-lg shadow-slate-200 cursor-pointer"
+                  >
+                    Done
+                  </button>
                 </div>
-                <button
-                  onClick={() => setIsAllCategoriesModalOpen(false)}
-                  className="w-full py-3 bg-slate-900 text-white rounded-xl font-bold text-sm hover:bg-slate-800 transition-colors shadow-lg shadow-slate-200 cursor-pointer"
-                >
-                  Done
-                </button>
-              </div>
 
+              </div>
             </div>
-          </div>
-        )}
+          )
+        }
 
         {/* ================= Delete Confirmation Modal ================= */}
-        {isDeleteModalOpen && (
-          <div className="fixed inset-0 z-[70] flex items-start justify-center pt-[20vh] px-4">
-            <div
-              className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity duration-200 animate-fade-in"
-              onClick={() => !isDeleting && setIsDeleteModalOpen(false)}
-            ></div>
+        {
+          isDeleteModalOpen && (
+            <div className="fixed inset-0 z-[70] flex items-start justify-center pt-[20vh] px-4">
+              <div
+                className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity duration-200 animate-fade-in"
+                onClick={() => !isDeleting && setIsDeleteModalOpen(false)}
+              ></div>
 
-            <div className="relative bg-white rounded-[2rem] shadow-2xl w-full max-w-sm overflow-hidden border border-slate-100 animate-in fade-in zoom-in duration-200 flex flex-col">
-              <div className="px-8 pt-8 pb-6 flex flex-col items-center text-center">
-                <div className="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mb-4">
-                  <Trash2 size={32} />
+              <div className="relative bg-white rounded-[2rem] shadow-2xl w-full max-w-sm overflow-hidden border border-slate-100 animate-in fade-in zoom-in duration-200 flex flex-col">
+                <div className="px-8 pt-8 pb-6 flex flex-col items-center text-center">
+                  <div className="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mb-4">
+                    <Trash2 size={32} />
+                  </div>
+                  <Text as="h3" className="font-bold text-xl text-slate-900 mb-2">Are you sure?</Text>
+                  <Text className="text-slate-500 text-sm px-2">
+                    Do you really want to delete this sale record? This action will restore the stock for the item.
+                  </Text>
                 </div>
-                <Text as="h3" className="font-bold text-xl text-slate-900 mb-2">Are you sure?</Text>
-                <Text className="text-slate-500 text-sm px-2">
-                  Do you really want to delete this sale record? This action will restore the stock for the item.
-                </Text>
-              </div>
 
-              <div className="px-8 pb-8 flex gap-3">
-                <button
-                  onClick={() => setIsDeleteModalOpen(false)}
-                  disabled={isDeleting}
-                  className="flex-1 py-3 bg-slate-100 text-slate-600 rounded-xl font-bold text-sm hover:bg-slate-200 transition-colors cursor-pointer disabled:opacity-50"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={() => handleDeleteSale(saleToDelete.id)}
-                  disabled={isDeleting}
-                  className="flex-1 py-3 bg-red-500 text-white rounded-xl font-bold text-sm hover:bg-red-600 transition-all shadow-lg shadow-red-100 cursor-pointer active:scale-95 disabled:opacity-70 flex items-center justify-center gap-2"
-                >
-                  {isDeleting ? (
-                    <>
-                      <svg className="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
-                      </svg>
-                      <Text as="span">Deleting...</Text>
-                    </>
-                  ) : (
-                    <Text as="span">Delete Sale</Text>
-                  )}
-                </button>
+                <div className="px-8 pb-8 flex gap-3">
+                  <button
+                    onClick={() => setIsDeleteModalOpen(false)}
+                    disabled={isDeleting}
+                    className="flex-1 py-3 bg-slate-100 text-slate-600 rounded-xl font-bold text-sm hover:bg-slate-200 transition-colors cursor-pointer disabled:opacity-50"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={() => handleDeleteSale(saleToDelete.id)}
+                    disabled={isDeleting}
+                    className="flex-1 py-3 bg-red-500 text-white rounded-xl font-bold text-sm hover:bg-red-600 transition-all shadow-lg shadow-red-100 cursor-pointer active:scale-95 disabled:opacity-70 flex items-center justify-center gap-2"
+                  >
+                    {isDeleting ? (
+                      <>
+                        <svg className="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                        </svg>
+                        <Text as="span">Deleting...</Text>
+                      </>
+                    ) : (
+                      <Text as="span">Delete Sale</Text>
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )
+        }
 
-      </div>
-    </div>
+      </div >
+    </div >
   );
 };
 

@@ -158,25 +158,27 @@ const Reports = () => {
   return (
     <div className="min-h-screen bg-[#F3F5F9] font-sans flex flex-col items-center">
       <div className="w-full max-w-[1280px] p-4 md:p-6 text-slate-700">
-        {/* Header & Controls */}
-        <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4 mb-5">
-          <div>
-            <Text as="h2" className="text-2xl font-bold text-slate-900 mb-1">Sales Reports</Text>
-            <Text className="text-slate-500 text-sm">Manage sales, view history, and export data.</Text>
+        {/* Header */}
+        <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4 mb-5 stagger-item delay-1">
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl sm:text-3xl font-display font-medium text-slate-900 tracking-tight">
+              Sales <span className="text-rose-600 italic font-serif">Reports</span>
+            </h1>
+            <div className="h-5 w-[1px] bg-slate-300 hidden sm:block"></div>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-3 w-full xl:w-auto">
+          <div className="flex flex-wrap sm:flex-row gap-2 w-full xl:w-auto">
             {/* View Toggle */}
             <div className="flex bg-white p-1 rounded-xl shadow-sm border border-slate-200">
               <button
                 onClick={() => setViewMode('daily')}
-                className={`px-6 py-2 rounded-lg text-sm font-bold transition-all duration-200 cursor-pointer ${viewMode === 'daily' ? 'bg-slate-100 text-slate-800' : 'text-slate-500 hover:text-slate-700'}`}
+                className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer ${viewMode === 'daily' ? 'bg-slate-100 text-slate-800' : 'text-slate-500 hover:text-slate-700'}`}
               >
                 <Text as="span">Daily View</Text>
               </button>
               <button
                 onClick={() => setViewMode('monthly')}
-                className={`px-6 py-2 rounded-lg text-sm font-bold transition-all duration-200 cursor-pointer ${viewMode === 'monthly' ? 'bg-slate-100 text-slate-800' : 'text-slate-500 hover:text-slate-700'}`}
+                className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer ${viewMode === 'monthly' ? 'bg-slate-100 text-slate-800' : 'text-slate-500 hover:text-slate-700'}`}
               >
                 <Text as="span">Monthly Overview</Text>
               </button>
@@ -186,19 +188,19 @@ const Reports = () => {
             <div className="flex bg-white p-1 rounded-xl shadow-sm border border-slate-200">
               <button
                 onClick={() => setFilterVat('all')}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${filterVat === 'all' ? 'bg-slate-800 text-white' : 'text-slate-500 hover:bg-slate-50'}`}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 cursor-pointer ${filterVat === 'all' ? 'bg-slate-800 text-white' : 'text-slate-500 hover:bg-slate-50'}`}
               >
                 All
               </button>
               <button
                 onClick={() => setFilterVat('vat')}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer flex items-center gap-1 ${filterVat === 'vat' ? 'bg-purple-100 text-purple-700' : 'text-slate-500 hover:bg-slate-50'}`}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 cursor-pointer flex items-center gap-1 ${filterVat === 'vat' ? 'bg-purple-100 text-purple-700' : 'text-slate-500 hover:bg-slate-50'}`}
               >
                 VAT
               </button>
               <button
                 onClick={() => setFilterVat('no_vat')}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer ${filterVat === 'no_vat' ? 'bg-slate-200 text-slate-600' : 'text-slate-500 hover:bg-slate-50'}`}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 cursor-pointer ${filterVat === 'no_vat' ? 'bg-slate-200 text-slate-600' : 'text-slate-500 hover:bg-slate-50'}`}
               >
                 No VAT
               </button>
@@ -211,14 +213,14 @@ const Reports = () => {
                   type="date"
                   value={selectedDate}
                   onChange={(e) => setSelectedDate(e.target.value)}
-                  className="px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm font-semibold outline-none focus:ring-2 focus:ring-blue-100 h-full cursor-pointer shadow-sm [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                  className="px-3 py-2 bg-white border border-slate-200 rounded-xl text-slate-700 text-xs font-semibold outline-none focus:ring-2 focus:ring-blue-100 h-full cursor-pointer shadow-sm [&::-webkit-calendar-picker-indicator]:cursor-pointer"
                 />
               ) : (
                 <input
                   type="month"
                   value={selectedMonth}
                   onChange={(e) => setSelectedMonth(e.target.value)}
-                  className="px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm font-semibold outline-none focus:ring-2 focus:ring-blue-100 h-full cursor-pointer shadow-sm [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                  className="px-3 py-2 bg-white border border-slate-200 rounded-xl text-slate-700 text-xs font-semibold outline-none focus:ring-2 focus:ring-blue-100 h-full cursor-pointer shadow-sm [&::-webkit-calendar-picker-indicator]:cursor-pointer"
                 />
               )}
             </div>
@@ -226,7 +228,7 @@ const Reports = () => {
         </div>
 
         {/* Summary Cards (Using SoftCard from Dashboard) */}
-        <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 mb-5">
+        <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 mb-5 stagger-item delay-2">
           <SoftCard
             title={`Total Revenue (${viewMode === 'daily' ? 'Day' : 'Month'})`}
             value={`฿${totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2 })}`}
@@ -266,7 +268,7 @@ const Reports = () => {
         </div>
 
         {/* Main Content Table */}
-        <div className="bg-white rounded-[2rem] p-5 shadow-[0_2px_40px_-10px_rgba(0,0,0,0.04)] border border-slate-100 mb-6">
+        <div className="bg-white rounded-[2rem] p-5 shadow-[0_2px_40px_-10px_rgba(0,0,0,0.04)] border border-slate-100 mb-6 stagger-item delay-3">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-5 gap-3">
             <div>
               <Text as="h3" className="text-lg font-bold text-slate-800 flex items-center gap-2">
