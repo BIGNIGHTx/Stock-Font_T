@@ -228,7 +228,7 @@ const Reports = () => {
         </div>
 
         {/* Summary Cards (Using SoftCard from Dashboard) */}
-        <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 mb-5 stagger-item delay-2">
+        <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 mb-5 stagger-item delay-2 will-change-transform">
           <SoftCard
             title={`Total Revenue (${viewMode === 'daily' ? 'Day' : 'Month'})`}
             value={`฿${totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2 })}`}
@@ -268,7 +268,7 @@ const Reports = () => {
         </div>
 
         {/* Main Content Table */}
-        <div className="bg-white dark:bg-dark-surface rounded-[2rem] p-5 shadow-sm border border-slate-100 dark:border-dark-border mb-6 stagger-item delay-3 transition-colors">
+        <div className="bg-white dark:bg-dark-surface rounded-[2rem] p-5 shadow-sm border border-slate-100 dark:border-dark-border mb-6 stagger-item delay-3 will-change-transform transition-colors">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-5 gap-3">
             <div>
               <Text as="h3" className="text-lg font-bold text-slate-800 dark:text-dark-text flex items-center gap-2">

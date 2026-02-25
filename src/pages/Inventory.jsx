@@ -133,9 +133,15 @@ const Inventory = () => {
 
   useEffect(() => {
     const init = async () => {
-      await fetchProducts();
-      await fetchCategories();
-      await fetchBrands();
+      try {
+        await Promise.all([
+          fetchProducts(),
+          fetchCategories(),
+          fetchBrands()
+        ]);
+      } catch (error) {
+        console.error("Initialization error:", error);
+      }
     };
     init();
   }, []);
@@ -356,7 +362,7 @@ const Inventory = () => {
             </button>
           </div>
         ) : (
-          <div className="relative flex items-center justify-center mb-5 min-h-[90px] stagger-item delay-1">
+          <div className="relative flex items-center justify-center mb-5 min-h-[90px] stagger-item delay-1 will-change-transform">
             <div className="text-center">
               <h1 className="text-2xl sm:text-3xl font-display font-medium text-slate-900 dark:text-dark-text mb-2 tracking-tight">
                 Inventory <span className="text-[#D4AF37] italic font-serif">Categories</span>
@@ -381,8 +387,8 @@ const Inventory = () => {
 
         {/* ===== VIEW 1: CATEGORY CARDS ===== */}
         {currentView === 'categories' && (
-          <div className="grid grid-cols-2 md:grid-cols-2 xl:grid-cols-4 gap-4 max-w-[1600px] w-full mx-auto stagger-item delay-2">
-            {categories.map((cat) => {
+          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 max-w-[1600px] w-full mx-auto">
+            {categories.map((cat, index) => {
               const itemCount = cat.name === 'All Products'
                 ? products.length
                 : products.filter(p =>
@@ -399,42 +405,44 @@ const Inventory = () => {
                     setStockFilter('all');
                     setVatFilter('all');
                   }}
-                  className="group bg-white dark:bg-dark-surface rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 cursor-pointer border border-transparent dark:border-dark-border hover:border-slate-100 dark:hover:border-slate-700 relative"
+                  style={{ animationDelay: `${0.1 + index * 0.08}s` }}
+                  className="stagger-item group bg-white dark:bg-dark-surface rounded-[2.5rem] overflow-hidden shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_-12px_rgba(0,0,0,0.12)] hover:-translate-y-2 transition-all duration-500 cursor-pointer border border-transparent dark:border-dark-border hover:border-slate-100 dark:hover:border-slate-700 relative will-change-transform"
                 >
                   {/* Edit/Delete — ซ่อนสำหรับ All Products */}
                   {cat.id !== 'all_products' && (
-                    <div className="absolute top-3 left-3 z-30 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-200">
+                    <div className="absolute top-4 left-4 z-30 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-1 group-hover:translate-y-0">
                       <button
                         onClick={(e) => handleEditCategory(cat, e)}
-                        className="p-1.5 rounded-full bg-white/80 backdrop-blur text-slate-400 hover:bg-blue-50 hover:text-blue-500 shadow-sm cursor-pointer"
+                        className="p-2 rounded-xl bg-white/90 backdrop-blur text-slate-400 hover:bg-blue-600 hover:text-white shadow-lg cursor-pointer transition-all active:scale-90"
                         title="แก้ไข Category"
                       >
-                        <Edit3 size={13} />
+                        <Edit3 size={14} />
                       </button>
                       <button
                         onClick={(e) => handleDeleteCategory(cat.id, e)}
-                        className="p-1.5 rounded-full bg-white/80 backdrop-blur text-slate-400 hover:bg-red-50 hover:text-red-500 shadow-sm cursor-pointer"
+                        className="p-2 rounded-xl bg-white/90 backdrop-blur text-slate-400 hover:bg-red-600 hover:text-white shadow-lg cursor-pointer transition-all active:scale-90"
                         title="ลบ Category นี้"
                       >
-                        <Trash2 size={13} />
+                        <Trash2 size={14} />
                       </button>
                     </div>
                   )}
 
-                  <div className="relative h-32 overflow-hidden bg-slate-100">
+                  <div className="relative h-40 overflow-hidden bg-slate-100">
                     <img src={cat.image} alt={cat.name}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                      className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                     <div className="absolute top-4 right-4 z-20">
-                      <span className={`inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold tracking-wide shadow-sm ${itemCount === 0 ? 'bg-red-500 text-white' : 'bg-green-500 text-white'}`}>
+                      <span className={`inline-flex items-center px-4 py-1.5 rounded-full text-[10px] font-black tracking-widest uppercase shadow-lg backdrop-blur-md ${itemCount === 0 ? 'bg-red-500/90 text-white' : 'bg-emerald-500/90 text-white'}`}>
                         {itemCount} Items
                       </span>
                     </div>
                   </div>
 
-                  <div className="p-5 bg-white dark:bg-dark-surface">
-                    <div className="w-8 h-[2px] bg-primary mb-3 group-hover:w-12 transition-all duration-500"></div>
-                    <h3 className="text-base font-display font-bold text-slate-900 dark:text-dark-text mb-0.5">{cat.name}</h3>
-                    <p className="text-xs font-body text-slate-700 dark:text-dark-muted font-medium">{cat.thai}</p>
+                  <div className="p-6 bg-white dark:bg-dark-surface">
+                    <div className="w-10 h-[3px] bg-primary mb-4 group-hover:w-16 transition-all duration-700 bg-blue-600 rounded-full"></div>
+                    <h3 className="text-lg font-display font-bold text-slate-900 dark:text-dark-text mb-1 group-hover:text-blue-600 transition-colors">{cat.name}</h3>
+                    <p className="text-xs font-body text-slate-500 dark:text-dark-muted font-semibold tracking-wide uppercase">{cat.thai}</p>
                   </div>
                 </div>
               );

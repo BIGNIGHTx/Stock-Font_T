@@ -207,7 +207,7 @@ const Dashboard = () => {
         <div className="flex-1 p-4 md:p-6 text-slate-700 dark:text-dark-text transition-colors duration-300">
 
           {/* ================= Header Section ================= */}
-          <header className="relative mb-8 mt-2 perspective-1000 stagger-item delay-1">
+          <header className="relative mb-8 mt-2 perspective-1000 stagger-item delay-1 will-change-transform">
             {/* 3D Floor Shadow */}
             <div className="absolute inset-x-10 -bottom-3 h-6 bg-slate-900/10 blur-xl rounded-full"></div>
 
@@ -280,7 +280,7 @@ const Dashboard = () => {
           </header>
 
           {/* ================= Stats Grid ================= */}
-          <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 mb-5 stagger-item delay-2">
+          <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 mb-5 stagger-item delay-2 will-change-transform">
             <SoftCard
               title="Total Products"
               value={isLoading ? '-' : totalProducts}
@@ -403,7 +403,7 @@ const Dashboard = () => {
 
             {/* Left Column */}
             <div className="lg:col-span-2">
-              <div className="bg-white dark:bg-dark-surface rounded-[2rem] p-5 shadow-[0_2px_40px_-10px_rgba(0,0,0,0.04)] border border-slate-100 dark:border-dark-border stagger-item delay-3">
+              <div className="bg-white dark:bg-dark-surface rounded-[2rem] p-5 shadow-[0_2px_40px_-10px_rgba(0,0,0,0.04)] border border-slate-100 dark:border-dark-border stagger-item delay-3 will-change-transform">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-3">
                   <div>
                     <Text as="h2" className="text-base font-bold text-slate-800 dark:text-dark-text flex items-center gap-2">
@@ -514,7 +514,7 @@ const Dashboard = () => {
               {/* Inventory by Category */}
               <div
                 onClick={() => setIsAllCategoriesModalOpen(true)}
-                className="bg-white dark:bg-dark-surface rounded-[2rem] p-5 border border-slate-100 dark:border-dark-border shadow-sm flex flex-col hover:shadow-xl dark:hover:shadow-none transition-all duration-500 ease-out hover:-translate-y-2 cursor-pointer outline-none focus:outline-none active:scale-[0.98] select-none stagger-item delay-4"
+                className="bg-white dark:bg-dark-surface rounded-[2rem] p-5 border border-slate-100 dark:border-dark-border shadow-sm flex flex-col hover:shadow-xl dark:hover:shadow-none transition-all duration-500 ease-out hover:-translate-y-2 cursor-pointer outline-none focus:outline-none active:scale-[0.98] select-none stagger-item delay-4 will-change-transform"
               >
                 <div className="mb-3">
                   <Text as="h3" className="text-base font-bold text-slate-800 dark:text-dark-text">Inventory by Category</Text>
@@ -579,7 +579,7 @@ const Dashboard = () => {
               </div>
 
               {/* Sales Trends Chart */}
-              <div className="bg-white dark:bg-dark-surface rounded-[2rem] p-5 border border-slate-100 dark:border-dark-border shadow-sm hover:shadow-xl dark:hover:shadow-none transition-all duration-500 ease-out hover:-translate-y-2 cursor-pointer flex-1 stagger-item delay-5">
+              <div className="bg-white dark:bg-dark-surface rounded-[2rem] p-5 border border-slate-100 dark:border-dark-border shadow-sm hover:shadow-xl dark:hover:shadow-none transition-all duration-500 ease-out hover:-translate-y-2 cursor-pointer flex-1 stagger-item delay-5 will-change-transform">
                 <div className="flex justify-between items-start mb-3">
                   <div>
                     <Text as="h3" className="text-base font-bold text-slate-800 dark:text-dark-text">Sales Trends</Text>

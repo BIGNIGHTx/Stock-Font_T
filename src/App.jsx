@@ -63,7 +63,7 @@ function App() {
         {/* Main Content */}
         <div className="flex-1 flex flex-col">
           {/* Dynamic Page Content */}
-          <main className="flex-1 overflow-y-auto bg-slate-50/50 dark:bg-dark-bg transition-colors duration-300">
+          <main className="flex-1 overflow-y-auto bg-slate-50/50 dark:bg-dark-bg transition-colors duration-300" style={{ scrollbarGutter: 'stable' }}>
             <div key={location.key} className="page-transition-container h-full">
               <Routes>
                 <Route path="/" element={<Dashboard />} />

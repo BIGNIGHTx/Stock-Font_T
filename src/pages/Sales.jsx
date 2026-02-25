@@ -183,7 +183,7 @@ const Sales = () => {
             <div className="w-full max-w-[1280px] px-6 py-4 md:px-10 md:py-5 text-slate-700 dark:text-dark-text">
 
                 {/* Header */}
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center justify-between mb-4 stagger-item delay-1 will-change-transform">
                     <div className="flex items-center gap-3">
                         <h1 className="text-2xl sm:text-3xl font-display font-medium text-slate-900 dark:text-dark-text tracking-tight">
                             Point of <span className="text-blue-600 italic font-serif">Sale</span>
@@ -198,7 +198,7 @@ const Sales = () => {
                     </span>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 stagger-item delay-2">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 stagger-item delay-2 will-change-transform">
                     {/* Left Column: Input Form */}
                     <div className="lg:col-span-2 space-y-4">
                         <div className="bg-white dark:bg-dark-surface p-5 rounded-[2rem] border border-slate-100 dark:border-dark-border shadow-sm transition-colors">
