@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import {
   Box,
@@ -15,7 +16,8 @@ import {
 import { Text } from '../components/text';
 import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
-const Dashboard = ({ onNavigate }) => {
+const Dashboard = () => {
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [sales, setSales] = useState([]);
   const [inventoryByCategory, setInventoryByCategory] = useState([]);
@@ -224,7 +226,7 @@ const Dashboard = ({ onNavigate }) => {
                   <Text as="span">Export</Text>
                 </button>
                 <button
-                  onClick={() => onNavigate && onNavigate('inventory', { openAddModal: true })}
+                  onClick={() => navigate('/inventory?openAddModal=true')}
                   className="flex items-center justify-center gap-2 px-4 py-2 bg-[#1e293b] text-white rounded-xl font-semibold shadow-lg shadow-slate-300 hover:bg-slate-800 transition-all transform active:scale-95 cursor-pointer text-sm"
                 >
                   <Plus size={16} />

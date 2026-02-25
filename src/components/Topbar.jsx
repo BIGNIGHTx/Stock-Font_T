@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   LayoutGrid,
   Package,
@@ -14,19 +15,24 @@ import {
   X
 } from 'lucide-react';
 
-const Topbar = ({ activePage, setActivePage, darkMode, setDarkMode }) => {
+const Topbar = ({ darkMode, setDarkMode }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Determine active page from current path
+  const currentPath = location.pathname.split('/')[1] || 'dashboard';
 
   const navItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutGrid },
-    { id: 'inventory', label: 'Inventory', icon: Package },
-    { id: 'sales', label: 'Sales', icon: ShoppingCart },
-    { id: 'reports', label: 'Reports', icon: BarChart2 },
-    { id: 'settings', label: 'Settings', icon: Settings },
+    { id: 'dashboard', path: '/', label: 'Dashboard', icon: LayoutGrid },
+    { id: 'inventory', path: '/inventory', label: 'Inventory', icon: Package },
+    { id: 'sales', path: '/sales', label: 'Sales', icon: ShoppingCart },
+    { id: 'reports', path: '/reports', label: 'Reports', icon: BarChart2 },
+    { id: 'settings', path: '/settings', label: 'Settings', icon: Settings },
   ];
 
-  const handleNav = (id) => {
-    setActivePage(id);
+  const handleNav = (path) => {
+    navigate(path);
     setMobileMenuOpen(false);
   };
 
@@ -56,15 +62,15 @@ const Topbar = ({ activePage, setActivePage, darkMode, setDarkMode }) => {
         {/* --- ตรงกลาง: เมนูเนวิเกชัน (Desktop) --- */}
         <div className="hidden md:flex items-center gap-1">
           {navItems.map((item) => {
-            const isActive = activePage === item.id;
+            const isActive = currentPath === item.id || (item.id === 'dashboard' && location.pathname === '/dashboard');
             const Icon = item.icon;
             return (
               <button
                 key={item.id}
-                onClick={() => handleNav(item.id)}
+                onClick={() => handleNav(item.path)}
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium text-[15px] transition-colors cursor-pointer ${isActive
-                    ? 'bg-[#f0f4f8] dark:bg-slate-800 text-gray-800 dark:text-gray-100 font-semibold'
-                    : 'text-[#64748b] dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-slate-800'
+                  ? 'bg-[#f0f4f8] dark:bg-slate-800 text-gray-800 dark:text-gray-100 font-semibold'
+                  : 'text-[#64748b] dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-slate-800'
                   }`}
               >
                 <Icon strokeWidth={2} className="w-[18px] h-[18px]" />
@@ -139,15 +145,15 @@ const Topbar = ({ activePage, setActivePage, darkMode, setDarkMode }) => {
         <div className="md:hidden w-full bg-white dark:bg-dark-surface border-b border-gray-100 dark:border-dark-border sticky top-[65px] z-40 shadow-lg animate-fade-in">
           <div className="flex flex-col px-4 py-2 gap-1">
             {navItems.map((item) => {
-              const isActive = activePage === item.id;
+              const isActive = currentPath === item.id || (item.id === 'dashboard' && location.pathname === '/dashboard');
               const Icon = item.icon;
               return (
                 <button
                   key={item.id}
-                  onClick={() => handleNav(item.id)}
+                  onClick={() => handleNav(item.path)}
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-colors cursor-pointer w-full text-left ${isActive
-                      ? 'bg-[#f0f4f8] dark:bg-slate-800 text-gray-800 dark:text-gray-100 font-semibold'
-                      : 'text-[#64748b] dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-slate-800'
+                    ? 'bg-[#f0f4f8] dark:bg-slate-800 text-gray-800 dark:text-gray-100 font-semibold'
+                    : 'text-[#64748b] dark:text-gray-400 hover:bg-slate-50 dark:hover:bg-slate-800'
                     }`}
                 >
                   <Icon strokeWidth={2} className="w-[18px] h-[18px]" />

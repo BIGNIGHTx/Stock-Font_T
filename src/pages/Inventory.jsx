@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import {
   Search, Plus, Edit3, Trash2, X, CheckCircle, AlertCircle,
@@ -19,8 +20,13 @@ const ALL_PRODUCTS_CARD = {
   image: 'https://images.unsplash.com/photo-1553413077-190dd305871c?w=600&auto=format&fit=crop&q=60',
 };
 
-const Inventory = ({ initialOpenModal = false }) => {
+const Inventory = () => {
   const { alert, confirm } = useAlert();
+  const location = useLocation();
+
+  // Parse query params
+  const queryParams = new URLSearchParams(location.search);
+  const initialOpenModal = queryParams.get('openAddModal') === 'true';
 
   const [currentView, setCurrentView] = useState('categories');
   const [activeCategory, setActiveCategory] = useState(null);
