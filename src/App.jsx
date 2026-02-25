@@ -55,7 +55,7 @@ function App() {
   }, [location.key]);
 
   return (
-    <div className="flex flex-col bg-slate-50 dark:bg-dark-bg min-h-screen font-sans transition-colors duration-300">
+    <div className="flex flex-col bg-slate-50 dark:bg-dark-bg min-h-screen font-sans transition-colors duration-300 scrollbar-hide">
       <AlertProvider>
         {/* Topbar */}
         <Topbar darkMode={darkMode} setDarkMode={setDarkMode} />
@@ -63,7 +63,7 @@ function App() {
         {/* Main Content */}
         <div className="flex-1 flex flex-col">
           {/* Dynamic Page Content */}
-          <main className="flex-1 overflow-y-auto bg-slate-50/50 dark:bg-dark-bg transition-colors duration-300" style={{ scrollbarGutter: 'stable' }}>
+          <main className="flex-1 overflow-y-auto scrollbar-hide bg-slate-50/50 dark:bg-dark-bg transition-colors duration-300">
             <div key={location.key} className="page-transition-container h-full">
               <Routes>
                 <Route path="/" element={<Dashboard />} />

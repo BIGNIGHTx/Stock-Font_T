@@ -26,10 +26,6 @@
 }
 
 /* Base Layout Polish & Stabilization */
-:root {
-  scrollbar-gutter: stable;
-}
-
 body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
@@ -84,27 +80,16 @@ body {
   }
 }
 
-/* Custom scrollbar for modern feel (จากต้นฉบับ) */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
+/* Utility to hide scrollbar while keeping scroll functionality */
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #d1d5db;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
-}
-
-.dark ::-webkit-scrollbar-thumb {
-  background: #475569;
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }
 
 /* --- Brand Animations --- */
